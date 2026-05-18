@@ -18,8 +18,10 @@ const path = require('path');
 async function generateHeadline(content, scoring, respondentName) {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
+    console.error('[headline] ANTHROPIC_API_KEY not set in environment');
     return fallbackHeadline(content, scoring);
   }
+  console.error('[headline] API key present, length:', apiKey.length);
 
   const quadrant = content.quadrants[scoring.quadrant];
   const priority1Code = scoring.priorityAreas[0];
@@ -64,21 +66,27 @@ async function generateHeadline(content, scoring, respondentName) {
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-5',
+        model: 'claude-haiku-4-5',
         max_tokens: 200,
         messages: [{ role: 'user', content: prompt }]
       })
     });
     if (!res.ok) {
-      console.error('Anthropic API non-OK:', res.status);
+      const errText = await res.text();
+      console.error('[headline] Anthropic API non-OK', res.status, errText.slice(0, 500));
       return fallbackHeadline(content, scoring);
     }
     const data = await res.json();
     const text = (data.content && data.content[0] && data.content[0].text) || '';
     const cleaned = text.trim().replace(/^["']|["']$/g, '');
-    return cleaned || fallbackHeadline(content, scoring);
+    if (!cleaned) {
+      console.error('[headline] Empty response from API, data keys:', Object.keys(data));
+      return fallbackHeadline(content, scoring);
+    }
+    console.error('[headline] Got headline:', cleaned.slice(0, 120));
+    return cleaned;
   } catch (e) {
-    console.error('Anthropic API error:', e.message);
+    console.error('[headline] Network/parse error:', e.message);
     return fallbackHeadline(content, scoring);
   }
 }
@@ -249,8 +257,12 @@ module.exports = async (req, res) => {
     }
   });
 
+  // Build the filename: include name if present
+  const safeName = respondentName ? respondentName.replace(/[^a-zA-Z0-9_-]+/g, '_') : '';
+  const filename = safeName ? `OSCI_Pro_Report_${safeName}.pdf` : 'OSCI_Pro_Report.pdf';
+
   res.setHeader('Content-Type', 'application/pdf');
-  res.setHeader('Content-Disposition', `attachment; filename="OSCI_Pro_Report.pdf"`);
+  res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
   doc.pipe(res);
 
   renderReport(doc, content, scoring, headline, respondentName, strengthCodes, developmentCodes, chosenMethods);
@@ -292,8 +304,15 @@ function renderReport(doc, content, scoring, headline, respondentName, strengthC
   h1(doc, 'There is a lot here to build on');
   bodyText(doc, headline);
   bodyText(doc, `Your results place you in the ${quadrant.label.replace(/^The /, '')} quadrant. ${quadrant.opening_paragraph}`);
-  bodyText(doc, `This report does three things. It names where your charisma is already working, so you can use those strengths more deliberately. It names two specific subscales where some focused practice will produce visible change. And it points at the methods, drawn from thirty years of working with senior people on this material, that fit your particular profile.`);
-  bodyText(doc, `Below your scores, you will find the four sections that matter most: your key strengths, your key development areas, the methods worth knowing, and a four-week plan you can start on this week.`);
+
+  // The manifesto: a through-line that frames everything else
+  if (content.manifesto && content.manifesto.front) {
+    doc.moveDown(0.3);
+    doc.font(FONT_HEAD_BOLD).fontSize(13).fillColor(COLOURS.navy)
+       .text(content.manifesto.front.title);
+    doc.moveDown(0.4);
+    content.manifesto.front.paragraphs.forEach(p => bodyText(doc, p));
+  }
 
   doc.moveDown(0.5);
   drawScoreTiles(doc, scoring, 72, doc.y, 451);
@@ -462,19 +481,23 @@ function renderReport(doc, content, scoring, headline, respondentName, strengthC
   // ─── Final page: Closing ──────────────────────────────────────────────────
   doc.addPage();
   eyebrow(doc, 'A final note');
-  h1(doc, 'The point of all this');
-  bodyText(doc, `The point is not to become a different person. It is to make the best of who you already are more consistent, more visible, and more useful to the people around you.`);
-  bodyText(doc, `The model the Pro report rests on is straightforward. Charisma is not a fixed personality trait. It is a set of specific skills, each one improvable on its own, with practice that can be done in real working situations. The two priority subscales in this report are where to start. The methods at the back are the patterns to reach for. The four-week plan is small enough to actually run.`);
-  bodyText(doc, `If you would value going further, the companion book, Open-Source Charisma, sets out the full model with stories, characters, and ten practical chapters of practice. For workshops, coaching, or licensed use of the Pro instrument in your own organisation, contact Jim at jim.harvey@themessagebusiness.com.`);
+  const backManifesto = (content.manifesto && content.manifesto.back) || null;
+  h1(doc, backManifesto ? backManifesto.title : 'The point of all this');
+  if (backManifesto) {
+    backManifesto.paragraphs.forEach(p => bodyText(doc, p));
+  } else {
+    // Fallback if manifesto block missing
+    bodyText(doc, `The point is not to become a different person. It is to make the best of who you already are more consistent, more visible, and more useful to the people around you.`);
+  }
 
   doc.moveDown(3);
   doc.lineWidth(0.5).strokeColor(COLOURS.gold)
      .moveTo(72, doc.y).lineTo(523, doc.y).stroke();
   doc.moveDown(0.6);
   doc.font(FONT_HEAD).fontSize(9).fillColor(COLOURS.muted)
-     .text(`OSCI Pro Report  ·  Generated ${today}  ·  Scoring version ${scoring.version || 'unknown'}`, { align: 'center', width: 451 });
+     .text(`OSCI Pro Report  \u00B7  Generated ${today}  \u00B7  Scoring version ${scoring.version || 'unknown'}`, { align: 'center', width: 451 });
   doc.moveDown(0.2);
-  doc.text('© 2026 James G Harvey / Allcow Trading Co Ltd  ·  opensourcecharisma.com', { align: 'center', width: 451 });
+  doc.text('\u00A9 2026 James G Harvey / Allcow Trading Co Ltd  \u00B7  opensourcecharisma.com', { align: 'center', width: 451 });
 }
 
 function confidenceBandSummary(band) {
@@ -540,7 +563,25 @@ function renderGoalSettingExercise(doc, gs, code, sub, score, n, total) {
   doc.addPage();
   eyebrow(doc, `Goal-setting exercise ${n} of ${total}`);
   h1(doc, `${code}  ${sub.name}`);
-  doc.font(FONT_BODY_ITALIC).fontSize(12).fillColor(COLOURS.muted)
+
+  // Subtitle: the one-liner descriptor for this subscale
+  if (sub.subtitle) {
+    doc.font(FONT_BODY_ITALIC).fontSize(12).fillColor(COLOURS.muted)
+       .text(sub.subtitle, { lineGap: 2 });
+    doc.moveDown(0.6);
+  }
+
+  // What moving up one level looks like for the people around them
+  if (sub.next_level_up) {
+    doc.font(FONT_HEAD_BOLD).fontSize(11).fillColor(COLOURS.navy)
+       .text('What moving up one level might look like');
+    doc.moveDown(0.2);
+    doc.font(FONT_BODY).fontSize(11).fillColor(COLOURS.ink)
+       .text(sub.next_level_up, { align: 'justify', lineGap: 3 });
+    doc.moveDown(0.6);
+  }
+
+  doc.font(FONT_BODY_ITALIC).fontSize(11).fillColor(COLOURS.muted)
      .text(`Current score: ${score} of 100. Use the five short steps below to set a specific goal for this subscale.`);
   doc.moveDown(0.8);
 

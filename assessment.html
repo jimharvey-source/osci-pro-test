@@ -155,12 +155,15 @@
   <!-- ========== SCREEN: EMAIL ========== -->
   <div id="screen-email">
     <div class="eyebrow">Step 1 of 2</div>
-    <h1>Your email</h1>
+    <h1>Your details</h1>
     <div class="gold-rule"></div>
-    <p>Your results will be sent to your inbox. We do not sell or share your address. The test build does not actually email you yet, but we use the field to test the flow.</p>
+    <p>Your name will appear on your personalised report. Your email is where the report will be sent. We do not sell or share your details. The test build does not actually email you yet, but we use both fields to test the flow.</p>
     <div class="card">
+      <label for="name-input" style="display:block; font-family:'Calibri',system-ui,sans-serif; font-size:13px; font-weight:600; color:var(--muted); margin-bottom:6px; letter-spacing:0.08em; text-transform:uppercase;">Your name</label>
+      <input type="text" id="name-input" placeholder="First and last name" autocomplete="name" style="width:100%; padding:12px; font-size:16px; font-family:Georgia,serif; border:1px solid var(--line); border-radius:3px; margin-bottom:16px;">
+      <label for="email-input" style="display:block; font-family:'Calibri',system-ui,sans-serif; font-size:13px; font-weight:600; color:var(--muted); margin-bottom:6px; letter-spacing:0.08em; text-transform:uppercase;">Your email</label>
       <input type="email" id="email-input" placeholder="you@yourcompany.com" autocomplete="email">
-      <p id="email-error" style="color: #c00; margin: 8px 0 0; font-size: 14px; display: none;">Please enter a valid email address.</p>
+      <p id="email-error" style="color: #c00; margin: 8px 0 0; font-size: 14px; display: none;">Please enter both your name and a valid email address.</p>
     </div>
     <div class="nav-row">
       <a class="btn secondary" href="/">Back</a>
@@ -232,6 +235,7 @@
 let QUESTIONNAIRE = null;
 let answers = {};
 let userEmail = null;
+let userName = null;
 let lastScoring = null;
 
 // Dimension intro copy
@@ -268,13 +272,17 @@ function goToScreen(name) {
 }
 
 function submitEmail() {
+  const nameInput = document.getElementById('name-input');
   const input = document.getElementById('email-input');
   const error = document.getElementById('email-error');
+  const nameValue = nameInput.value.trim();
   const value = input.value.trim();
-  const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-  if (!valid) { error.style.display = 'block'; return; }
+  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  const nameValid = nameValue.length >= 2;
+  if (!nameValid || !emailValid) { error.style.display = 'block'; return; }
   error.style.display = 'none';
   userEmail = value;
+  userName = nameValue;
   renderQuestions();
   goToScreen('questions');
 }
@@ -409,17 +417,17 @@ function bandPretty(b) {
 function showDebug() {
   const area = document.getElementById('debug-area');
   const out = document.getElementById('debug-output');
-  out.textContent = JSON.stringify({ email: userEmail, answers, scoring: lastScoring }, null, 2);
+  out.textContent = JSON.stringify({ name: userName, email: userEmail, answers, scoring: lastScoring }, null, 2);
   area.classList.remove('hidden');
 }
 
 async function generateReport() {
   if (!lastScoring) { alert("No scoring data yet."); return; }
   try {
-    const res = await fetch('/api/generate-report', {
+    const res = await fetch('/api/generate-test-report', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: userEmail, scoring: lastScoring })
+      body: JSON.stringify({ email: userEmail, scoring: lastScoring, respondentName: userName })
     });
     if (!res.ok) throw new Error('Server returned ' + res.status);
     const blob = await res.blob();
