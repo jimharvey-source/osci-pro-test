@@ -1,103 +1,505 @@
 {
-  "version": "pro-test-1.0",
+  "version": "pro-test-1.1",
   "title": "OSCI Pro — Charisma Quadrant Assessment",
   "subtitle": "50 questions. Ten subscales. About 8 minutes.",
   "likert": [
-    { "value": 1, "label": "Strongly disagree" },
-    { "value": 2, "label": "Disagree" },
-    { "value": 3, "label": "Neither agree nor disagree" },
-    { "value": 4, "label": "Agree" },
-    { "value": 5, "label": "Strongly agree" }
+    {
+      "value": 1,
+      "label": "Strongly disagree"
+    },
+    {
+      "value": 2,
+      "label": "Disagree"
+    },
+    {
+      "value": 3,
+      "label": "Neither agree nor disagree"
+    },
+    {
+      "value": 4,
+      "label": "Agree"
+    },
+    {
+      "value": 5,
+      "label": "Strongly agree"
+    }
   ],
   "subscales": {
-    "A1": { "name": "Self-Esteem & Self-Worth",            "dimension": "Confidence",    "items": [1, 2, 3, 4, 5] },
-    "A2": { "name": "Resilience & Composure",              "dimension": "Confidence",    "items": [6, 7, 8, 9, 10] },
-    "A3": { "name": "Assertiveness & Accountability",      "dimension": "Confidence",    "items": [11, 12, 13, 14, 15] },
-    "A4": { "name": "Growth & Adaptability",               "dimension": "Confidence",    "items": [16, 17, 18, 19, 20] },
-    "A5": { "name": "Situational Self-Awareness",          "dimension": "Confidence",    "items": [21, 22, 23, 24, 25] },
-    "B1": { "name": "Empathy & Listening",                 "dimension": "Social Skills", "items": [26, 27, 28, 29, 30] },
-    "B2": { "name": "Warmth & Social Courtesy",            "dimension": "Social Skills", "items": [31, 32, 33, 34, 35] },
-    "B3": { "name": "Conversational Skills",               "dimension": "Social Skills", "items": [36, 37, 38, 39, 40] },
-    "B4": { "name": "Emotional Control & Humility",        "dimension": "Social Skills", "items": [41, 42, 43, 44, 45] },
-    "B5": { "name": "Authentic vs Performed Social Behaviour", "dimension": "Social Skills", "items": [46, 47, 48, 49, 50] }
+    "A1": {
+      "name": "Self-Esteem & Self-Worth",
+      "dimension": "Confidence",
+      "items": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    "A2": {
+      "name": "Resilience & Composure",
+      "dimension": "Confidence",
+      "items": [
+        6,
+        7,
+        8,
+        9,
+        10
+      ]
+    },
+    "A3": {
+      "name": "Assertiveness & Accountability",
+      "dimension": "Confidence",
+      "items": [
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    "A4": {
+      "name": "Growth & Adaptability",
+      "dimension": "Confidence",
+      "items": [
+        16,
+        17,
+        18,
+        19,
+        20
+      ]
+    },
+    "A5": {
+      "name": "Situational Self-Awareness",
+      "dimension": "Confidence",
+      "items": [
+        21,
+        22,
+        23,
+        24,
+        25
+      ]
+    },
+    "B1": {
+      "name": "Empathy & Listening",
+      "dimension": "Social Skills",
+      "items": [
+        26,
+        27,
+        28,
+        29,
+        30
+      ]
+    },
+    "B2": {
+      "name": "Warmth & Social Courtesy",
+      "dimension": "Social Skills",
+      "items": [
+        31,
+        32,
+        33,
+        34,
+        35
+      ]
+    },
+    "B3": {
+      "name": "Conversational Skills",
+      "dimension": "Social Skills",
+      "items": [
+        36,
+        37,
+        38,
+        39,
+        40
+      ]
+    },
+    "B4": {
+      "name": "Emotional Control & Humility",
+      "dimension": "Social Skills",
+      "items": [
+        41,
+        42,
+        43,
+        44,
+        45
+      ]
+    },
+    "B5": {
+      "name": "Authentic vs Performed Social Behaviour",
+      "dimension": "Social Skills",
+      "items": [
+        46,
+        47,
+        48,
+        49,
+        50
+      ]
+    }
   },
-  "reverseItems": [3, 5, 8, 10, 13, 15, 18, 20, 23, 25, 28, 30, 33, 35, 38, 40, 43, 45, 47, 49],
-  "shadowItems": [35, 40, 45, 46, 47, 48, 49, 50],
+  "reverseItems": [
+    3,
+    5,
+    8,
+    10,
+    13,
+    15,
+    18,
+    20,
+    23,
+    25,
+    28,
+    30,
+    33,
+    35,
+    38,
+    40,
+    43,
+    45,
+    47,
+    49
+  ],
+  "shadowItems": [
+    35,
+    40,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50
+  ],
   "items": [
-    { "n": 1,  "subscale": "A1", "text": "I feel settled in myself, regardless of how recent events have gone." },
-    { "n": 2,  "subscale": "A1", "text": "When I do something well, I take it as evidence rather than waiting for someone else to confirm it." },
-    { "n": 3,  "subscale": "A1", "text": "My sense of how well I am doing depends on what the last person to comment said about my work.", "reverse": true },
-    { "n": 4,  "subscale": "A1", "text": "When something goes badly, I can separate the event from a verdict on who I am." },
-    { "n": 5,  "subscale": "A1", "text": "When I am criticised on something I have done, I find myself questioning whether I belong in the role.", "reverse": true },
-
-    { "n": 6,  "subscale": "A2", "text": "When a meeting starts going wrong, I slow down rather than speed up." },
-    { "n": 7,  "subscale": "A2", "text": "After a setback at work, I can usually identify what I can act on within the next two days." },
-    { "n": 8,  "subscale": "A2", "text": "When I am under pressure, I lose track of what the people in the room actually need from me.", "reverse": true },
-    { "n": 9,  "subscale": "A2", "text": "I can sit through a difficult meeting without people picking up that I am anxious." },
-    { "n": 10, "subscale": "A2", "text": "After something has gone wrong, it tends to occupy my thinking for the rest of the day.", "reverse": true },
-
-    { "n": 11, "subscale": "A3", "text": "When I think a meeting is heading towards a poor decision, I say so before the decision is made." },
-    { "n": 12, "subscale": "A3", "text": "When I commit to something at work, I commit to a specific deliverable by a specific date." },
-    { "n": 13, "subscale": "A3", "text": "When I disagree with a senior colleague, I usually keep it to myself.", "reverse": true },
-    { "n": 14, "subscale": "A3", "text": "When something goes wrong in my work, I tell people about it before they find out themselves." },
-    { "n": 15, "subscale": "A3", "text": "I tend to soften difficult messages to the point where the main point gets lost.", "reverse": true },
-
-    { "n": 16, "subscale": "A4", "text": "When I am shown evidence I was wrong about something at work, I update my position out loud." },
-    { "n": 17, "subscale": "A4", "text": "In the last six months I have asked someone to tell me something about my work that was uncomfortable to hear." },
-    { "n": 18, "subscale": "A4", "text": "When something I am doing is not working, I tend to try harder at it rather than try something different.", "reverse": true },
-    { "n": 19, "subscale": "A4", "text": "I have done something unfamiliar in my work in the last three months." },
-    { "n": 20, "subscale": "A4", "text": "When I describe a weakness of mine, I tend to describe it as a fixed feature rather than something I am working on.", "reverse": true },
-
-    { "n": 21, "subscale": "A5", "text": "When a meeting goes badly, I usually know my part in why." },
-    { "n": 22, "subscale": "A5", "text": "Before a significant meeting, I take a moment to notice what state I am in and choose what to do with it." },
-    { "n": 23, "subscale": "A5", "text": "I am usually surprised when people tell me how I came across in a meeting.", "reverse": true },
-    { "n": 24, "subscale": "A5", "text": "I notice when my energy or focus has dropped before it affects how I am with other people." },
-    { "n": 25, "subscale": "A5", "text": "The way I think I come across is usually how I come across to others.", "reverse": true },
-
-    { "n": 26, "subscale": "B1", "text": "When someone is telling me something difficult, I let them finish before I respond, even when I think I know what to say." },
-    { "n": 27, "subscale": "B1", "text": "In a conversation, I can usually tell when the other person is troubled by something they have not said out loud." },
-    { "n": 28, "subscale": "B1", "text": "I usually have my response ready before the other person has finished speaking.", "reverse": true },
-    { "n": 29, "subscale": "B1", "text": "When someone brings me a problem, I check what they want from the conversation before I start solving it." },
-    { "n": 30, "subscale": "B1", "text": "After a difficult conversation, I find it hard to say what the other person was most worried about.", "reverse": true },
-
-    { "n": 31, "subscale": "B2", "text": "I acknowledge people I pass in the building who I have no reason to need anything from." },
-    { "n": 32, "subscale": "B2", "text": "When I see someone I have met once before, I can usually remember something specific they told me." },
-    { "n": 33, "subscale": "B2", "text": "The amount of attention I give people in a meeting depends on how senior they are.", "reverse": true },
-    { "n": 34, "subscale": "B2", "text": "I follow up with people after a conversation that mattered, even when there is no task attached." },
-    { "n": 35, "subscale": "B2", "text": "The warmth I show senior people is greater than the warmth I show junior people.", "reverse": true, "shadow": true },
-
-    { "n": 36, "subscale": "B3", "text": "In a conversation, my follow-up questions are usually about what the other person actually just said, rather than the topic I had in mind." },
-    { "n": 37, "subscale": "B3", "text": "In the first minute of a conversation with someone new, I find out one thing about them that is not their job title." },
-    { "n": 38, "subscale": "B3", "text": "In conversation, I tend to make a connection to my own experience before I have fully heard the other person's.", "reverse": true },
-    { "n": 39, "subscale": "B3", "text": "When I share an opinion in a discussion, I usually frame it as my view rather than as a fact." },
-    { "n": 40, "subscale": "B3", "text": "The version of me that turns up in casual conversation is noticeably different from the version that turns up in formal meetings.", "reverse": true, "shadow": true },
-
-    { "n": 41, "subscale": "B4", "text": "When someone disagrees with me in front of others, I respond at the same volume and pace I was using before." },
-    { "n": 42, "subscale": "B4", "text": "When I am praised for something that involved someone else's contribution, I say so in the room where the praise is happening." },
-    { "n": 43, "subscale": "B4", "text": "When I do not know something in a meeting, I find a way to talk around it rather than admit it.", "reverse": true },
-    { "n": 44, "subscale": "B4", "text": "In a meeting where I am the most senior person, I let others speak before I share my view." },
-    { "n": 45, "subscale": "B4", "text": "I tend to be more measured in front of senior people than I am with everyone else.", "reverse": true, "shadow": true },
-
-    { "n": 46, "subscale": "B5", "text": "I treat the most junior person in a meeting with the same quality of attention as the most senior.", "shadow": true },
-    { "n": 47, "subscale": "B5", "text": "There is a version of me that turns up when I am being evaluated, and a different version that turns up when I am not.", "reverse": true, "shadow": true },
-    { "n": 48, "subscale": "B5", "text": "People who see me at work and people who see me outside it would describe me in the same terms.", "shadow": true },
-    { "n": 49, "subscale": "B5", "text": "When I am tired or distracted, my warmth and attention drop noticeably.", "reverse": true, "shadow": true },
-    { "n": 50, "subscale": "B5", "text": "I invest in conversations with people who have nothing to offer me directly.", "shadow": true }
+    {
+      "n": 1,
+      "subscale": "A1",
+      "text": "I feel settled in myself, regardless of how recent events have gone."
+    },
+    {
+      "n": 2,
+      "subscale": "A1",
+      "text": "When I do something well, I take it as evidence rather than waiting for someone else to confirm it."
+    },
+    {
+      "n": 3,
+      "subscale": "A1",
+      "text": "My sense of how well I am doing depends on what the last person to comment on it said.",
+      "reverse": true
+    },
+    {
+      "n": 4,
+      "subscale": "A1",
+      "text": "When something goes badly, I can separate the event from a verdict on who I am."
+    },
+    {
+      "n": 5,
+      "subscale": "A1",
+      "text": "When I am criticised on something I have done, I find myself questioning whether I belong where I am.",
+      "reverse": true
+    },
+    {
+      "n": 6,
+      "subscale": "A2",
+      "text": "When a conversation or situation starts going wrong, I slow down and reflect on why it is happening, rather than press on regardless."
+    },
+    {
+      "n": 7,
+      "subscale": "A2",
+      "text": "After a setback, I can usually identify something I can act on within the next couple of days."
+    },
+    {
+      "n": 8,
+      "subscale": "A2",
+      "text": "When I am under pressure, I lose track of what the people around me actually need.",
+      "reverse": true
+    },
+    {
+      "n": 9,
+      "subscale": "A2",
+      "text": "I can sit through a difficult conversation without people picking up that I am anxious."
+    },
+    {
+      "n": 10,
+      "subscale": "A2",
+      "text": "After something has gone wrong, it tends to occupy my thinking for the rest of the day.",
+      "reverse": true
+    },
+    {
+      "n": 11,
+      "subscale": "A3",
+      "text": "When I think a discussion is heading towards a poor decision, I say so before the decision is made."
+    },
+    {
+      "n": 12,
+      "subscale": "A3",
+      "text": "When I make a commitment, I make it specifically. What I will do, by when."
+    },
+    {
+      "n": 13,
+      "subscale": "A3",
+      "text": "When I disagree with someone whose opinion of me matters, I usually keep it to myself.",
+      "reverse": true
+    },
+    {
+      "n": 14,
+      "subscale": "A3",
+      "text": "When something I am responsible for goes wrong, I tell the people affected before they find out themselves."
+    },
+    {
+      "n": 15,
+      "subscale": "A3",
+      "text": "I tend to soften difficult messages to the point where the main point gets lost.",
+      "reverse": true
+    },
+    {
+      "n": 16,
+      "subscale": "A4",
+      "text": "When I am shown evidence I was wrong about something, I am comfortable saying so out loud."
+    },
+    {
+      "n": 17,
+      "subscale": "A4",
+      "text": "In the last six months I have asked someone to give me potentially uncomfortable feedback."
+    },
+    {
+      "n": 18,
+      "subscale": "A4",
+      "text": "When something I am doing is not working, I tend to try harder at it rather than try something different.",
+      "reverse": true
+    },
+    {
+      "n": 19,
+      "subscale": "A4",
+      "text": "In the last three months I have chosen to do something out of my comfort zone."
+    },
+    {
+      "n": 20,
+      "subscale": "A4",
+      "text": "When I describe a weakness of mine, I tend to describe it as a permanent feature rather than something I am working on.",
+      "reverse": true
+    },
+    {
+      "n": 21,
+      "subscale": "A5",
+      "text": "When an interaction goes badly, I usually know my part in why."
+    },
+    {
+      "n": 22,
+      "subscale": "A5",
+      "text": "Before a significant conversation, I take a moment to notice what state I am in (physically, emotionally, mentally) and choose what to do with it."
+    },
+    {
+      "n": 23,
+      "subscale": "A5",
+      "text": "People who give me feedback on my performance usually describe me the way I would describe myself.",
+      "reverse": true
+    },
+    {
+      "n": 24,
+      "subscale": "A5",
+      "text": "I notice when my energy or focus has dropped before it affects how I am with other people."
+    },
+    {
+      "n": 25,
+      "subscale": "A5",
+      "text": "The way I think I come across is usually the way I come across to others.",
+      "reverse": true
+    },
+    {
+      "n": 26,
+      "subscale": "B1",
+      "text": "When someone is telling me something difficult, I let them finish before I respond, even when I think I know what to say."
+    },
+    {
+      "n": 27,
+      "subscale": "B1",
+      "text": "In a conversation, I can usually tell when the other person is troubled by something they have not said out loud."
+    },
+    {
+      "n": 28,
+      "subscale": "B1",
+      "text": "I usually have my response ready before the other person has finished speaking.",
+      "reverse": true
+    },
+    {
+      "n": 29,
+      "subscale": "B1",
+      "text": "When someone brings me a problem, I check what they want from the conversation before I start solving it."
+    },
+    {
+      "n": 30,
+      "subscale": "B1",
+      "text": "After a difficult conversation, I find it hard to say what the other person was most worried about.",
+      "reverse": true
+    },
+    {
+      "n": 31,
+      "subscale": "B2",
+      "text": "In social and professional situations, my default is to acknowledge everyone I meet or pass."
+    },
+    {
+      "n": 32,
+      "subscale": "B2",
+      "text": "When I see someone I have met before, I can usually remember something specific about them."
+    },
+    {
+      "n": 33,
+      "subscale": "B2",
+      "text": "The amount of attention I give people depends on how useful they are to me.",
+      "reverse": true
+    },
+    {
+      "n": 34,
+      "subscale": "B2",
+      "text": "I follow up with people after a conversation that mattered, even when there is no task attached."
+    },
+    {
+      "n": 35,
+      "subscale": "B2",
+      "text": "The warmth and interest I show important people is greater than the warmth and interest I show less important people.",
+      "reverse": true,
+      "shadow": true
+    },
+    {
+      "n": 36,
+      "subscale": "B3",
+      "text": "In a conversation, my follow-up questions are usually about what the other person has said, rather than the topic I had in mind."
+    },
+    {
+      "n": 37,
+      "subscale": "B3",
+      "text": "When I meet someone new, I find out something about them beyond what they do for a living."
+    },
+    {
+      "n": 38,
+      "subscale": "B3",
+      "text": "In conversation, I tend to make a connection to my own experience before I have fully heard the other person's.",
+      "reverse": true
+    },
+    {
+      "n": 39,
+      "subscale": "B3",
+      "text": "When I share an opinion, I usually frame it as my view rather than as a fact."
+    },
+    {
+      "n": 40,
+      "subscale": "B3",
+      "text": "The version of me that turns up in casual conversation is noticeably different from the version that turns up in formal settings.",
+      "reverse": true,
+      "shadow": true
+    },
+    {
+      "n": 41,
+      "subscale": "B4",
+      "text": "When someone disagrees with me in front of others, I respond at the same volume and pace I was using before."
+    },
+    {
+      "n": 42,
+      "subscale": "B4",
+      "text": "When I am praised for something that involved someone else's contribution, I say so in the room where the praise is happening."
+    },
+    {
+      "n": 43,
+      "subscale": "B4",
+      "text": "When I do not know something, I find a way to talk around it rather than admit it.",
+      "reverse": true
+    },
+    {
+      "n": 44,
+      "subscale": "B4",
+      "text": "When I am the most senior or experienced person in a group, I let others speak before I share my view."
+    },
+    {
+      "n": 45,
+      "subscale": "B4",
+      "text": "I am more measured in front of people I want to impress than I am with everyone else.",
+      "reverse": true,
+      "shadow": true
+    },
+    {
+      "n": 46,
+      "subscale": "B5",
+      "text": "I treat the most junior person in a group with the same quality of attention as the most senior.",
+      "shadow": true
+    },
+    {
+      "n": 47,
+      "subscale": "B5",
+      "text": "There is a version of me that turns up when I am being evaluated, and a different version that turns up when I am not.",
+      "reverse": true,
+      "shadow": true
+    },
+    {
+      "n": 48,
+      "subscale": "B5",
+      "text": "People who see me at work and people who see me outside it would describe me in the same terms.",
+      "shadow": true
+    },
+    {
+      "n": 49,
+      "subscale": "B5",
+      "text": "When I am tired or distracted, my warmth and attention drop noticeably.",
+      "reverse": true,
+      "shadow": true
+    },
+    {
+      "n": 50,
+      "subscale": "B5",
+      "text": "I invest in conversations and relationships with people who have nothing to offer me directly.",
+      "shadow": true
+    }
   ],
   "cutPoints": {
-    "confidence":   { "lowerToDeveloping": 65, "developingToHigher": 78 },
-    "socialSkills": { "lowerToDeveloping": 65, "developingToHigher": 77 }
+    "confidence": {
+      "lowerToDeveloping": 65,
+      "developingToHigher": 78
+    },
+    "socialSkills": {
+      "lowerToDeveloping": 65,
+      "developingToHigher": 77
+    }
   },
   "authenticityBands": [
-    { "min": 85, "max": 100, "label": "Consistently available",     "description": "Behaviour is not conditional on status, usefulness, or familiarity. The same principle shows up across audiences, with appropriate surface adaptation." },
-    { "min": 70, "max": 84,  "label": "Broadly consistent",          "description": "Behaviour is reliable in most settings, with one or two specific contexts that narrow it." },
-    { "min": 55, "max": 69,  "label": "Selectively deployed",        "description": "Skills are real but unevenly distributed. Inner ring gets the full version. Peripheral contacts get less." },
-    { "min": 0,  "max": 54,  "label": "Significantly instrumental",  "description": "Behaviour is at its strongest when it serves a purpose. The transactional logic is visible to others." }
+    {
+      "min": 85,
+      "max": 100,
+      "label": "Consistently available",
+      "description": "Behaviour is not conditional on status, usefulness, or familiarity. The same principle shows up across audiences, with appropriate surface adaptation."
+    },
+    {
+      "min": 70,
+      "max": 84,
+      "label": "Broadly consistent",
+      "description": "Behaviour is reliable in most settings, with one or two specific contexts that narrow it."
+    },
+    {
+      "min": 55,
+      "max": 69,
+      "label": "Selectively deployed",
+      "description": "Skills are real but unevenly distributed. Inner ring gets the full version. Peripheral contacts get less."
+    },
+    {
+      "min": 0,
+      "max": 54,
+      "label": "Significantly instrumental",
+      "description": "Behaviour is at its strongest when it serves a purpose. The transactional logic is visible to others."
+    }
   ],
   "quadrants": {
-    "incidentally_invisible":   { "label": "The Incidentally Invisible",   "tagline": "Talented but overlooked. Ability is not the gap. Visibility is." },
-    "unknowingly_influential":  { "label": "The Unknowingly Influential",  "tagline": "Connects naturally. Undersells consistently. Influence outruns reputation." },
-    "occasionally_overconfident": { "label": "The Occasionally Overconfident", "tagline": "Commands attention. Loses the room when warmth or restraint is the test." },
-    "courteously_charismatic":  { "label": "The Courteously Charismatic",  "tagline": "Competent and connected. The work is consistency. Closing the gap between best and average." }
+    "incidentally_invisible": {
+      "label": "The Incidentally Invisible",
+      "tagline": "Talented but overlooked. Ability is not the gap. Visibility is."
+    },
+    "unknowingly_influential": {
+      "label": "The Unknowingly Influential",
+      "tagline": "Connects naturally. Undersells consistently. Influence outruns reputation."
+    },
+    "occasionally_overconfident": {
+      "label": "The Occasionally Overconfident",
+      "tagline": "Commands attention. Loses the room when warmth or restraint is the test."
+    },
+    "courteously_charismatic": {
+      "label": "The Courteously Charismatic",
+      "tagline": "Competent and connected. The work is consistency. Closing the gap between best and average."
+    }
   }
 }
