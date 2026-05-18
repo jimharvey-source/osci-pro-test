@@ -1,0 +1,465 @@
+{
+  "version": "report-content-1.0",
+  "_meta": {
+    "purpose": "Canonical content blocks for the OSCI Pro PDF report. Each subscale has two frames: strength (when the subscale is a relative high point for the respondent) and development (when it's a relative low point). The report generator selects the right frame at render time. Voice follows OSCI_Feedback_Style_guide.",
+    "structure_strength_frame": [
+      "what_this_suggests",
+      "why_it_matters",
+      "how_to_use_it_even_better"
+    ],
+    "structure_development_frame": [
+      "what_may_be_happening",
+      "why_this_matters",
+      "the_skill_to_build",
+      "what_to_try_next"
+    ]
+  },
+  "quadrants": {
+    "courteously_charismatic": {
+      "label": "The Courteously Charismatic",
+      "tagline": "Competent and connected. The work is consistency.",
+      "opening_paragraph": "You sit in the quadrant of the model where most leaders would like to be: higher on both Confidence and Social Skills. People in this position tend to be respected and liked, which is harder to combine than the literature usually admits. The challenge for you is not to find what you do well. It is to keep doing it consistently, across audiences and across pressure.",
+      "what_the_quadrant_means": "Courteously Charismatic is the version of the model where presence and warmth land together. You are credible in the room. People listen when you speak and trust what you say. The risk that comes with this position is invisible to most people in it. Because the conventional charisma signals are working for you, you may not notice the moments when they slip, and other people often do not tell you. The work in this quadrant is the work of consistency: closing the gap between your best version and your average one. That is what the Authenticity Index, and the development areas in this report, are pointing at.",
+      "common_blind_spots": "Two patterns recur for people in this quadrant. The first is variable presence: a noticeable difference between the version of you that turns up at 9am and the version at 4pm, or between the version that turns up for senior people and the version that turns up for everyone else. The second is the assumption that because you are good at this on a good day, the work is done. The development pages in this report identify the specific places where the work continues."
+    },
+    "unknowingly_influential": {
+      "label": "The Unknowingly Influential",
+      "tagline": "Connects naturally. Undersells consistently.",
+      "opening_paragraph": "You sit in the quadrant where social skill is strong and confidence has not yet caught up. People in this position are often liked, trusted, and listened to, but consistently overlooked when the credit is being handed out. Your influence is real. You just underestimate it.",
+      "what_the_quadrant_means": "The Unknowingly Influential is one of the more interesting positions in the model. Other people experience you as someone they want to work with, take advice from, and have in the room. You experience yourself as someone who is not quite stepping up. The gap between those two readings is the main piece of development available to you. Closing it does not mean becoming louder. It means trusting that what you are already doing is working, and being willing to claim space proportionate to the value you actually bring.",
+      "common_blind_spots": "Two patterns recur here. The first is over-deferring: holding back a view because you assume someone more senior or more confident will offer a better one, when the room actually wanted yours. The second is under-claiming: describing your contribution to a piece of work in terms so modest that nobody else realises what you did. The development pages in this report will probably touch on assertiveness and self-esteem. Both are the work of bringing your external impact and your internal sense of yourself into alignment."
+    },
+    "occasionally_overconfident": {
+      "label": "The Occasionally Overconfident",
+      "tagline": "Commands attention. Loses the room when warmth or restraint is the test.",
+      "opening_paragraph": "You sit in the quadrant where confidence is strong and social skill is the area to build. People in this position usually walk into the room well: presence is not the problem. The work is what happens after that. The moments where warmth, restraint, or attention to the other person would have produced a better outcome than another assertion from you.",
+      "what_the_quadrant_means": "Occasionally Overconfident is a position that often comes with strong delivery skills. You are not short on conviction. The cost of that strength is that conviction can crowd out the quieter behaviours that build long-term influence: noticing what the other person is bringing, leaving space for them to find their own answer, sharing credit specifically, admitting where you do not know. The development pages in this report will probably point at one or more of those. The work is not to be less confident. It is to add the moves that complete the picture.",
+      "common_blind_spots": "Two patterns recur here. The first is dominating the conversational space without realising: more airtime than the situation needs, more certainty than the situation warrants. The second is missing the cumulative cost of small moments where warmth would have been the better move. Both are recoverable. Neither requires a personality transplant. The activities in this report are about adding moves, not subtracting from who you are."
+    },
+    "incidentally_invisible": {
+      "label": "The Incidentally Invisible",
+      "tagline": "Talented but overlooked. Ability is not the gap. Visibility is.",
+      "opening_paragraph": "You sit in the quadrant where both Confidence and Social Skills have room to grow. People in this position are often capable, often hard-working, and often invisible to the people whose attention would help them most. Ability is not the gap. Visibility is. The work here is the most rewarding in the model, because the gap between current and possible is the widest.",
+      "what_the_quadrant_means": "Incidentally Invisible is a position the model tends to be misread as a verdict. It is not. It is a starting point. Most of the people who end up in the Courteously Charismatic quadrant started somewhere closer to this one and did the work over time. The two priority subscales in this report are where to start. Pick one. Work on it for four to six weeks. Then come back to the other. The instrument and the report are designed for exactly this kind of incremental, visible improvement.",
+      "common_blind_spots": "The pattern that recurs here is treating the position as fixed rather than as the current state of a developable system. People in this quadrant often describe themselves as 'not naturally good at this kind of thing', and that framing closes the door before any work can begin. The framing the rest of this report uses is different: charisma is a set of specific skills, each one improvable on its own, with practice that can be done in real working situations. The activities are designed to be done in the next four weeks, not someday."
+    }
+  },
+  "subscales": {
+    "A1": {
+      "name": "Self-Esteem and Self-Worth",
+      "dimension": "Confidence",
+      "strength": {
+        "what_this_suggests": "Your Self-Esteem score sits in a strong range. The pattern this points to is a settled internal baseline that does not move much with the most recent event. You can take a piece of criticism, weigh what is useful in it, and not let it reshape your view of who you are. You can take a good outcome without needing it to confirm your worth. The baseline holds.",
+        "why_it_matters": "Settled self-esteem is the platform everything else stands on. When the baseline is steady, you can hear hard feedback without flinching, give difficult feedback without performing humility, take a setback without an identity collapse, and bring views that may be unpopular without needing the room to validate them first. Most of the harder behaviours later in this report depend on this one being in place.",
+        "how_to_use_it_even_better": "The strength to develop further is not your self-esteem itself, but its visible effect on others. People who are settled in themselves tend to put other people at ease. You can use that deliberately. In meetings where the room is anxious, your steadiness changes the temperature. In conversations with someone who is wavering, your settled register helps them think more clearly. The opportunity is to notice these moments and make the most of them: when you walk into the room, you are bringing something the room can use."
+      },
+      "development": {
+        "what_may_be_happening": "Your Self-Esteem score sits in a lower range. The pattern this often points to is a sense of how well you are doing that moves more with recent events than it should. A good meeting and you feel competent. A piece of negative feedback and you find yourself questioning whether you belong where you are. The settled baseline that this subscale measures is the version of you that exists when nothing has just happened, good or bad. For most people in this band, that baseline is harder to locate than the high points and the low points are.",
+        "why_this_matters": "The cost of low self-esteem is mostly internal, but it shows up externally too. You may hold back views you would otherwise have brought. You may seek validation more than you would choose to. You may read criticism on a piece of work as criticism of yourself, which makes it harder to act on. Over time, the people around you adjust to the version of you that is uncertain, and the cycle continues.",
+        "the_skill_to_build": "The work here is what the book calls being in good faith with yourself. Self-esteem is not a feeling you wait for. It is the practice of treating yourself as a person of worth, gathering accurate evidence about what you are actually doing, and acting on it until the internal version catches up.",
+        "what_to_try_next": [
+          "At the end of each working week, write down three moments where you did something you are pleased with. Not three successes. Three moments. Keep the list somewhere you can read it when the internal voice gets loud. Most people's internal account of their performance is more negative than the evidence supports. The weekly note is the evidence.",
+          "When something goes badly, separate the event from the verdict. The meeting did not go well. That is the event. 'I am not up to this' is a different sentence, and it has not been earned. Then diagnose the actual problem, fix the specific thing, and move on. The collapse from event into verdict is the mechanism that drives low self-esteem lower. Naming the two as separate, in the moment, is what stops the slide.",
+          "When you receive criticism, hold the response by twenty-four hours. Then come back to it and ask one question: what part of this is information I can act on? The rest is volume. Most criticism contains a small useful core inside a larger emotional reaction. The twenty-four hours lets the volume drop.",
+          "Ask three people you trust to give you specific feedback on your work. Not 'any feedback for me?' Use the structured ask: 'What one thing could I do differently to be more effective for you?' Your internal opinion is one data point. It is also, when self-esteem is low, often the least accurate one. The external evidence is what corrects the picture."
+        ]
+      }
+    },
+    "A2": {
+      "name": "Resilience and Composure",
+      "dimension": "Confidence",
+      "strength": {
+        "what_this_suggests": "Your Resilience and Composure score sits in a strong range. You stay functional under pressure. When meetings start going wrong, you can slow down rather than speed up. When something has gone wrong already, you can move from the event to what is now possible within a useful time window. The visible version of this is composure that does not require the suppression of feeling.",
+        "why_it_matters": "Composure under load is the behaviour that lets the rest of your skill set keep working when the stakes are highest. Most professional setbacks are not catastrophic in themselves. What does the damage is the reaction to them. People who stay composed are also the people who stay credible, because the room watches how they handle the difficult moment and updates its view accordingly.",
+        "how_to_use_it_even_better": "The opportunity is to be the calmer presence in a room that needs one. When others are losing function under pressure, your composure changes the available behaviours for everyone. The deliberate use of this strength is to notice when a room is tilting toward panic and to be the steady voice that brings the temperature down. Not by minimising the problem. By staying with it long enough to make a useful decision."
+      },
+      "development": {
+        "what_may_be_happening": "Your Resilience and Composure score sits in a lower range. The pattern this often shows is pressure-induced narrowing: when things get hard, the field of attention shrinks, and what was an interaction with people becomes a struggle with the situation. You may notice that you find it hard to read the room when stakes are high. You may notice that setbacks occupy your thinking for longer than is useful. Neither is a failing. Both are signals that the composure muscle has not yet been fully built.",
+        "why_this_matters": "Pressure is when the people around you are watching most carefully. The version of you that turns up in difficult moments is the version they remember. If composure is unreliable, your reputation will be built more on those moments than on the easier ones. The cost is not what happens during the difficult moment itself. It is the version of you the room carries forward.",
+        "the_skill_to_build": "The work here is composure under load. Not stoicism. Composure that allows you to keep acting well while you feel what you feel. The three principles that handle most professional pressure are: nobody cares as much as you think they do, nobody is going to die, and getting over yourself frees up the attention you need to handle the situation. Each one is in the methods at the back of this report.",
+        "what_to_try_next": [
+          "When you notice pressure rising, slow down by one beat before you respond. Just one. The slowdown breaks the speed-up cycle. It also signals to the room that you are still in charge of yourself.",
+          "After a setback, give yourself a finite window to feel what you feel about it. An hour. Half a day. Then move to the diagnostic question: what is the next useful action? The window contains the reaction. The question opens the recovery.",
+          "Before a high-stakes meeting, name to yourself what you are bringing into the room: the state, the worries, the residue from the last interaction. Naming it reduces its grip. The five-minutes practice in the methods is the longer version of this.",
+          "When something has gone wrong, treat it the way you would treat your car not starting. Diagnose the actual problem. Get help if you need it. Fix the specific thing. Learn from it. Move on. Personal verdicts about your competence are not part of the protocol."
+        ]
+      }
+    },
+    "A3": {
+      "name": "Assertiveness and Accountability",
+      "dimension": "Confidence",
+      "strength": {
+        "what_this_suggests": "Your Assertiveness score sits in a strong range. You say the thing that needs saying. You take responsibility for outcomes, including the ones that have not gone well. When you commit to something, you commit specifically, and the people around you know what to expect from you.",
+        "why_it_matters": "Assertive behaviour is the visible expression of self-respect and respect for others. People can act on what you say because you have said it clearly. People trust what you commit to because your commitments are specific. Over time, you become someone the room turns to when a difficult message needs to be delivered or a difficult decision needs to be made.",
+        "how_to_use_it_even_better": "The development edge for someone with strong assertiveness is calibration. The same directness that works well in most settings can land too hard in some. The skill to develop is reading the room's capacity for directness in the moment, and adjusting the volume without softening the message. The point is not to become less direct. It is to make directness land more reliably."
+      },
+      "development": {
+        "what_may_be_happening": "Your Assertiveness score sits in a lower range. The pattern this often shows is softening the difficult message until the main point is lost, keeping disagreements to yourself when you should have voiced them, or hedging commitments instead of making them specific. Most people learn to do this because, at some point, saying the difficult thing plainly felt risky. That is understandable. The cost is that softened messages create confusion, and the people around you cannot respond to what they have not clearly heard.",
+        "why_this_matters": "Lower assertiveness shows up in two ways that compound. Internally, you may feel a slow accumulation of unsaid things, which over time becomes frustration or resignation. Externally, the people around you may experience you as agreeable in the room and then surprising in your actions, because the disagreement only surfaces later. The reputation cost is the gap between what you said in the meeting and what you actually did afterwards.",
+        "the_skill_to_build": "The work here is calm, specific assertion. Saying the difficult thing without becoming aggressive or apologetic. The three-part assertion method (in the methods at the back) is the structure: the situation as fact, your feelings owned not weaponised, the want or need stated specifically. The structure does the work; you do not have to be braver than you are.",
+        "what_to_try_next": [
+          "Prepare one clear sentence before a difficult conversation. Write it down. Say it out loud first if you need to. The preparation is what separates a delivered message from a swallowed one.",
+          "Make commitments specifically. 'Thursday with three options' rather than 'I'll look into it'. Specific commitments make you accountable and other people able to plan. Vague commitments leave both sides guessing.",
+          "When you disagree with someone in a meeting, surface the disagreement once, in the room, briefly. You do not have to win the argument. You do have to be on record. The cost of not being on record is that the decision proceeds without your view in it, and you carry the consequence anyway.",
+          "When something you are responsible for has gone wrong, tell the people affected before they find out themselves. The conversation is harder when they discover it first. The cost of getting ahead of it is one uncomfortable hour. The cost of not getting ahead of it is the loss of trust that takes much longer to rebuild."
+        ]
+      }
+    },
+    "A4": {
+      "name": "Growth and Adaptability",
+      "dimension": "Confidence",
+      "strength": {
+        "what_this_suggests": "Your Growth and Adaptability score sits in a strong range. You update your position when shown new evidence. You seek out feedback that is more critical than you are likely to enjoy. You treat unfamiliar situations as material to learn from rather than threats to manage. The visible version of this is someone whose thinking moves forward over time, and whose colleagues can see that movement.",
+        "why_it_matters": "Adaptability is the behaviour that compounds. Each piece of feedback acted on makes the next one easier to ask for. Each updated position makes the next update more natural. Over a career, the difference between someone who consistently updates and someone who does not is enormous, and most of it is invisible at the level of any single decision.",
+        "how_to_use_it_even_better": "The development edge for someone with strong adaptability is signal-to-noise. The same openness that lets you update on good evidence can leave you updating on weak evidence too. The skill to develop is filtering: which feedback is from someone whose judgement on this matters, and which is from someone whose comfort you are accidentally optimising for. Adapt to the first. Notice but do not over-weight the second."
+      },
+      "development": {
+        "what_may_be_happening": "Your Growth and Adaptability score sits in a lower range. The pattern this often shows is treating your current way of working as the way of working, and treating feedback that contradicts it as friction to manage rather than information to act on. You may notice that you describe weaknesses of yours as fixed features rather than things you are working on. You may notice that you try harder at the same approach when something is not working, rather than trying something different.",
+        "why_this_matters": "Lower adaptability has a slow cost. In the short term, nothing dramatic happens. In the longer term, your colleagues update their methods and you do not, and the gap widens without anyone naming it. The reputation cost is the version of you that becomes hard to work with as the work itself changes.",
+        "the_skill_to_build": "The work here is the practice of deliberate updating. Treating feedback as data you can act on. Treating setbacks as material to learn from within a reasonable time window. Treating your own approach as one option among several, rather than the only one you trust.",
+        "what_to_try_next": [
+          "In the next month, do something at work that is unfamiliar enough that you are not sure you will be good at it. The act of being a beginner again is the strongest single corrective to fixed-feature thinking.",
+          "Ask one trusted colleague to tell you something about your work that has been uncomfortable to mention. Make it easy for them: thank them, write down what they said, do not defend, do not explain. The next time will be easier.",
+          "When a piece of work is not landing, ask yourself whether you are working harder at it or working differently at it. Both are options. Only one of them is a strategy.",
+          "Update one position out loud in a meeting this week. 'I had thought X, but having heard Y, I think Z.' The act of updating publicly normalises updating for you and for everyone watching."
+        ]
+      }
+    },
+    "A5": {
+      "name": "Situational Self-Awareness",
+      "dimension": "Confidence",
+      "strength": {
+        "what_this_suggests": "Your Situational Self-Awareness score sits in a strong range. You can read your own state accurately, in the moment, without performing it and without suppressing it. You can read what a room is carrying, separately from what is on the agenda. The visible version of this is someone whose presence in a meeting is calibrated to what the meeting actually needs, not just to what was planned for it.",
+        "why_it_matters": "Situational self-awareness is the rarest of the strengths in the model, and the one that quietly underpins all the others. Most people are noticeably worse at this than they think. Eurich's research suggests fewer than fifteen per cent of working adults meet a defensible criterion for being self-aware, even though the great majority believe they are. If you score well here, the people around you experience you as someone who notices things they themselves had not articulated.",
+        "how_to_use_it_even_better": "The development edge is using this strength to help others develop theirs. People with strong situational awareness are often most useful when they name out loud what they are noticing in the room, not just to act on it themselves. 'It looks like we are pulling in two directions on this, can we name what they are?' is the kind of intervention that only someone reading the room can make. The opportunity is to make those observations available."
+      },
+      "development": {
+        "what_may_be_happening": "Your Situational Self-Awareness score sits in a lower range. There are two distinct skills in this subscale, and lower scores usually mean at least one of them is uneven. The first is reading your own state accurately. The second is reading the room. Many people are stronger at one than the other, and the gap is hard to see from the inside.",
+        "why_this_matters": "Most professional friction is generated by states going unread. The colleague who walked into a sensitive meeting carrying yesterday's anger. The leader who pressed for a decision while the room was still processing the news. The version of yourself that arrived in a meeting without first noticing what version had arrived. None of these are character failings. All of them are gap-awareness failings. The cost is in the relationships that strain without anyone being able to name why.",
+        "the_skill_to_build": "The work here is the five-minutes practice. Before any meeting that matters, name what you are carrying, imagine what the room might need, choose the state you are going to bring, and reset the body. The practice is short. The effect is the gap between an interaction that drifts and one that lands.",
+        "what_to_try_next": [
+          "Run the five-minutes practice before three significant meetings this week. Name your state. Picture the room. Choose what you are bringing. Reset the body before you walk in. The practice is in the methods at the back of this report.",
+          "After each of those meetings, write one sentence on what you actually noticed about your own state versus what other people seemed to be carrying. The note is the audit trail. Over a few weeks, patterns become visible.",
+          "Ask one person whose judgement you trust to tell you, after a meeting, how you came across. Not how the meeting went. How you came across. The gap between your intended version and the observed one is where most of the work is.",
+          "When you notice your energy or focus has dropped, name it to yourself before it leaks into your behaviour with others. The naming reduces the leak. Most state contamination travels because it is unnamed."
+        ]
+      }
+    },
+    "B1": {
+      "name": "Empathy and Listening",
+      "dimension": "Social Skills",
+      "strength": {
+        "what_this_suggests": "Your Empathy and Listening score sits in a strong range. You let people finish before you respond, even when you think you know what to say. You read emotional registers as accurately as verbal content. You adjust your response based on what the other person seems to need, rather than what is convenient to say. The visible version of this is someone other people open up to.",
+        "why_it_matters": "Listening is the most underestimated of the social skills. People who feel heard tend to think more clearly, decide more cleanly, and trust the relationship more deeply. Over time, the reputation you build as a listener earns you access to information and trust that no other behaviour can.",
+        "how_to_use_it_even_better": "The development edge here is using this strength in moments that matter, rather than only in moments that are easy. Listening well in a relaxed one-to-one is one thing. Listening well in a meeting where you are under pressure, in a feedback conversation that has tilted, or in a difficult moment with someone you find draining, is a different order of skill. The opportunity is to deploy it deliberately when the stakes rise rather than letting it default to the easy contexts."
+      },
+      "development": {
+        "what_may_be_happening": "Your Empathy and Listening score sits in a lower range. The pattern this often shows is listening for the gap to speak rather than listening for the full stop. You may have your response ready before the other person has finished. After a difficult conversation, you may find it hard to say what the other person was most worried about. This is not malice. It is the default state most adults arrive at if they have not deliberately built the listening muscle.",
+        "why_this_matters": "Lower listening produces a particular reputation. People stop volunteering information to you because they do not feel you are receiving it. Decisions get made on a thinner evidence base than they should. The people around you, especially the ones with quieter voices, gradually stop bringing their best thinking to you. The cost compounds over time and is hard to see from the inside.",
+        "the_skill_to_build": "The work here is listening for the full stop, not the gap. Wait until the speaker actually has nothing more to say. That moment is felt by the other person as respect, even when they could not name what produced the feeling. The other half of the skill is hyperlinks: noticing the specific phrases in what someone says that are doors to the next level of their thinking, and asking about those rather than about the topic you had in mind.",
+        "what_to_try_next": [
+          "In your next three significant conversations, listen until the other person has actually stopped, not until they have left a gap. The gap is a pause. The full stop is when they have nothing more to add. The difference is felt by the other person.",
+          "When someone has finished, ask one question about something they said, not something you were going to say anyway. The follow-up question that lands is the one that picks up the specific phrase, the named worry, the half-mentioned detail.",
+          "Before offering advice, check what the person wants from the conversation. 'Do you want me to think with you, or do you want me to tell you what I would do?' Most advice lands badly because it answers the wrong question.",
+          "After a conversation that mattered, write one sentence on what the other person was most worried about underneath what they actually said. The practice is what builds the muscle. Over a few weeks, you start hearing the underneath in real time."
+        ]
+      }
+    },
+    "B2": {
+      "name": "Warmth and Social Courtesy",
+      "dimension": "Social Skills",
+      "strength": {
+        "what_this_suggests": "Your Warmth and Social Courtesy score sits in a strong range. The pattern this points to is everyday social behaviour that makes people feel welcome and respected. You greet people you do not need anything from. You remember small details and use them lightly. You notice when someone is being left out and include them. You treat junior colleagues with the same courtesy as senior ones.",
+        "why_it_matters": "Warmth is the texture of how a person occupies shared social space, and it compounds. The cumulative effect of small acts of attention over years is what produces the reputation of being someone other people want to work with. The single warm gesture is not the point. The reliability of warmth across situations is.",
+        "how_to_use_it_even_better": "The development edge for someone with strong warmth is to keep it visible in the contexts where it matters most. Warmth that everyone receives equally is what builds long-term influence. The risk for high-warmth people is that the warmth is real but selective: a warmer version with familiar people, a more functional version with everyone else. The opportunity is to notice that gap and close it deliberately."
+      },
+      "development": {
+        "what_may_be_happening": "Your Warmth and Social Courtesy score sits in a lower range. This subscale is not about being charming or extraverted. It is about the small everyday gestures that signal to other people that they are seen. The acknowledgement of someone you pass in the building. The follow-up after a conversation that mattered. The remembered detail used lightly. These are the texture of professional life, and lower scores often indicate that the texture has thinned without anyone naming it.",
+        "why_this_matters": "Lower warmth has an asymmetric cost. People rarely complain about it directly. They simply give you a thinner version of themselves: less information, less trust, fewer favours when you need them, less benefit of the doubt when things go wrong. The cost is visible only in aggregate, and only over time.",
+        "the_skill_to_build": "The work here is the practice of unconditional warmth: the kind that does not depend on who is in front of you or what they can do for you. The distinction between conditional and unconditional warmth is in the methods at the back of this report. Conditional warmth is what most adults default to. Unconditional warmth is what people remember.",
+        "what_to_try_next": [
+          "Acknowledge three people this week whom you have no professional reason to engage with. Not a project conversation. A real, unhurried hello. The act normalises the behaviour for you and for them.",
+          "After your next meaningful conversation, send a short follow-up note within twenty-four hours. Not a task. Just an acknowledgement of something specific they said. The follow-up is what turns a one-off conversation into a relationship.",
+          "When you next see someone you have met once before, surface one thing they told you about themselves. 'How is the cycling going?' is the kind of small specific that signals you were actually listening last time. Over months, the cumulative effect is substantial.",
+          "Notice who is being left out of the conversation in your next group meeting, and bring them in deliberately. 'X, you have been quiet on this, what is your read?' The inclusion is small. The reputation effect is not."
+        ]
+      }
+    },
+    "B3": {
+      "name": "Conversational Skills",
+      "dimension": "Social Skills",
+      "strength": {
+        "what_this_suggests": "Your Conversational Skills score sits in a strong range. You ask questions that move the conversation forward, rather than questions that perform interest. You yield the floor without losing the thread. You end conversations cleanly. You adapt your register to the person you are with.",
+        "why_it_matters": "Conversational skill is the mechanical side of social effectiveness, and it is what makes the difference between someone who can be effective in a familiar setting and someone who can land in any setting. Strong conversational craft is what lets warmth and empathy actually arrive in the room, rather than being held back by clunky turn-taking or mis-pitched register.",
+        "how_to_use_it_even_better": "The development edge is the conversation that gets to the second level. Most conversations stay at the polite-exchange surface. The skill to develop is moving them, gently, to the layer underneath: the specific worry, the half-mentioned detail, the thing the speaker almost said and chose not to. This is the strokes-and-clicks practice in the methods at the back. People who can find the second layer reliably are rare."
+      },
+      "development": {
+        "what_may_be_happening": "Your Conversational Skills score sits in a lower range. The pattern this often shows is mechanical: a follow-up question that returns to your own topic rather than to what the other person actually said, a tendency to make the connection to your own experience before fully hearing theirs, a register that does not adjust to the person in front of you. None of these are character failings. They are skill gaps in a craft most adults have never been deliberately taught.",
+        "why_this_matters": "Lower conversational skill produces conversations that work mechanically but do not move. The other person feels heard procedurally but not substantively. Over time, the people around you give you the conversations they have to have, but not the conversations that actually matter to them.",
+        "the_skill_to_build": "The work here is strokes and clicks. A stroke is a deliberate act of attention to the other person: noticing what they said, asking about it specifically, returning to it later. A click is the moment they open up because the stroke landed. Four stages: stimulus, response, reward, repeat. The method is at the back of the report.",
+        "what_to_try_next": [
+          "In your next three conversations, make your follow-up question about something the other person just said, not the topic you had planned. The redirect from your topic to theirs is the click.",
+          "When someone shares something, hold back from making the connection to your own experience until you have asked them one more question about theirs. The connection can come. It just does not have to come first.",
+          "Adjust your register, deliberately, to the person you are with. Pace. Vocabulary. Formality. The same conversation in two different registers will land in two different places.",
+          "End conversations cleanly. 'I have what I needed, thank you for the time' is a complete sentence. The reluctance to end conversations is what produces the awkward dwindling that leaves both sides feeling worse than they should."
+        ]
+      }
+    },
+    "B4": {
+      "name": "Emotional Control and Humility",
+      "dimension": "Social Skills",
+      "strength": {
+        "what_this_suggests": "Your Emotional Control and Humility score sits in a strong range. You stay steady when contradicted in front of others. You give credit specifically and publicly. You can say 'I do not know' without self-deprecation. You do not need to be the smartest voice in the conversation.",
+        "why_it_matters": "Emotional control and humility together produce a particular kind of credibility. The people around you trust that they will not be embarrassed by you, that the praise will be shared accurately, and that what you do not know will be admitted rather than disguised. This is the foundation of long-term professional trust.",
+        "how_to_use_it_even_better": "The development edge is to make these behaviours visible in the moments they cost something. Sharing credit when the credit is small is one thing. Sharing credit when the credit is large, and you could plausibly have kept it, is what builds reputation. Admitting you do not know in a low-stakes meeting is one thing. Admitting it in a high-stakes one is what builds trust. The opportunity is to deploy these moves where the cost is real and the effect is largest."
+      },
+      "development": {
+        "what_may_be_happening": "Your Emotional Control and Humility score sits in a lower range. There are two skills running together here, and lower scores usually mean at least one is uneven. The first is choosing what emotional output goes into the room, particularly under pressure. The second is sharing credit and acknowledging limits without self-deprecation. The pattern that often shows is responding at a louder volume when contradicted, talking around what you do not know, or claiming more credit for a piece of work than the contribution warrants.",
+        "why_this_matters": "Lower emotional control and humility have a reputation cost that is hard to see from the inside. People stop disagreeing with you in front of others, which sounds like winning but is actually losing. They stop volunteering when they have done good work, because they have learnt the credit will not be shared. They stop admitting they do not know things either, because the example you are setting is the opposite. The cost compounds.",
+        "the_skill_to_build": "The work here is letting the room not need you to be the loudest. Composure in disagreement. Specific credit-sharing. Saying 'I do not know' without performance. The book calls this the room does not need you to be the loudest, and it is one of the rarest social skills in professional life. The method is at the back.",
+        "what_to_try_next": [
+          "When someone disagrees with you in front of others, respond at the same volume and pace you were using before. The instinct is to raise both. The effect of not raising them is striking.",
+          "When you are praised for something that involved someone else's contribution, name them specifically, in the room where the praise is happening. 'Thank you. Most of the credit goes to X, who did Y.' Specific. Public. Immediate.",
+          "When you do not know something in a meeting, say so without self-deprecation. 'I do not know. I will find out.' The structure is two short sentences. The reputation effect is disproportionate to the effort.",
+          "In a meeting where you are the most senior or most experienced, let others speak before you share your view. Your view will land harder when it lands later. The room will think more clearly because they were not anchored to yours first."
+        ]
+      }
+    },
+    "B5": {
+      "name": "Authentic vs Performed Social Behaviour",
+      "dimension": "Social Skills",
+      "strength": {
+        "what_this_suggests": "Your Authentic vs Performed score sits in a strong range. The pattern this points to is consistency of social skill across audiences. The same quality of attention shows up for the most junior person in the meeting and the most senior. The same warmth shows up regardless of what the other person can do for you. The volume changes. The vocabulary changes. The amount you reveal changes. What does not change is who you are underneath the adjustments.",
+        "why_it_matters": "Consistency across audiences is the rarest of the social skills in the model, and the most diagnostic of long-term influence. People who are visibly the same person regardless of who is in the room become the people other people trust most. The opposite pattern, where warmth varies by stakes, is felt by the people on the receiving end even when they cannot name it. They simply find themselves trusting that person less over time.",
+        "how_to_use_it_even_better": "The development edge is to be deliberate about where this strength is visible. The very people who score well here often have it taken for granted. Make it visible in moments where others would not bother: the conversation with the temp, the follow-up with someone you will not see again, the genuine engagement with the person whose name nobody else remembers. Those are the moments that build long-term reputation."
+      },
+      "development": {
+        "what_may_be_happening": "Your Authentic vs Performed score sits in a lower range. The pattern this often shows is a version of you that is calibrated to the audience: warmer with people who matter to you, more functional with people who do not. There may be a version of you that shows up when you are being evaluated, and a different version that shows up when you are not. None of this is necessarily conscious. Most uneven social behaviour is unaware of itself.",
+        "why_this_matters": "Lower scores on this subscale have a particular cost. The Authenticity Index is the part of the Pro report that picks up the signal the free tool cannot see: that someone can score well on the conventional social skill items while still being experienced as transactional by the people on the periphery of their orbit. The reputation cost is asymmetric. The people in your inner ring will speak well of you. The people on the periphery will speak less warmly, or not at all.",
+        "the_skill_to_build": "The work here is surface adapts, principle holds. The principle is the standard of warmth, attention, and courtesy you bring to everyone in your orbit. The surface is the volume, the vocabulary, the formality, the amount you reveal. The surface should change. The principle should not. The method is in the back of the report.",
+        "what_to_try_next": [
+          "In your next group meeting, pay deliberate attention to the most junior person in the room. The same quality of attention you would give the most senior. The deliberateness is what builds the habit.",
+          "After a week, audit your conversations: how many were with people who can directly help you, and how many were with people who cannot? The ratio is not the issue. The variance in your warmth across the two groups is.",
+          "When you are tired or distracted, notice whether your warmth and attention drop noticeably. Name the drop to yourself. Naming it is what reduces it. The variance in tired states is where most of the audience-conditional behaviour shows up.",
+          "Invest, this month, in one conversation with someone who has nothing to offer you directly. Not for them. For you. The practice is what builds the underlying principle. Over time, the principle holds when you are not thinking about it."
+        ]
+      }
+    }
+  },
+  "methods": {
+    "_meta": "Half-page summaries of the seventeen named methods from the OSCI Pro Practice Content Library. The report includes three to five of these per respondent, chosen by relevance to their priority subscales.",
+    "M1": {
+      "name": "The three-part assertion statement",
+      "summary": "The structured way to say a difficult thing without it becoming aggressive or apologetic. Three parts: the situation as fact ('I have been waiting three days, and you said I would have it today'), your feelings owned not weaponised ('I feel let down because I believed what you said'), and your want or need stated specifically ('I need your decision now'). An optional fourth part is the 'or else': not a threat, but information that helps the other person make an informed choice. Write it down before you say it. The structure does the work; you do not have to be braver than you are.",
+      "relevant_to": [
+        "A3"
+      ]
+    },
+    "M2": {
+      "name": "The discrepancy framework",
+      "summary": "Used when something has been agreed and something else has happened. Opens the conversation on the gap, not on the person. The structure is short: 'We agreed X. What I am seeing is Y. Help me understand what has happened.' The framework keeps you on the gap rather than on the character of the other person, which tends to produce a useful answer rather than a defensive one.",
+      "relevant_to": [
+        "A3",
+        "B4"
+      ]
+    },
+    "M3": {
+      "name": "Giving feedback that lands",
+      "summary": "Three components: specific behaviour observed ('In the meeting on Tuesday, when X raised the budget question, you cut across her'), specific impact ('She did not raise it again, and we left without an answer'), and a clear ask for next time ('Could you let her finish even when you disagree?'). Feedback that lands is feedback that names a behaviour, names an impact, and names an alternative. Anything less specific tends to be heard as a personal criticism and resisted accordingly.",
+      "relevant_to": [
+        "A3",
+        "B4"
+      ]
+    },
+    "M4": {
+      "name": "Asking for feedback worth getting",
+      "summary": "Vague asks ('any feedback for me?') get vague answers. The structured ask gets useful ones. Try: 'What one thing could I do differently to be more effective for you?' Or: 'If you had to describe how I work in three words, what would you say?' Or: 'When have I been at my best with you, and when have I been at my worst?' The specificity in the question is what produces specificity in the answer.",
+      "relevant_to": [
+        "A1",
+        "A4"
+      ]
+    },
+    "M5": {
+      "name": "The five-minutes practice",
+      "summary": "Before any meeting that matters, take five minutes for four short steps. Name what you are carrying: tiredness, residue from the last interaction, anxiety about a different problem. Imagine what the room might need from this meeting that they may not have said. Choose the state you are going to bring: which version of you is going to be useful here. Reset the body: water, breath, posture. The practice is short. The effect is the gap between an interaction that drifts and one that lands.",
+      "relevant_to": [
+        "A2",
+        "A5"
+      ]
+    },
+    "M6": {
+      "name": "Reading the room before you walk into it",
+      "summary": "Most meetings are walked into without preparation, and the cost is paid in the first five minutes when you are still working out what the room is carrying. The check-in: before the meeting, ask one person already in it what the state of things is. The pre-meeting note: write one sentence on what the meeting needs from you that may not be on the agenda. The expectation set: be clear with yourself, before you walk in, on what you want to leave the room with. None of these takes more than a few minutes. All of them compound.",
+      "relevant_to": [
+        "A5",
+        "B1"
+      ]
+    },
+    "M7": {
+      "name": "Surface adapts, principle holds",
+      "summary": "The volume changes. The vocabulary changes. The amount you reveal changes. The standard of warmth, attention, and courtesy you bring does not. This is the operational discipline of authentic social behaviour, and it answers the most common misunderstanding about consistency. Consistency does not mean being the same across audiences. It means the principle underneath your behaviour stays steady, even where the surface adapts appropriately to the situation.",
+      "relevant_to": [
+        "B5",
+        "B2"
+      ]
+    },
+    "M8": {
+      "name": "In good faith with yourself",
+      "summary": "The word confidence comes from the Latin 'con fides', meaning in good faith. The actor's version: you cannot perform confidence without being in good faith with yourself first. Three layers: self-esteem (in good faith with who you are), self-confidence (in good faith with what you can do), and external confidence (in good faith with the room). The work is not on the external layer. It is on the two underneath, which produce the external layer as a by-product.",
+      "relevant_to": [
+        "A1"
+      ]
+    },
+    "M9": {
+      "name": "The car-not-starting principle",
+      "summary": "When something goes wrong, treat it the way you would treat your car not starting. Diagnose the actual problem. Get help if you need it. Fix the specific thing. Learn from it. Move on. Personal verdicts about your competence are not part of the protocol. The same posture applies to a meeting that did not go well, a piece of work that came back with criticism, or a relationship that has gone cold. The diagnostic, fix, learn, move-on sequence is short, specific, and does not collapse into character judgements.",
+      "relevant_to": [
+        "A1",
+        "A2",
+        "A3",
+        "A4"
+      ]
+    },
+    "M10": {
+      "name": "Composure under load",
+      "summary": "Composure is not stoicism. It is staying functional while you feel what you feel. Three components: slow down by one beat before you respond, name your state to yourself before it leaks into your behaviour, and ask what the next useful action is rather than what the most justified reaction would be. Composure is not the absence of feeling. It is the discipline of choosing what to put into the room while the feeling is doing its work elsewhere.",
+      "relevant_to": [
+        "A2",
+        "B4"
+      ]
+    },
+    "M11": {
+      "name": "Three principles for handling pressure",
+      "summary": "Most professional pressure is not the kind of pressure your brain is treating it as. Three principles for putting it in perspective. One: nobody cares as much as you think. The room is not paying as much attention to your performance as you are. Two: nobody is going to die. The catastrophic framing is rarely accurate. Three: get over yourself. Self-consciousness is attention pointed in the wrong direction; redirecting it outward dissolves most of the pressure.",
+      "relevant_to": [
+        "A2"
+      ]
+    },
+    "M12": {
+      "name": "Updating well",
+      "summary": "Updating a position out loud is one of the strongest signals of professional credibility. The structure: 'I had thought X. Having heard Y, I now think Z.' Three sentences. The act of updating publicly normalises updating for you and for everyone watching. People who never update look certain in the moment but lose credibility over time. People who update well look open in the moment and gain credibility over time.",
+      "relevant_to": [
+        "A4"
+      ]
+    },
+    "M13": {
+      "name": "The fascinated listener",
+      "summary": "Two operational components. One: listen for the full stop, not the gap. Wait until the speaker actually has nothing more to say. The full stop is felt by the other person as respect. Two: notice the hyperlinks in what people say. The specific phrases, named worries, half-mentioned details. Each is a door to the next level of the speaker's thinking. The follow-up question is the click.",
+      "relevant_to": [
+        "B1",
+        "B3"
+      ]
+    },
+    "M14": {
+      "name": "Conditional and unconditional warmth",
+      "summary": "Conditional warmth is what most adults default to: warm with people who matter to them, functional with people who do not. Unconditional warmth is what people remember: the same standard of attention regardless of audience. The Matt and Stan illustration in the book makes the contrast vivid. The cost of conditional warmth is asymmetric and slow. The benefit of unconditional warmth compounds over years.",
+      "relevant_to": [
+        "B2",
+        "B5"
+      ]
+    },
+    "M15": {
+      "name": "Strokes and clicks",
+      "summary": "A stroke is a deliberate act of attention to the other person: noticing what they said, asking about it specifically, returning to it later. A click is the moment they open up because the stroke landed. Four stages: stimulus, response, reward, repeat. The method is taken from Eric Berne's Transactional Analysis and adapted for conversational practice. Three failure modes: manufactured strokes (felt as fake), clicking too fast (felt as pressure), preparing the next question while the answer is still being given (felt as inattention).",
+      "relevant_to": [
+        "B3",
+        "B1"
+      ]
+    },
+    "M16": {
+      "name": "The five layers of conversation",
+      "summary": "Adapted from Perls's five layers of neurosis. Most conversations stay at the surface: clich\u00e9, role, impasse. The deeper layers are honest version and breakthrough, and they are accessed by the right kind of question. The most useful single move is the shift from 'why' to 'how'. 'Why' asks the speaker to justify, which tends to pull them back to the role layer. 'How' asks them to describe or stay with what is happening, which lets them go further down.",
+      "relevant_to": [
+        "B1",
+        "B3"
+      ]
+    },
+    "M17": {
+      "name": "The room does not need you to be the loudest",
+      "summary": "Composure in disagreement, specific credit-sharing, and saying 'I do not know' without self-deprecation, all together. The discipline is letting the room not need you to be the loudest. The cost of being the loudest is that people stop bringing their best thinking to you. The benefit of letting the room have its own voice is that the room thinks more clearly and you get the credit for the conditions rather than the volume.",
+      "relevant_to": [
+        "B4"
+      ]
+    }
+  },
+  "authenticity_bands": {
+    "consistently_available": {
+      "label": "Consistently available",
+      "what_this_suggests": "Your Authenticity Index sits in the strongest band. The pattern this points to is behaviour that is reliably available regardless of who is in the room. The same quality of warmth, attention and courtesy shows up for the people who matter directly to your work and for everyone else. Surface adapts. Principle holds.",
+      "why_it_matters": "Consistency across audiences is the rarest of the social skills in the model and the strongest predictor of long-term reputation. The people on the periphery of your orbit speak about you in similar terms to the people in the centre, which is unusual and quietly compounding.",
+      "how_to_use_it_even_better": "The opportunity is to be visible about what this strength produces. The very people who score in this band tend to take the behaviour for granted. Naming what you are doing, when a more junior colleague or a peer might benefit from seeing the model, is what passes the practice on."
+    },
+    "broadly_consistent": {
+      "label": "Broadly consistent",
+      "what_this_suggests": "Your Authenticity Index sits in the second band. The pattern this often shows is behaviour that is reliable in most settings, with one or two specific contexts that narrow it. The audience drop-off is usually small and located: tired states, particular kinds of meetings, particular kinds of people.",
+      "why_this_matters": "The drop-off is small enough to be invisible to you and visible to others. The cost is asymmetric: the people who experience the narrower version often do not say so. They simply give you a slightly thinner version of themselves in return.",
+      "how_to_make_it_stronger": "The work is in locating the one or two contexts where the drop happens. Tired states are the most common. Once you have named the context, the work is the same as for B5: surface adapts, principle holds. The development pages in this report will point at this if B5 has shown up as one of your priority subscales."
+    },
+    "selectively_deployed": {
+      "label": "Selectively deployed",
+      "what_this_suggests": "Your Authenticity Index sits in the third band. The pattern this often shows is social skills that are real but unevenly distributed. The inner ring (the people who matter directly to your work) gets a stronger version. The peripheral contacts get less.",
+      "why_this_matters": "Selectively deployed warmth has a particular reputation cost. The people on the periphery rarely complain about it, but they do speak about it among themselves. Over time, the version of you that gets repeated by people who are not in your inner ring is a quieter, more functional one. The cost compounds and is hard to see from inside.",
+      "the_skill_to_build": "The work here is the practice of unconditional warmth: the standard of attention you bring is the same regardless of who is in front of you and what they can do for you. The volume changes. The vocabulary changes. The amount you reveal changes. The underlying regard for the person in front of you does not.",
+      "what_to_try_next": [
+        "Identify, this week, three conversations you would normally treat as transactional. Approach them with the same quality of attention you would give your most important meeting of the day.",
+        "Notice the moments where you are tempted to give a shorter version of yourself because the other person has nothing to offer. The noticing is what gives you the choice.",
+        "Use the Strokes and Clicks method (in the methods at the back) deliberately, in at least one peripheral conversation per day for a fortnight."
+      ]
+    },
+    "significantly_instrumental": {
+      "label": "Significantly instrumental",
+      "what_this_suggests": "Your Authenticity Index sits in the lowest band. The pattern this often shows is behaviour that is at its strongest when it serves a purpose, and noticeably reduced when it does not. The transactional logic is usually visible to others even when it is not visible to you.",
+      "why_this_matters": "This is the part of the Pro instrument that picks up the signal the free tool cannot see. You may have scored well on the conventional social skill subscales, which means in your interactions with people who matter to your work, the behaviour is doing its job. The asymmetry is between those interactions and the rest. The cost of that asymmetry is reputational. The people who experience the smaller version of you do not become enemies. They simply do not become advocates.",
+      "the_skill_to_build": "The work here is closing the gap. Not by reducing the warmth in your important interactions, but by extending it to the others. The principle the book uses is surface adapts, principle holds: the standard of regard you bring to people is the same; the volume, vocabulary, and amount you reveal varies with the situation, as it should.",
+      "what_to_try_next": [
+        "For the next two weeks, pick one peripheral conversation per day and treat it with the same standard of attention you would give a meeting that mattered to you. Not the same amount of time. The same quality of attention.",
+        "Use the Conditional and Unconditional Warmth method (at the back of this report) to map your current pattern. Where does the warmth drop, and with whom? Naming the pattern is the first move.",
+        "Ask one person you trust, who has seen you across different audiences, to tell you what they have noticed. Make it easy for them. Do not defend. Write down what they say.",
+        "Notice, over a week, the moments where you find yourself giving a smaller version of yourself because the other person has nothing to offer. The noticing is what gives you the choice."
+      ]
+    }
+  },
+  "headline_prompt_template": "You are writing the single-sentence headline insight for a personalised OSCI Pro charisma report. The headline appears on the cover and is echoed in the opening summary. It must read as if written by a thoughtful, experienced coach who has just looked at this person's scores.\n\n## Style requirements\n\nWrite in UK English. Warm, plain, human. No corporate jargon, no therapy-speak, no American motivational language, no AI tells. No em dashes. No 'not just X but Y' antithesis. Short sentence. Specific. Forward-facing.\n\nThe headline should:\n- name what is already working as the starting point\n- gesture at the development area without diagnosing it\n- end on the move that is available\n\nGood examples:\n\"You read the room well. The work now is making that strength as available with people on the periphery as it is with the people who matter most.\"\n\"The presence is already there. Closing the gap between your best meetings and your average ones is where the next step lives.\"\n\"You listen better than most people in your line of work. The opportunity is to use that strength deliberately in the moments where the stakes are highest.\"\n\nBad examples:\n\"You leverage strong stakeholder management capabilities while exhibiting opportunities for growth in behavioural consistency.\" (corporate jargon, AI voice)\n\"You're not just an empathic listener, you're a charismatic leader.\" (antithesis, over-praise)\n\"Your weakness is consistency.\" (deficit-framed)\n\n## The respondent's scores\n\nQuadrant: {quadrant_label} ({quadrant_tagline})\nConfidence: {confidence}/100, band: {confidence_band}\nSocial Skills: {social_skills}/100, band: {social_skills_band}\nAuthenticity Index: {authenticity_index}/100, band: {authenticity_band}\n\nTwo lowest subscales (development priorities):\n- {priority_1_code} {priority_1_name}: {priority_1_score}/100 ({priority_1_band})\n- {priority_2_code} {priority_2_name}: {priority_2_score}/100 ({priority_2_band})\n\nTwo highest subscales (strengths):\n- {strength_1_code} {strength_1_name}: {strength_1_score}/100\n- {strength_2_code} {strength_2_name}: {strength_2_score}/100\n\n## Your task\n\nWrite the headline. One or two short sentences. Return only the headline text. No quotation marks, no preamble, no explanation.",
+  "goal_setting": {
+    "_meta": "Goal-setting exercise. Adapted from solution-focused scaling. One exercise per priority subscale, five steps each. Designed for printable / fillable use after the four-week plan.",
+    "intro_page": {
+      "eyebrow": "Setting your goals",
+      "title": "Where you are, and the next step up",
+      "intro_paragraphs": [
+        "The two exercises that follow take each of your priority subscales in turn and walk you through five short steps. The exercises come from a method called solution-focused scaling, which has a long track record in coaching and therapy. The structure is built to do three things at once: anchor where you are, gather the evidence of what is already working, and produce one specific next step.",
+        "Each exercise takes about ten minutes. You can do them on screen with a PDF reader, print them, or copy the prompts into a notebook. The point is the thinking, not the format.",
+        "Two principles before you start. First, the number you give yourself does not matter very much. A 4 from one person and a 7 from another tell you nothing on their own. What matters is the direction. Moving from a 4 to a 5 is the point of the exercise, and the four steps after the rating are what makes the move possible.",
+        "Second, treat 10 as the desired situation, not the perfect one. Perfection is a trap. Desired is workable. Aim for the version of this subscale that would meaningfully improve your working life, not for an unreachable ideal."
+      ]
+    },
+    "step_titles": {
+      "step_1": "Where are you now?",
+      "step_2": "What is already working?",
+      "step_3": "What helped you get here?",
+      "step_4": "What changes if you move up?",
+      "step_5": "What is the next small step?"
+    },
+    "step_prompts": {
+      "step_1_lead": "Where would you rate yourself on this subscale right now, on a scale of 0 to 10?",
+      "step_1_anchor_low": "0 \u2014 Not happening at all",
+      "step_1_anchor_high": "10 \u2014 Reliably and consistently happening",
+      "step_2_prompts": [
+        "What are you already doing in this area that you would say is working?",
+        "What can you do more of, because it works?"
+      ],
+      "step_3_prompts": [
+        "What got you to this point on the scale, rather than a lower one?",
+        "What is different now compared to when this skill was less developed for you?"
+      ],
+      "step_4_prompts": [
+        "If you moved up one point on this scale, what would be different in your work?",
+        "What would the people around you notice, that they do not notice now?"
+      ],
+      "step_5_prompts": [
+        "What is the smallest specific action you could take this week to move up one point?",
+        "How will you know that you have moved up the scale?"
+      ]
+    },
+    "closing_paragraph": "Come back to these two pages in four weeks. Re-rate yourself on each scale. The shift in the number is the second piece of evidence (the first is the change you and the people around you have noticed in real conversations). If the number has moved, the work is doing its job. If it has not, the next move is to look at the actions you committed to in step 5 and ask what stopped them from happening."
+  }
+}
