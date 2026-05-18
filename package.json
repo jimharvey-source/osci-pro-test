@@ -1,0 +1,9 @@
+{
+  "name": "osci-pro-test",
+  "version": "0.1.0",
+  "private": true,
+  "description": "OSCI Pro — technical test build. Clones the free OSCI architecture for the longer Pro questionnaire.",
+  "dependencies": {
+    "pdfkit": "^0.15.2"
+  }
+}

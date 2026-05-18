@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>OSCI Pro — Test Build</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Calibri:wght@400;600;700&family=Georgia&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple: #534AB7;
+    --teal:   #0F6E56;
+    --navy:   #1F3A5F;
+    --gold:   #B08D57;
+    --cream:  #F8F5EF;
+    --ink:    #1A1A1A;
+    --muted:  #555555;
+    --line:   #D9D9D9;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: Georgia, serif; color: var(--ink);
+    background: var(--cream); line-height: 1.55; font-size: 17px;
+  }
+  .container { max-width: 760px; margin: 0 auto; padding: 32px 24px 96px; }
+  .test-banner {
+    background: #FFE9A8; color: #6B4F00; padding: 8px 16px; text-align: center;
+    font-family: system-ui, -apple-system, sans-serif; font-size: 13px;
+    border-bottom: 1px solid #E0C870;
+  }
+  h1, h2, h3 { font-family: 'Calibri', system-ui, sans-serif; color: var(--navy); margin-top: 0; }
+  h1 { font-size: 36px; font-weight: 700; line-height: 1.15; margin-bottom: 8px; }
+  h2 { font-size: 24px; font-weight: 700; margin: 32px 0 12px; }
+  h3 { font-size: 18px; font-weight: 600; margin: 24px 0 8px; }
+  .eyebrow {
+    font-family: 'Calibri', system-ui, sans-serif; font-size: 14px; font-weight: 700;
+    letter-spacing: 0.15em; color: var(--gold); text-transform: uppercase; margin-bottom: 8px;
+  }
+  .gold-rule { height: 2px; background: var(--gold); margin: 16px 0 24px; }
+  .subtitle { font-family: Georgia, serif; font-size: 20px; font-style: italic; color: var(--muted); margin-bottom: 32px; }
+  .card {
+    background: white; border: 1px solid var(--line); border-radius: 4px;
+    padding: 24px; margin: 16px 0;
+  }
+  button.primary {
+    background: var(--teal); color: white; border: 0; padding: 14px 28px;
+    font-size: 16px; font-weight: 700; font-family: 'Calibri', system-ui, sans-serif;
+    border-radius: 3px; cursor: pointer; letter-spacing: 0.02em;
+  }
+  button.primary:hover { background: #0a5944; }
+  button.primary:disabled { background: #999; cursor: not-allowed; }
+  button.secondary {
+    background: white; color: var(--navy); border: 1px solid var(--navy);
+    padding: 12px 24px; font-size: 15px; font-weight: 600; font-family: 'Calibri', system-ui, sans-serif;
+    border-radius: 3px; cursor: pointer;
+  }
+  input[type=email] {
+    width: 100%; padding: 12px; font-size: 16px; font-family: Georgia, serif;
+    border: 1px solid var(--line); border-radius: 3px;
+  }
+  .progress-bar {
+    position: sticky; top: 0; background: var(--cream); padding: 12px 0;
+    border-bottom: 1px solid var(--line); z-index: 10;
+  }
+  .progress-track { height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; }
+  .progress-fill  { height: 100%; background: var(--purple); transition: width 0.3s ease; }
+  .progress-label {
+    font-family: 'Calibri', system-ui, sans-serif; font-size: 13px; color: var(--muted);
+    margin-top: 6px;
+  }
+  .question {
+    padding: 24px 0; border-bottom: 1px solid var(--line);
+  }
+  .question:last-child { border-bottom: 0; }
+  .question-number {
+    font-family: 'Calibri', system-ui, sans-serif; font-size: 13px;
+    font-weight: 700; color: var(--gold); letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .question-text {
+    font-size: 18px; line-height: 1.45; margin-bottom: 16px; color: var(--ink);
+  }
+  .likert {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 12px;
+  }
+  .likert label {
+    display: flex; flex-direction: column; align-items: center; cursor: pointer;
+    padding: 12px 8px; border: 1px solid var(--line); border-radius: 3px;
+    background: white; text-align: center; transition: all 0.15s ease;
+    font-family: 'Calibri', system-ui, sans-serif; font-size: 12px;
+    color: var(--muted); min-height: 64px; justify-content: center;
+  }
+  .likert label:hover { border-color: var(--purple); }
+  .likert input[type=radio] {
+    position: absolute; opacity: 0; pointer-events: none;
+  }
+  .likert input[type=radio]:checked + .likert-text {
+    color: white;
+  }
+  .likert label:has(input:checked) {
+    background: var(--purple); border-color: var(--purple); color: white;
+  }
+  .likert-value {
+    font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 4px;
+  }
+  .likert label:has(input:checked) .likert-value { color: white; }
+  .nav-row {
+    display: flex; gap: 12px; justify-content: space-between; margin-top: 32px;
+  }
+  .score-row {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin: 24px 0;
+  }
+  .score-tile {
+    background: white; border: 1px solid var(--line); padding: 16px; border-radius: 4px;
+    text-align: center;
+  }
+  .score-tile .score-label {
+    font-family: 'Calibri', system-ui, sans-serif; font-size: 12px;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
+  }
+  .score-tile .score-value {
+    font-family: 'Calibri', system-ui, sans-serif; font-size: 40px; font-weight: 700;
+    color: var(--navy); margin: 4px 0;
+  }
+  .score-tile .score-band {
+    font-size: 13px; color: var(--muted); font-style: italic;
+  }
+  .subscale-table {
+    width: 100%; border-collapse: collapse; margin-top: 16px;
+  }
+  .subscale-table th, .subscale-table td {
+    padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--line);
+    font-size: 14px;
+  }
+  .subscale-table th {
+    font-family: 'Calibri', system-ui, sans-serif; font-weight: 700;
+    color: var(--navy); background: #F2EEE8;
+  }
+  .priority-flag {
+    display: inline-block; background: var(--gold); color: white;
+    font-family: 'Calibri', system-ui, sans-serif; font-size: 10px;
+    padding: 2px 6px; border-radius: 2px; margin-left: 8px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .hidden { display: none; }
+  .debug-output {
+    font-family: 'Courier New', monospace; font-size: 12px; background: #f0f0f0;
+    padding: 12px; border-radius: 3px; overflow-x: auto; white-space: pre-wrap;
+  }
+  @media (max-width: 600px) {
+    .likert label { font-size: 11px; padding: 8px 4px; min-height: 56px; }
+    .likert-value { font-size: 16px; }
+    h1 { font-size: 28px; }
+    .score-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="test-banner">
+  TEST BUILD · Pro instrument · No payments, no real PDFs, no analytics. Hosted on /pro-test for technical validation only.
+</div>
+
+<div class="container">
+
+  <!-- ========== SCREEN 1: INTRO ========== -->
+  <div id="screen-intro">
+    <div class="eyebrow">OSCI Pro</div>
+    <h1>The Charisma Quadrant Assessment</h1>
+    <div class="gold-rule"></div>
+    <p class="subtitle">Ten subscales. Fifty questions. About eight minutes.</p>
+    <p>This is the Pro version of the Open-Source Charisma Indicator. It measures the same two dimensions as the free tool, Confidence and Social Skills, in finer detail. Ten subscales rather than four. An Authenticity Index that picks up the gap between how you behave with the people who matter to you and everyone else. A banded interpretation that tells you what to work on.</p>
+    <p>You will be asked to rate fifty statements on a five-point scale, from Strongly Disagree to Strongly Agree. There are no right answers. The instrument is reading patterns, not testing knowledge.</p>
+    <p>Answer honestly. The report you receive is only as accurate as the answers you give it.</p>
+    <div style="margin-top: 32px;">
+      <button class="primary" onclick="goToScreen('email')">Begin assessment</button>
+    </div>
+  </div>
+
+  <!-- ========== SCREEN 2: EMAIL GATE ========== -->
+  <div id="screen-email" class="hidden">
+    <div class="eyebrow">Before you start</div>
+    <h1>Your email</h1>
+    <div class="gold-rule"></div>
+    <p>Your results are sent to your inbox and saved to your account. We do not sell or share your address.</p>
+    <div class="card">
+      <input type="email" id="email-input" placeholder="you@yourcompany.com" autocomplete="email">
+      <p id="email-error" style="color: #c00; margin: 8px 0 0; font-size: 14px; display: none;">Please enter a valid email address.</p>
+    </div>
+    <div class="nav-row">
+      <button class="secondary" onclick="goToScreen('intro')">Back</button>
+      <button class="primary" onclick="submitEmail()">Continue</button>
+    </div>
+  </div>
+
+  <!-- ========== SCREEN 3: QUESTIONNAIRE ========== -->
+  <div id="screen-questions" class="hidden">
+    <div class="progress-bar">
+      <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+      <div class="progress-label" id="progress-label">Question 1 of 50</div>
+    </div>
+    <div id="questions-list"></div>
+    <div class="nav-row">
+      <button class="secondary" onclick="goToScreen('email')">Back</button>
+      <button class="primary" id="submit-btn" onclick="submitAnswers()" disabled>See results</button>
+    </div>
+  </div>
+
+  <!-- ========== SCREEN 4: RESULTS ========== -->
+  <div id="screen-results" class="hidden">
+    <div class="eyebrow">Your result</div>
+    <h1 id="quadrant-label">—</h1>
+    <p class="subtitle" id="quadrant-tagline">—</p>
+    <div class="gold-rule"></div>
+
+    <div class="score-row">
+      <div class="score-tile">
+        <div class="score-label">Confidence</div>
+        <div class="score-value" id="score-confidence">—</div>
+        <div class="score-band" id="band-confidence">—</div>
+      </div>
+      <div class="score-tile">
+        <div class="score-label">Social Skills</div>
+        <div class="score-value" id="score-social">—</div>
+        <div class="score-band" id="band-social">—</div>
+      </div>
+      <div class="score-tile">
+        <div class="score-label">Authenticity Index</div>
+        <div class="score-value" id="score-auth">—</div>
+        <div class="score-band" id="band-auth">—</div>
+      </div>
+    </div>
+
+    <h2>Subscale breakdown</h2>
+    <p style="color: var(--muted); font-size: 15px;">Your two lowest subscales are flagged as priority areas. The full Pro report (not yet active in this test build) will give you band-calibrated practice content for each.</p>
+    <table class="subscale-table" id="subscale-table"><thead>
+      <tr><th>Subscale</th><th>Score</th><th>Band</th></tr>
+    </thead><tbody></tbody></table>
+
+    <h2>Generate report</h2>
+    <p style="color: var(--muted); font-size: 15px;">In production, this triggers Stripe Checkout. In this test build, it generates a placeholder PDF directly so we can verify the full server-side flow end-to-end.</p>
+    <div class="nav-row">
+      <button class="primary" onclick="generateReport()">Generate test PDF</button>
+      <button class="secondary" onclick="showDebug()">Show scoring debug</button>
+    </div>
+    <div id="debug-area" class="hidden" style="margin-top: 24px;">
+      <h3>Scoring payload</h3>
+      <pre class="debug-output" id="debug-output"></pre>
+    </div>
+  </div>
+
+</div>
+
+<script src="assets/scoring.js"></script>
+<script>
+let QUESTIONNAIRE = null;
+let answers = {};
+let userEmail = null;
+let lastScoring = null;
+
+// ─── Initial load ────────────────────────────────────────────────────────
+async function loadQuestionnaire() {
+  try {
+    const res = await fetch('assets/questionnaire.json');
+    QUESTIONNAIRE = await res.json();
+  } catch (e) {
+    alert("Failed to load questionnaire. Reload the page.");
+    console.error(e);
+  }
+}
+loadQuestionnaire();
+
+// ─── Screen switching ────────────────────────────────────────────────────
+function goToScreen(name) {
+  ['intro','email','questions','results'].forEach(s => {
+    document.getElementById('screen-' + s).classList.add('hidden');
+  });
+  document.getElementById('screen-' + name).classList.remove('hidden');
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+// ─── Email gate ──────────────────────────────────────────────────────────
+function submitEmail() {
+  const input = document.getElementById('email-input');
+  const error = document.getElementById('email-error');
+  const value = input.value.trim();
+  const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  if (!valid) { error.style.display = 'block'; return; }
+  error.style.display = 'none';
+  userEmail = value;
+  // In production we'd fire Mailchimp JSONP here. Test build skips it.
+  renderQuestions();
+  goToScreen('questions');
+}
+
+// ─── Render questionnaire ────────────────────────────────────────────────
+function renderQuestions() {
+  const list = document.getElementById('questions-list');
+  list.innerHTML = '';
+  QUESTIONNAIRE.items.forEach((item, idx) => {
+    const q = document.createElement('div');
+    q.className = 'question';
+    q.id = 'q-' + item.n;
+    q.innerHTML = `
+      <div class="question-number">Question ${item.n} of ${QUESTIONNAIRE.items.length}</div>
+      <div class="question-text">${item.text}</div>
+      <div class="likert">
+        ${QUESTIONNAIRE.likert.map(l => `
+          <label>
+            <input type="radio" name="q${item.n}" value="${l.value}" onchange="recordAnswer(${item.n}, ${l.value})">
+            <span class="likert-text">
+              <span class="likert-value">${l.value}</span>
+              ${l.label}
+            </span>
+          </label>
+        `).join('')}
+      </div>
+    `;
+    list.appendChild(q);
+  });
+  updateProgress();
+}
+
+function recordAnswer(n, v) {
+  answers[n] = v;
+  updateProgress();
+  // Auto-scroll to the next unanswered question on desktop.
+  // On mobile we just let the user scroll naturally.
+  if (window.innerWidth > 600) {
+    const nextItem = QUESTIONNAIRE.items.find(i => answers[i.n] === undefined);
+    if (nextItem) {
+      const el = document.getElementById('q-' + nextItem.n);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+}
+
+function updateProgress() {
+  const total = QUESTIONNAIRE.items.length;
+  const done = Object.keys(answers).length;
+  const pct = Math.round((done / total) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `${done} of ${total} answered`;
+  document.getElementById('submit-btn').disabled = (done < total);
+}
+
+// ─── Submit and score ────────────────────────────────────────────────────
+function submitAnswers() {
+  try {
+    lastScoring = window.scoreOSCIPro(answers, QUESTIONNAIRE);
+    renderResults(lastScoring);
+    goToScreen('results');
+  } catch (e) {
+    alert("Scoring failed: " + e.message);
+    console.error(e);
+  }
+}
+
+function renderResults(s) {
+  const q = QUESTIONNAIRE.quadrants[s.quadrant];
+  document.getElementById('quadrant-label').textContent = q.label;
+  document.getElementById('quadrant-tagline').textContent = q.tagline;
+
+  document.getElementById('score-confidence').textContent = s.confidence;
+  document.getElementById('band-confidence').textContent = bandPretty(s.confidenceBand);
+  document.getElementById('score-social').textContent = s.socialSkills;
+  document.getElementById('band-social').textContent = bandPretty(s.socialSkillsBand);
+  document.getElementById('score-auth').textContent = s.authenticityIndex;
+  document.getElementById('band-auth').textContent = s.authenticityBand || '—';
+
+  const tbody = document.querySelector('#subscale-table tbody');
+  tbody.innerHTML = '';
+  const priority = s.priorityAreas;
+  Object.keys(s.subscaleScores).forEach(code => {
+    const sub = QUESTIONNAIRE.subscales[code];
+    const isPriority = priority.includes(code);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><strong>${code}</strong> ${sub.name}${isPriority ? ' <span class="priority-flag">Priority</span>' : ''}</td>
+      <td>${s.subscaleScores[code]}</td>
+      <td>${bandPretty(s.subscaleBands[code])}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function bandPretty(b) {
+  return b ? b.charAt(0).toUpperCase() + b.slice(1) + ' band' : '';
+}
+
+function showDebug() {
+  const area = document.getElementById('debug-area');
+  const out = document.getElementById('debug-output');
+  out.textContent = JSON.stringify({ email: userEmail, answers, scoring: lastScoring }, null, 2);
+  area.classList.remove('hidden');
+}
+
+// ─── Generate test PDF ───────────────────────────────────────────────────
+async function generateReport() {
+  if (!lastScoring) { alert("No scoring data yet."); return; }
+  try {
+    const res = await fetch('/api/generate-test-report', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: userEmail, scoring: lastScoring })
+    });
+    if (!res.ok) throw new Error('Server returned ' + res.status);
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'OSCI_Pro_Test_Report.pdf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  } catch (e) {
+    alert("PDF generation failed: " + e.message);
+    console.error(e);
+  }
+}
+</script>
+
+</body>
+</html>
