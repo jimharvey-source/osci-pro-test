@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Take the Assessment — Open-Source Charisma Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Calibri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.css">
+<style>
+  /* Assessment-specific styles, layered on top of site.css */
+  .progress-bar {
+    position: sticky; top: 0; background: var(--cream); padding: 12px 0 16px;
+    border-bottom: 1px solid var(--line); z-index: 10;
+  }
+  .progress-track { height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; }
+  .progress-fill  { height: 100%; background: var(--purple); transition: width 0.3s ease; }
+  .progress-label {
+    font-family: 'Calibri', system-ui, sans-serif; font-size: 13px;
+    color: var(--muted); margin-top: 6px;
+  }
+  .dimension-banner {
+    background: var(--navy); color: white;
+    padding: 24px 32px; margin: 48px 0 16px;
+    border-radius: 4px;
+    border-left: 4px solid var(--gold);
+  }
+  .dimension-banner .dimension-eyebrow {
+    font-family: 'Calibri', system-ui, sans-serif;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 8px;
+  }
+  .dimension-banner h2 {
+    color: white;
+    font-size: 28px;
+    margin: 0 0 8px;
+  }
+  .dimension-banner p {
+    color: rgba(255,255,255,0.85);
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: 16px;
+    margin: 0;
+  }
+  .subscale-heading {
+    margin: 48px 0 16px 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--gold);
+  }
+  .subscale-heading .subscale-eyebrow {
+    font-family: 'Calibri', system-ui, sans-serif;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 4px;
+  }
+  .subscale-heading h3 {
+    color: var(--navy);
+    font-family: 'Calibri', system-ui, sans-serif;
+    font-size: 22px;
+    margin: 0;
+  }
+  .question {
+    padding: 20px 0; border-bottom: 1px solid var(--line);
+  }
+  .question:last-child { border-bottom: 0; }
+  .question-number {
+    font-family: 'Calibri', system-ui, sans-serif; font-size: 12px;
+    font-weight: 700; color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .question-text {
+    font-size: 17px; line-height: 1.5; margin-bottom: 14px; color: var(--ink);
+  }
+  .likert {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;
+  }
+  .likert label {
+    display: flex; flex-direction: column; align-items: center; cursor: pointer;
+    padding: 12px 8px; border: 1px solid var(--line); border-radius: 3px;
+    background: white; text-align: center; transition: all 0.15s ease;
+    font-family: 'Calibri', system-ui, sans-serif; font-size: 12px;
+    color: var(--muted); min-height: 64px; justify-content: center;
+  }
+  .likert label:hover { border-color: var(--purple); }
+  .likert input[type=radio] { position: absolute; opacity: 0; pointer-events: none; }
+  .likert label:has(input:checked) {
+    background: var(--purple); border-color: var(--purple); color: white;
+  }
+  .likert-value {
+    font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 4px;
+  }
+  .likert label:has(input:checked) .likert-value { color: white; }
+
+  .nav-row {
+    display: flex; gap: 12px; justify-content: space-between; margin-top: 32px;
+  }
+  input[type=email] {
+    width: 100%; padding: 12px; font-size: 16px; font-family: Georgia, serif;
+    border: 1px solid var(--line); border-radius: 3px;
+  }
+  .score-row {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin: 24px 0;
+  }
+  .score-tile {
+    background: white; border: 1px solid var(--line); padding: 16px; border-radius: 4px;
+    text-align: center;
+  }
+  .score-tile .score-label {
+    font-family: 'Calibri', system-ui, sans-serif; font-size: 12px;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
+  }
+  .score-tile .score-value {
+    font-family: 'Calibri', system-ui, sans-serif; font-size: 40px; font-weight: 700;
+    color: var(--navy); margin: 4px 0;
+  }
+  .score-tile .score-band {
+    font-size: 13px; color: var(--muted); font-style: italic;
+  }
+  .subscale-table {
+    width: 100%; border-collapse: collapse; margin-top: 16px;
+  }
+  .subscale-table th, .subscale-table td {
+    padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--line);
+    font-size: 14px;
+  }
+  .subscale-table th {
+    font-family: 'Calibri', system-ui, sans-serif; font-weight: 700;
+    color: var(--navy); background: var(--soft-cream);
+  }
+  .priority-flag {
+    display: inline-block; background: var(--gold); color: white;
+    font-family: 'Calibri', system-ui, sans-serif; font-size: 10px;
+    padding: 2px 6px; border-radius: 2px; margin-left: 8px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .hidden { display: none; }
+  .debug-output {
+    font-family: 'Courier New', monospace; font-size: 12px; background: #f0f0f0;
+    padding: 12px; border-radius: 3px; overflow-x: auto; white-space: pre-wrap;
+  }
+  @media (max-width: 600px) {
+    .likert label { font-size: 11px; padding: 8px 4px; min-height: 56px; }
+    .likert-value { font-size: 16px; }
+    .score-row { grid-template-columns: 1fr; }
+    .dimension-banner { padding: 20px 20px; }
+    .dimension-banner h2 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<main class="container">
+
+  <!-- ========== SCREEN: EMAIL ========== -->
+  <div id="screen-email">
+    <div class="eyebrow">Step 1 of 2</div>
+    <h1>Your email</h1>
+    <div class="gold-rule"></div>
+    <p>Your results will be sent to your inbox. We do not sell or share your address. The test build does not actually email you yet, but we use the field to test the flow.</p>
+    <div class="card">
+      <input type="email" id="email-input" placeholder="you@yourcompany.com" autocomplete="email">
+      <p id="email-error" style="color: #c00; margin: 8px 0 0; font-size: 14px; display: none;">Please enter a valid email address.</p>
+    </div>
+    <div class="nav-row">
+      <a class="btn secondary" href="/">Back</a>
+      <button class="primary" onclick="submitEmail()">Begin the assessment</button>
+    </div>
+  </div>
+
+  <!-- ========== SCREEN: QUESTIONNAIRE ========== -->
+  <div id="screen-questions" class="hidden">
+    <div class="progress-bar">
+      <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+      <div class="progress-label" id="progress-label">0 of 50 answered</div>
+    </div>
+    <div id="questions-list"></div>
+    <div class="nav-row">
+      <a class="btn secondary" href="/">Back to home</a>
+      <button class="primary" id="submit-btn" onclick="submitAnswers()" disabled>See my results</button>
+    </div>
+  </div>
+
+  <!-- ========== SCREEN: RESULTS ========== -->
+  <div id="screen-results" class="hidden">
+    <div class="eyebrow">Your result</div>
+    <h1 id="quadrant-label">&nbsp;</h1>
+    <p class="subtitle" id="quadrant-tagline">&nbsp;</p>
+    <div class="gold-rule"></div>
+
+    <div class="score-row">
+      <div class="score-tile">
+        <div class="score-label">Confidence</div>
+        <div class="score-value" id="score-confidence">&nbsp;</div>
+        <div class="score-band" id="band-confidence">&nbsp;</div>
+      </div>
+      <div class="score-tile">
+        <div class="score-label">Social Skills</div>
+        <div class="score-value" id="score-social">&nbsp;</div>
+        <div class="score-band" id="band-social">&nbsp;</div>
+      </div>
+      <div class="score-tile">
+        <div class="score-label">Authenticity Index</div>
+        <div class="score-value" id="score-auth">&nbsp;</div>
+        <div class="score-band" id="band-auth">&nbsp;</div>
+      </div>
+    </div>
+
+    <h2>Subscale breakdown</h2>
+    <p style="color: var(--muted); font-size: 15px;">Your two lowest subscales are flagged as priority areas. The full Pro report (not yet active in this test build) will give you band-calibrated practice content for each.</p>
+    <table class="subscale-table" id="subscale-table"><thead>
+      <tr><th>Subscale</th><th>Score</th><th>Band</th></tr>
+    </thead><tbody></tbody></table>
+
+    <h2>Generate report</h2>
+    <p style="color: var(--muted); font-size: 15px;">In production, this triggers Stripe Checkout. In this test build, it generates a placeholder PDF directly so we can verify the full server-side flow end-to-end.</p>
+    <div class="nav-row">
+      <button class="primary" onclick="generateReport()">Generate test PDF</button>
+      <button class="secondary" onclick="showDebug()">Show scoring debug</button>
+    </div>
+    <div id="debug-area" class="hidden" style="margin-top: 24px;">
+      <h3>Scoring payload</h3>
+      <pre class="debug-output" id="debug-output"></pre>
+    </div>
+  </div>
+
+</main>
+
+<script src="/assets/chrome.js"></script>
+<script src="/assets/scoring.js"></script>
+<script>
+let QUESTIONNAIRE = null;
+let answers = {};
+let userEmail = null;
+let lastScoring = null;
+
+// Dimension intro copy
+const DIMENSION_INTROS = {
+  Confidence: {
+    eyebrow: "Part A of 2",
+    title: "Confidence",
+    subtitle: "How you carry yourself. Twenty-five questions across five subscales: self-esteem, resilience, assertiveness, growth, and situational self-awareness."
+  },
+  "Social Skills": {
+    eyebrow: "Part B of 2",
+    title: "Social Skills",
+    subtitle: "How you behave with other people. Twenty-five questions across five subscales: empathy, warmth, conversation, emotional control, and consistency across audiences."
+  }
+};
+
+async function loadQuestionnaire() {
+  try {
+    const res = await fetch('/assets/questionnaire.json');
+    QUESTIONNAIRE = await res.json();
+  } catch (e) {
+    alert("Failed to load questionnaire. Reload the page.");
+    console.error(e);
+  }
+}
+loadQuestionnaire();
+
+function goToScreen(name) {
+  ['email','questions','results'].forEach(s => {
+    document.getElementById('screen-' + s).classList.add('hidden');
+  });
+  document.getElementById('screen-' + name).classList.remove('hidden');
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+function submitEmail() {
+  const input = document.getElementById('email-input');
+  const error = document.getElementById('email-error');
+  const value = input.value.trim();
+  const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  if (!valid) { error.style.display = 'block'; return; }
+  error.style.display = 'none';
+  userEmail = value;
+  renderQuestions();
+  goToScreen('questions');
+}
+
+function renderQuestions() {
+  const list = document.getElementById('questions-list');
+  list.innerHTML = '';
+
+  // Group items by subscale, in the order they appear in the JSON
+  // (questionnaire.json subscales is already ordered A1..A5, B1..B5)
+  const subscaleCodes = Object.keys(QUESTIONNAIRE.subscales);
+  let currentDimension = null;
+
+  subscaleCodes.forEach(code => {
+    const sub = QUESTIONNAIRE.subscales[code];
+
+    // Dimension banner — once per dimension change
+    if (sub.dimension !== currentDimension) {
+      currentDimension = sub.dimension;
+      const intro = DIMENSION_INTROS[currentDimension];
+      const banner = document.createElement('div');
+      banner.className = 'dimension-banner';
+      banner.innerHTML = `
+        <div class="dimension-eyebrow">${intro.eyebrow}</div>
+        <h2>${intro.title}</h2>
+        <p>${intro.subtitle}</p>
+      `;
+      list.appendChild(banner);
+    }
+
+    // Subscale heading
+    const heading = document.createElement('div');
+    heading.className = 'subscale-heading';
+    heading.innerHTML = `
+      <div class="subscale-eyebrow">Subscale ${code}</div>
+      <h3>${sub.name}</h3>
+    `;
+    list.appendChild(heading);
+
+    // The five items for this subscale
+    sub.items.forEach(n => {
+      const item = QUESTIONNAIRE.items.find(i => i.n === n);
+      const q = document.createElement('div');
+      q.className = 'question';
+      q.id = 'q-' + item.n;
+      q.innerHTML = `
+        <div class="question-number">Question ${item.n} of ${QUESTIONNAIRE.items.length}</div>
+        <div class="question-text">${item.text}</div>
+        <div class="likert">
+          ${QUESTIONNAIRE.likert.map(l => `
+            <label>
+              <input type="radio" name="q${item.n}" value="${l.value}" onchange="recordAnswer(${item.n}, ${l.value})">
+              <span class="likert-text">
+                <span class="likert-value">${l.value}</span>
+                ${l.label}
+              </span>
+            </label>
+          `).join('')}
+        </div>
+      `;
+      list.appendChild(q);
+    });
+  });
+
+  updateProgress();
+}
+
+function recordAnswer(n, v) {
+  answers[n] = v;
+  updateProgress();
+  if (window.innerWidth > 600) {
+    const nextItem = QUESTIONNAIRE.items.find(i => answers[i.n] === undefined);
+    if (nextItem) {
+      const el = document.getElementById('q-' + nextItem.n);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+}
+
+function updateProgress() {
+  const total = QUESTIONNAIRE.items.length;
+  const done = Object.keys(answers).length;
+  const pct = Math.round((done / total) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `${done} of ${total} answered`;
+  document.getElementById('submit-btn').disabled = (done < total);
+}
+
+function submitAnswers() {
+  try {
+    lastScoring = window.scoreOSCIPro(answers, QUESTIONNAIRE);
+    renderResults(lastScoring);
+    goToScreen('results');
+  } catch (e) {
+    alert("Scoring failed: " + e.message);
+    console.error(e);
+  }
+}
+
+function renderResults(s) {
+  const q = QUESTIONNAIRE.quadrants[s.quadrant];
+  document.getElementById('quadrant-label').textContent = q.label;
+  document.getElementById('quadrant-tagline').textContent = q.tagline;
+
+  document.getElementById('score-confidence').textContent = s.confidence;
+  document.getElementById('band-confidence').textContent = bandPretty(s.confidenceBand);
+  document.getElementById('score-social').textContent = s.socialSkills;
+  document.getElementById('band-social').textContent = bandPretty(s.socialSkillsBand);
+  document.getElementById('score-auth').textContent = s.authenticityIndex;
+  document.getElementById('band-auth').textContent = s.authenticityBand || '';
+
+  const tbody = document.querySelector('#subscale-table tbody');
+  tbody.innerHTML = '';
+  const priority = s.priorityAreas;
+  Object.keys(s.subscaleScores).forEach(code => {
+    const sub = QUESTIONNAIRE.subscales[code];
+    const isPriority = priority.includes(code);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><strong>${code}</strong> ${sub.name}${isPriority ? ' <span class="priority-flag">Priority</span>' : ''}</td>
+      <td>${s.subscaleScores[code]}</td>
+      <td>${bandPretty(s.subscaleBands[code])}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function bandPretty(b) {
+  return b ? b.charAt(0).toUpperCase() + b.slice(1) + ' band' : '';
+}
+
+function showDebug() {
+  const area = document.getElementById('debug-area');
+  const out = document.getElementById('debug-output');
+  out.textContent = JSON.stringify({ email: userEmail, answers, scoring: lastScoring }, null, 2);
+  area.classList.remove('hidden');
+}
+
+async function generateReport() {
+  if (!lastScoring) { alert("No scoring data yet."); return; }
+  try {
+    const res = await fetch('/api/generate-test-report', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: userEmail, scoring: lastScoring })
+    });
+    if (!res.ok) throw new Error('Server returned ' + res.status);
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'OSCI_Pro_Test_Report.pdf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  } catch (e) {
+    alert("PDF generation failed: " + e.message);
+    console.error(e);
+  }
+}
+</script>
+
+</body>
+</html>

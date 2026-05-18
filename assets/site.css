@@ -1,0 +1,242 @@
+/* assets/site.css — shared styles for all pages */
+
+:root {
+  --purple: #534AB7;
+  --teal:   #0F6E56;
+  --navy:   #1F3A5F;
+  --gold:   #B08D57;
+  --cream:  #F8F5EF;
+  --ink:    #1A1A1A;
+  --muted:  #555555;
+  --line:   #D9D9D9;
+  --soft-cream: #F2EEE8;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: Georgia, 'Times New Roman', serif;
+  color: var(--ink);
+  background: var(--cream);
+  line-height: 1.55;
+  font-size: 17px;
+}
+
+/* ─── Test banner (visible on every page until launch) ─────────────────── */
+.test-banner {
+  background: #FFE9A8; color: #6B4F00; padding: 8px 16px; text-align: center;
+  font-family: system-ui, -apple-system, sans-serif; font-size: 13px;
+  border-bottom: 1px solid #E0C870;
+}
+
+/* ─── Header ────────────────────────────────────────────────────────────── */
+.site-header {
+  background: var(--navy);
+  border-bottom: 2px solid var(--gold);
+}
+.site-header-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.site-logo {
+  font-family: 'Calibri', system-ui, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: white;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+}
+.site-logo .pro-badge {
+  display: inline-block;
+  background: var(--gold);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 7px;
+  margin-left: 8px;
+  border-radius: 2px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.site-nav {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.site-nav a {
+  font-family: 'Calibri', system-ui, sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.85);
+  text-decoration: none;
+  padding: 6px 0;
+  margin-right: 24px;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s ease;
+}
+.site-nav a:last-child { margin-right: 0; }
+.site-nav a:hover,
+.site-nav a[aria-current="page"] {
+  color: white;
+  border-bottom-color: var(--gold);
+}
+
+/* ─── Footer ────────────────────────────────────────────────────────────── */
+.site-footer {
+  background: var(--navy);
+  color: rgba(255,255,255,0.75);
+  margin-top: 96px;
+  padding: 32px 24px;
+  font-family: 'Calibri', system-ui, sans-serif;
+  font-size: 14px;
+}
+.site-footer-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.site-footer a { color: rgba(255,255,255,0.85); text-decoration: none; }
+.site-footer a:hover { color: white; text-decoration: underline; }
+.site-footer .copyright { color: rgba(255,255,255,0.55); }
+
+/* ─── Container & typography ────────────────────────────────────────────── */
+.container {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 48px 24px 96px;
+}
+.container-wide {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 48px 24px 96px;
+}
+
+h1, h2, h3 {
+  font-family: 'Calibri', system-ui, sans-serif;
+  color: var(--navy);
+  margin-top: 0;
+}
+h1 { font-size: 40px; font-weight: 700; line-height: 1.15; margin-bottom: 8px; }
+h2 { font-size: 26px; font-weight: 700; margin: 48px 0 12px; }
+h3 { font-size: 19px; font-weight: 600; margin: 32px 0 8px; }
+
+p { margin: 0 0 16px; }
+
+.eyebrow {
+  font-family: 'Calibri', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.gold-rule {
+  height: 2px;
+  background: var(--gold);
+  margin: 16px 0 32px;
+  width: 80px;
+}
+.subtitle {
+  font-family: Georgia, serif;
+  font-size: 20px;
+  font-style: italic;
+  color: var(--muted);
+  margin: 0 0 32px;
+  line-height: 1.4;
+}
+
+a.inline-link { color: var(--navy); text-decoration: underline; text-decoration-color: var(--gold); }
+a.inline-link:hover { color: var(--gold); }
+
+/* ─── Buttons ────────────────────────────────────────────────────────────── */
+button, .btn {
+  font-family: 'Calibri', system-ui, sans-serif;
+  font-weight: 700;
+  border-radius: 3px;
+  cursor: pointer;
+  border: 0;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  display: inline-block;
+}
+button.primary, .btn.primary {
+  background: var(--teal); color: white;
+  padding: 14px 28px; font-size: 16px;
+}
+button.primary:hover, .btn.primary:hover { background: #0a5944; }
+button.primary:disabled { background: #999; cursor: not-allowed; }
+button.secondary, .btn.secondary {
+  background: white; color: var(--navy);
+  border: 1px solid var(--navy);
+  padding: 12px 24px; font-size: 15px;
+}
+button.secondary:hover, .btn.secondary:hover { background: var(--soft-cream); }
+
+/* ─── Cards / sections ──────────────────────────────────────────────────── */
+.card {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 24px;
+  margin: 16px 0;
+}
+.three-up {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin: 32px 0;
+}
+.three-up .tile {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 24px;
+}
+.three-up .tile h3 { margin-top: 0; color: var(--navy); }
+.three-up .tile p { margin-bottom: 0; font-size: 16px; }
+
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  margin: 48px 0 32px;
+  text-align: center;
+}
+.hero-stats .stat-value {
+  font-family: 'Calibri', system-ui, sans-serif;
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.hero-stats .stat-label {
+  font-family: 'Calibri', system-ui, sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ─── Mobile ─────────────────────────────────────────────────────────────── */
+@media (max-width: 700px) {
+  .site-header-inner { padding: 12px 16px; }
+  .site-nav { gap: 16px; }
+  .site-nav a { font-size: 14px; }
+  .container, .container-wide { padding: 32px 16px 64px; }
+  h1 { font-size: 30px; }
+  h2 { font-size: 22px; }
+  .three-up, .hero-stats { grid-template-columns: 1fr; }
+  .site-footer-inner { flex-direction: column; gap: 12px; }
+}
