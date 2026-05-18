@@ -424,7 +424,7 @@ function showDebug() {
 async function generateReport() {
   if (!lastScoring) { alert("No scoring data yet."); return; }
   try {
-    const res = await fetch('/api/generate-test-report', {
+    const res = await fetch('/api/generate-report', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: userEmail, scoring: lastScoring, respondentName: userName })
