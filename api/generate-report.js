@@ -228,23 +228,39 @@ module.exports = async (req, res) => {
   // Generate the headline (with fallback)
   const headline = await generateHeadline(content, scoring, respondentName);
 
-  // Identify the strengths and development areas
+  // Identify the strengths and development areas.
+  // Critical: a subscale must never appear in both lists. Where scores are
+  // tied (e.g. A1=A2=64 with both flagged as priorities), the development
+  // area selection wins, and strengths are picked from what remains.
+  const developmentCodes = scoring.priorityAreas;
   const sortedSubscales = Object.entries(scoring.subscaleScores)
+    .filter(([code]) => !developmentCodes.includes(code))
     .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
   const strengthCodes = sortedSubscales.slice(0, 2).map(s => s[0]);
-  const developmentCodes = scoring.priorityAreas;
 
-  // Select methods relevant to the development areas
-  const relevantMethods = [];
+  // Select methods: 3 most relevant to the development areas, plus 1 wildcard
+  // from across the toolkit so the reader gets a balanced set rather than
+  // four methods all clustered on the same theme.
   const methodKeys = Object.keys(content.methods).filter(k => k.startsWith('M'));
+  const priorityMatched = [];
+  const wildcards = [];
   for (const k of methodKeys) {
     const m = content.methods[k];
     if (m.relevant_to && m.relevant_to.some(s => developmentCodes.includes(s))) {
-      relevantMethods.push({ key: k, ...m });
+      priorityMatched.push({ key: k, ...m });
+    } else {
+      wildcards.push({ key: k, ...m });
     }
   }
-  // Pick the most relevant 4 methods
-  const chosenMethods = relevantMethods.slice(0, 4);
+  const chosenMethods = priorityMatched.slice(0, 3);
+  // Add one wildcard from a different dimension to broaden the toolkit
+  if (wildcards.length) {
+    const devDimensions = new Set(developmentCodes.map(c => c[0])); // 'A' or 'B'
+    const fromOtherDimension = wildcards.find(m =>
+      m.relevant_to && m.relevant_to.some(s => !devDimensions.has(s[0]))
+    );
+    chosenMethods.push(fromOtherDimension || wildcards[0]);
+  }
 
   // Build the PDF
   const doc = new PDFDocument({
@@ -302,17 +318,15 @@ function renderReport(doc, content, scoring, headline, respondentName, strengthC
   doc.addPage();
   eyebrow(doc, 'Opening summary');
   h1(doc, 'There is a lot here to build on');
-  bodyText(doc, headline);
-  bodyText(doc, `Your results place you in the ${quadrant.label.replace(/^The /, '')} quadrant. ${quadrant.opening_paragraph}`);
 
-  // The manifesto: a through-line that frames everything else
+  // Lead with the manifesto (the through-line of the whole report).
+  // Page 1 has carried the quadrant name and the headline. Page 2 picks
+  // that up and frames what comes next.
   if (content.manifesto && content.manifesto.front) {
-    doc.moveDown(0.3);
-    doc.font(FONT_HEAD_BOLD).fontSize(13).fillColor(COLOURS.navy)
-       .text(content.manifesto.front.title);
-    doc.moveDown(0.4);
     content.manifesto.front.paragraphs.forEach(p => bodyText(doc, p));
   }
+
+  bodyText(doc, `Your results place you in the ${quadrant.label.replace(/^The /, '')} quadrant. ${quadrant.opening_paragraph}`);
 
   doc.moveDown(0.5);
   drawScoreTiles(doc, scoring, 72, doc.y, 451);
@@ -335,9 +349,7 @@ function renderReport(doc, content, scoring, headline, respondentName, strengthC
   doc.addPage();
   eyebrow(doc, 'Your two dimensions');
   h1(doc, 'Confidence and Social Skills');
-  bodyText(doc, `Your Confidence score is ${scoring.confidence}, which sits in the ${prettyBand(scoring.confidenceBand).toLowerCase()} band. Your Social Skills score is ${scoring.socialSkills}, which sits in the ${prettyBand(scoring.socialSkillsBand).toLowerCase()} band. These two scores together are what produces your quadrant placement.`);
-
-  bodyText(doc, `The three bands the Pro uses (Lower, Developing, Higher) are deliberately calibrated against ten validation cases drawn from coaching practice. The Developing band is where most paying users sit, and it is also where the work is most actionable. Close enough to the higher tier that the gap is genuinely closeable. Far enough from it that there is something to close.`);
+  bodyText(doc, `Your Confidence score is ${scoring.confidence}, in the ${prettyBand(scoring.confidenceBand).toLowerCase()} band. Your Social Skills score is ${scoring.socialSkills}, in the ${prettyBand(scoring.socialSkillsBand).toLowerCase()} band. The two together produce your quadrant placement, and the way you read them as you develop matters more than the headline numbers.`);
 
   h2(doc, 'On the Confidence dimension');
   bodyText(doc, confidenceBandSummary(scoring.confidenceBand));
@@ -390,7 +402,7 @@ function renderReport(doc, content, scoring, headline, respondentName, strengthC
   doc.addPage();
   eyebrow(doc, 'Your key strengths');
   h1(doc, 'What is already working');
-  bodyText(doc, `Two subscales stand out as relative strengths in your profile. The Pro report leads with these because the most reliable way to develop is to build out from what is already working, not to start from scratch on what is not.`);
+  bodyText(doc, `Two subscales stand out as relative strengths in your profile. The Pro report leads with these because the most reliable way to develop is to extend what is already working, rather than start from scratch on what is not.`);
 
   strengthCodes.forEach((code, idx) => {
     if (idx > 0) doc.addPage();
@@ -418,7 +430,7 @@ function renderReport(doc, content, scoring, headline, respondentName, strengthC
   eyebrow(doc, 'Your key development areas');
   h1(doc, 'Where to put your attention next');
   bodyText(doc, `Two subscales have been identified as the most useful focus for your development now. These are the areas where some deliberate practice over the next four to six weeks will produce visible change. Pick one to start with. Work on it. Then come back to the other.`);
-  bodyText(doc, `The framing the rest of this report uses is important: a low score on a subscale does not mean you are deficient as a person. It means that particular module is not yet doing its job reliably. It needs writing, testing, or refining. The work is incremental, visible, and entirely doable in the real meetings and conversations of your working week.`);
+  bodyText(doc, `The framing the rest of this report uses is important. A low score on a subscale does not mean you are deficient as a person. It means that particular skill is not yet doing its job reliably. The work is incremental, visible, and entirely doable in the real meetings and conversations of your working week.`);
 
   developmentCodes.forEach((code, idx) => {
     doc.addPage();
@@ -446,26 +458,27 @@ function renderReport(doc, content, scoring, headline, respondentName, strengthC
   doc.addPage();
   eyebrow(doc, 'Methods worth knowing');
   h1(doc, 'Four methods for your profile');
-  bodyText(doc, `The OSCI Pro Practice Content Library contains seventeen named methods. The four below have been selected as the most directly relevant to the development areas above. Each is described in short here. Each is set out in fuller detail in the companion book, Open-Source Charisma.`);
+  bodyText(doc, `The Pro Practice Content Library contains seventeen named methods. Three of the four below have been chosen for their direct relevance to your development areas. The fourth is included to broaden the toolkit. Each is set out in fuller detail in the companion book, Open-Source Charisma.`);
+  doc.moveDown(0.4);
 
-  chosenMethods.forEach(m => {
-    h3(doc, m.name);
-    bodyText(doc, m.summary);
+  chosenMethods.forEach((m, idx) => {
+    renderMethodCard(doc, m, idx === chosenMethods.length - 1);
   });
 
   // ─── Page 14: A four-week development plan ─────────────────────────────
   doc.addPage();
   eyebrow(doc, 'Your four-week plan');
   h1(doc, 'Where to start');
-  bodyText(doc, `Most development plans fail because they are too long or too vague. Yours has three habits to focus on over the next four weeks. Specific. Small enough to actually do. Concrete enough that you and the people around you will notice the difference.`);
+  bodyText(doc, `Most development plans fail because they are too long or too vague. Yours has four weeks, with one or two specific things to do in each. Small enough to actually run alongside your normal work.`);
+  bodyText(doc, `Focus on your first priority subscale: ${content.subscales[developmentCodes[0]] ? content.subscales[developmentCodes[0]].name : 'your first priority'}. The plan below uses the activities from that subscale. After four weeks, come back to this report and decide whether to keep going or to move on to your second priority.`);
 
-  const plan = buildFourWeekPlan(content, developmentCodes, chosenMethods);
-  plan.forEach((item, idx) => {
-    h3(doc, `Habit ${idx + 1}: ${item.title}`);
-    bodyText(doc, item.detail);
+  const weeklyPlan = buildWeeklyPlan(content, developmentCodes, chosenMethods);
+  weeklyPlan.forEach(week => {
+    h3(doc, week.title);
+    bodyText(doc, week.detail);
   });
 
-  bodyText(doc, `At the end of week four, come back to this report. Re-read the development pages. Notice what has changed and what has not. The pattern you build in the first four weeks will tell you whether to keep going on the same habit or to shift to the second priority subscale next.`);
+  bodyText(doc, `Re-read the development pages at the end of week four. Notice what has changed in how you behave, and notice what the people around you have started doing differently. Both are evidence. The shift in your own behaviour is the first thing. The shift in theirs is the second, and the more important one.`);
 
   // ─── Pages 15-17: Goal-setting exercise ──────────────────────────────
   if (content.goal_setting) {
@@ -495,59 +508,73 @@ function renderReport(doc, content, scoring, headline, respondentName, strengthC
      .moveTo(72, doc.y).lineTo(523, doc.y).stroke();
   doc.moveDown(0.6);
   doc.font(FONT_HEAD).fontSize(9).fillColor(COLOURS.muted)
-     .text(`OSCI Pro Report  \u00B7  Generated ${today}  \u00B7  Scoring version ${scoring.version || 'unknown'}`, { align: 'center', width: 451 });
+     .text(`OSCI Pro Report  \u00B7  Generated ${today}`, { align: 'center', width: 451 });
   doc.moveDown(0.2);
   doc.text('\u00A9 2026 James G Harvey / Allcow Trading Co Ltd  \u00B7  opensourcecharisma.com', { align: 'center', width: 451 });
 }
 
 function confidenceBandSummary(band) {
   if (band === 'higher') {
-    return "You sit in the higher band on Confidence. The pattern this points to is a settled internal baseline, composure under pressure, willingness to say the difficult thing, and the capacity to update your position when shown evidence. The work at this band is mostly about consistency and calibration: keeping the strength visible across audiences and across the pressure points where it can otherwise slip.";
+    return "Your Confidence score sits in the higher band. The pattern this usually means: a settled internal baseline, composure when things get hard, willingness to say the difficult thing in the room rather than around it, and the capacity to update your position when shown new evidence. The work at this band is consistency. Keeping the strength visible across audiences, and across the pressure points where it can quietly slip.";
   }
   if (band === 'developing') {
-    return "You sit in the developing band on Confidence. This is the band where most paying users sit, and it is the band where the work is most actionable. You have the building blocks. The development question is which specific subscale to focus on first. The priority subscales identified later in this report point at where the work will most repay your attention now.";
+    return "Your Confidence score sits in the developing band. The components are mostly in place, with one or two specific subscales still uneven. The development question is which one to focus on first. The priority subscales identified later in this report point at where the work will most repay attention now. Improvement at this band tends to be visible to other people inside a few weeks.";
   }
-  return "You sit in the lower band on Confidence. The pattern this often shows is that the building blocks are present but uneven: a settled baseline that has not fully consolidated, composure that is reliable in some settings and not others, willingness to speak directly that is conditional on stakes. The work is to build the underlying skills one at a time, with deliberate practice in the real meetings and conversations of your working week.";
+  return "Your Confidence score sits in the lower band. The components are present but uneven. The settled baseline that is supposed to hold under pressure has not yet consolidated. Composure that is reliable in some settings is missing in others. Willingness to speak directly is conditional on stakes. The work is incremental, one subscale at a time, with practice that runs in the real meetings of your working week.";
 }
 
 function socialSkillsBandSummary(band) {
   if (band === 'higher') {
-    return "You sit in the higher band on Social Skills. The pattern this points to is consistent quality of listening, warmth that does not depend on what the other person can do for you, conversational craft that moves rather than just exchanges, and emotional control that lets the room think for itself. The work at this band is mostly about deploying these strengths where they matter most.";
+    return "Your Social Skills score sits in the higher band. The pattern this points to is consistent listening, warmth that does not depend on what the other person can do for you, conversational craft that moves rather than just exchanges, and emotional control that lets the room think for itself. The work at this band is deployment: putting these strengths to work where they matter most, with the people who would benefit most from them.";
   }
   if (band === 'developing') {
-    return "You sit in the developing band on Social Skills. The components are in place. What the development pages will probably point at is where one or two specific behaviours are still uneven: how you listen under pressure, how warmth shows up with peripheral contacts, how you handle disagreement in front of others. Small adjustments at this band produce visible reputation effects.";
+    return "Your Social Skills score sits in the developing band. The basic moves are in place. What is uneven is the next layer down: how you listen when under pressure, how warmth shows up with people on the periphery of your work, how you handle disagreement in front of others. Small adjustments at this band tend to produce disproportionate reputational effects. The priority subscales below name which specific behaviours are most worth attention.";
   }
-  return "You sit in the lower band on Social Skills. The pattern this often shows is that the conventional social moves are working in some contexts but not transferring reliably to others. The priority subscales identified later in this report will name which specific behaviours are most worth your attention now. None of them require a personality change. All of them are practices you can run in the real meetings of the next four weeks.";
+  return "Your Social Skills score sits in the lower band. The conventional social moves are working in some contexts but not transferring reliably to others. The priority subscales identified later in this report will name which specific behaviours are most worth attention now. None of them require a personality change. All of them are practices that can run in the real meetings and conversations of the next four weeks.";
 }
 
-function buildFourWeekPlan(content, developmentCodes, chosenMethods) {
-  // Three concrete habits drawn from the two development subscales' first activities
+function buildWeeklyPlan(content, developmentCodes, chosenMethods) {
+  // Week-by-week structure built from the first priority subscale's four
+  // activities. Week 1 = the smallest first move. Week 2 = the harder
+  // version. Week 3 = use the most relevant named method. Week 4 = audit
+  // and notice the shift in other people.
   const plan = [];
-  if (developmentCodes[0]) {
-    const sub = content.subscales[developmentCodes[0]];
-    if (sub && sub.development && sub.development.what_to_try_next[0]) {
-      plan.push({
-        title: `${sub.name}`,
-        detail: sub.development.what_to_try_next[0]
-      });
-    }
+  const primarySub = content.subscales[developmentCodes[0]];
+  const acts = (primarySub && primarySub.development && primarySub.development.what_to_try_next) || [];
+
+  if (acts[0]) {
+    plan.push({
+      title: 'Week 1: start small',
+      detail: acts[0]
+    });
   }
-  if (developmentCodes[1]) {
-    const sub = content.subscales[developmentCodes[1]];
-    if (sub && sub.development && sub.development.what_to_try_next[0]) {
-      plan.push({
-        title: `${sub.name}`,
-        detail: sub.development.what_to_try_next[0]
-      });
-    }
+  if (acts[1]) {
+    plan.push({
+      title: 'Week 2: the harder version',
+      detail: acts[1]
+    });
   }
   if (chosenMethods[0]) {
     plan.push({
-      title: `Practise the ${chosenMethods[0].name}`,
-      detail: `In the next four weeks, find three real situations where you can use this method. The first time will be awkward. The second time will be less awkward. By the third, the practice will be building muscle. ${chosenMethods[0].summary.split('. ')[0]}.`
+      title: `Week 3: use the ${chosenMethods[0].name}`,
+      detail: `Find three real situations this week to put this method to work. The first time will feel awkward. The second time will be less awkward. By the third, the practice will be building muscle. ${chosenMethods[0].summary.split('. ')[0]}.`
+    });
+  } else if (acts[2]) {
+    plan.push({
+      title: 'Week 3: extend',
+      detail: acts[2]
     });
   }
+  plan.push({
+    title: 'Week 4: notice the shift',
+    detail: `Audit the four weeks. What have you done differently? What have the people around you started doing differently with you? The change in their behaviour is the more important signal, and it usually shows up first as small things: a colleague volunteering more, a more candid answer to a question, a meeting that ends somewhere better than expected. Re-read the development page for ${primarySub ? primarySub.name : 'your priority subscale'} and decide whether to stay with it or move to the second priority next.`
+  });
   return plan;
+}
+
+// Kept for compatibility in case anything still references it
+function buildFourWeekPlan(content, developmentCodes, chosenMethods) {
+  return buildWeeklyPlan(content, developmentCodes, chosenMethods);
 }
 
 // ── Goal-setting renderers ─────────────────────────────────────────────────
@@ -655,5 +682,44 @@ function drawWriteBox(doc, height) {
   doc.fillColor(COLOURS.ink);
   doc.y = y + height + 4;
   doc.x = x;
+}
+
+// ── Method card renderer ───────────────────────────────────────────────────
+// Renders a single method as a soft-cream card with the method name in navy.
+// Pages flow normally; cards split across pages if necessary.
+
+function renderMethodCard(doc, method, isLast) {
+  // Estimate height needed for this card. If not enough space remains on
+  // the current page, the card starts a new page. We measure by laying out
+  // the text in a hidden pass.
+  const x = 72;
+  const w = 451;
+  const padding = 16;
+  const titleHeight = 20;
+
+  // Save state, measure body text height
+  const savedY = doc.y;
+  doc.font(FONT_BODY).fontSize(10.5);
+  const bodyHeight = doc.heightOfString(method.summary, { width: w - 2 * padding, lineGap: 3 });
+  const cardHeight = titleHeight + bodyHeight + 2 * padding + 6;
+  doc.y = savedY;
+
+  // If card would overflow the page, start a new one
+  if (savedY + cardHeight > 760) {
+    doc.addPage();
+  }
+
+  const startY = doc.y;
+  // Background
+  doc.rect(x, startY, w, cardHeight).fillAndStroke(COLOURS.soft, COLOURS.line);
+  // Title
+  doc.fillColor(COLOURS.navy).font(FONT_HEAD_BOLD).fontSize(13)
+     .text(method.name, x + padding, startY + padding, { width: w - 2 * padding });
+  // Body
+  doc.fillColor(COLOURS.ink).font(FONT_BODY).fontSize(10.5)
+     .text(method.summary, x + padding, startY + padding + titleHeight + 4,
+           { width: w - 2 * padding, lineGap: 3, align: 'justify' });
+  doc.y = startY + cardHeight + (isLast ? 8 : 14);
+  doc.x = 72;
 }
 

@@ -1,6 +1,6 @@
 {
-  "version": "pro-test-1.1",
-  "title": "OSCI Pro — Charisma Quadrant Assessment",
+  "version": "pro-test-1.2",
+  "title": "OSCI Pro \u2014 Charisma Quadrant Assessment",
   "subtitle": "50 questions. Ten subscales. About 8 minutes.",
   "likert": [
     {
@@ -172,279 +172,279 @@
     {
       "n": 1,
       "subscale": "A1",
-      "text": "I feel settled in myself, regardless of how recent events have gone."
+      "text": "I usually feel comfortable with who I am, regardless of how things have gone recently."
     },
     {
       "n": 2,
       "subscale": "A1",
-      "text": "When I do something well, I take it as evidence rather than waiting for someone else to confirm it."
+      "text": "When I do something well, I do not need other people to confirm it before I believe it myself."
     },
     {
       "n": 3,
       "subscale": "A1",
-      "text": "My sense of how well I am doing depends on what the last person to comment on it said.",
+      "text": "My confidence in myself changes a lot depending on what other people say about me.",
       "reverse": true
     },
     {
       "n": 4,
       "subscale": "A1",
-      "text": "When something goes badly, I can separate the event from a verdict on who I am."
+      "text": "When something goes wrong, I can usually separate the event from my sense of who I am."
     },
     {
       "n": 5,
       "subscale": "A1",
-      "text": "When I am criticised on something I have done, I find myself questioning whether I belong where I am.",
+      "text": "When I receive criticism, I sometimes question whether I deserve to be where I am.",
       "reverse": true
     },
     {
       "n": 6,
       "subscale": "A2",
-      "text": "When a conversation or situation starts going wrong, I slow down and reflect on why it is happening, rather than press on regardless."
+      "text": "When a situation starts going badly, I slow down and think before reacting."
     },
     {
       "n": 7,
       "subscale": "A2",
-      "text": "After a setback, I can usually identify something I can act on within the next couple of days."
+      "text": "After a setback, I usually focus on what I can do next rather than staying stuck in the problem."
     },
     {
       "n": 8,
       "subscale": "A2",
-      "text": "When I am under pressure, I lose track of what the people around me actually need.",
+      "text": "Under pressure, I find it harder to notice what other people need from me.",
       "reverse": true
     },
     {
       "n": 9,
       "subscale": "A2",
-      "text": "I can sit through a difficult conversation without people picking up that I am anxious."
+      "text": "During difficult conversations, I usually stay calm in how I speak and behave."
     },
     {
       "n": 10,
       "subscale": "A2",
-      "text": "After something has gone wrong, it tends to occupy my thinking for the rest of the day.",
+      "text": "When something goes wrong, I often carry it with me for the rest of the day.",
       "reverse": true
     },
     {
       "n": 11,
       "subscale": "A3",
-      "text": "When I think a discussion is heading towards a poor decision, I say so before the decision is made."
+      "text": "When I think a group is heading towards a poor decision, I usually say so before the decision is made."
     },
     {
       "n": 12,
       "subscale": "A3",
-      "text": "When I make a commitment, I make it specifically. What I will do, by when."
+      "text": "When I make a commitment, I explain clearly what I will do and when I will do it."
     },
     {
       "n": 13,
       "subscale": "A3",
-      "text": "When I disagree with someone whose opinion of me matters, I usually keep it to myself.",
+      "text": "I often avoid disagreeing with people whose opinion of me matters.",
       "reverse": true
     },
     {
       "n": 14,
       "subscale": "A3",
-      "text": "When something I am responsible for goes wrong, I tell the people affected before they find out themselves."
+      "text": "When something I am responsible for goes wrong, I tell the people affected before they discover it themselves."
     },
     {
       "n": 15,
       "subscale": "A3",
-      "text": "I tend to soften difficult messages to the point where the main point gets lost.",
+      "text": "I sometimes soften difficult messages so much that the main point becomes unclear.",
       "reverse": true
     },
     {
       "n": 16,
       "subscale": "A4",
-      "text": "When I am shown evidence I was wrong about something, I am comfortable saying so out loud."
+      "text": "When I discover I was wrong about something, I can usually admit it openly."
     },
     {
       "n": 17,
       "subscale": "A4",
-      "text": "In the last six months I have asked someone to give me potentially uncomfortable feedback."
+      "text": "In the last six months, I have asked someone for honest feedback that might be uncomfortable to hear."
     },
     {
       "n": 18,
       "subscale": "A4",
-      "text": "When something I am doing is not working, I tend to try harder at it rather than try something different.",
+      "text": "When something I am doing is not working, I tend to keep trying the same approach rather than change it.",
       "reverse": true
     },
     {
       "n": 19,
       "subscale": "A4",
-      "text": "In the last three months I have chosen to do something out of my comfort zone."
+      "text": "In the last three months, I have deliberately done something difficult or unfamiliar."
     },
     {
       "n": 20,
       "subscale": "A4",
-      "text": "When I describe a weakness of mine, I tend to describe it as a permanent feature rather than something I am working on.",
+      "text": "When I talk about my weaknesses, I usually describe them as fixed rather than changeable.",
       "reverse": true
     },
     {
       "n": 21,
       "subscale": "A5",
-      "text": "When an interaction goes badly, I usually know my part in why."
+      "text": "When an interaction goes badly, I can usually recognise my part in it."
     },
     {
       "n": 22,
       "subscale": "A5",
-      "text": "Before a significant conversation, I take a moment to notice what state I am in (physically, emotionally, mentally) and choose what to do with it."
+      "text": "Before an important conversation, I usually notice the state I am in and think about how I want to show up."
     },
     {
       "n": 23,
       "subscale": "A5",
-      "text": "People who give me feedback on my performance usually describe me the way I would describe myself.",
+      "text": "Feedback from other people sometimes surprises me because it does not match how I see myself.",
       "reverse": true
     },
     {
       "n": 24,
       "subscale": "A5",
-      "text": "I notice when my energy or focus has dropped before it affects how I am with other people."
+      "text": "I usually notice changes in my energy, mood or focus before they affect other people."
     },
     {
       "n": 25,
       "subscale": "A5",
-      "text": "The way I think I come across is usually the way I come across to others.",
+      "text": "I rarely discover that other people experienced me differently from how I intended.",
       "reverse": true
     },
     {
       "n": 26,
       "subscale": "B1",
-      "text": "When someone is telling me something difficult, I let them finish before I respond, even when I think I know what to say."
+      "text": "When someone is telling me something difficult, I usually let them finish before responding."
     },
     {
       "n": 27,
       "subscale": "B1",
-      "text": "In a conversation, I can usually tell when the other person is troubled by something they have not said out loud."
+      "text": "I can often tell when someone is worried about something they have not said directly."
     },
     {
       "n": 28,
       "subscale": "B1",
-      "text": "I usually have my response ready before the other person has finished speaking.",
+      "text": "I often prepare my response before the other person has finished speaking.",
       "reverse": true
     },
     {
       "n": 29,
       "subscale": "B1",
-      "text": "When someone brings me a problem, I check what they want from the conversation before I start solving it."
+      "text": "Before offering solutions, I usually check what the other person wants from the conversation."
     },
     {
       "n": 30,
       "subscale": "B1",
-      "text": "After a difficult conversation, I find it hard to say what the other person was most worried about.",
+      "text": "After a difficult conversation, I sometimes struggle to understand what mattered most to the other person.",
       "reverse": true
     },
     {
       "n": 31,
       "subscale": "B2",
-      "text": "In social and professional situations, my default is to acknowledge everyone I meet or pass."
+      "text": "In social or professional situations, I usually acknowledge the people around me."
     },
     {
       "n": 32,
       "subscale": "B2",
-      "text": "When I see someone I have met before, I can usually remember something specific about them."
+      "text": "When I meet someone again, I can often remember something specific about them."
     },
     {
       "n": 33,
       "subscale": "B2",
-      "text": "The amount of attention I give people depends on how useful they are to me.",
+      "text": "The attention I give people sometimes depends on how useful they are to me.",
       "reverse": true
     },
     {
       "n": 34,
       "subscale": "B2",
-      "text": "I follow up with people after a conversation that mattered, even when there is no task attached."
+      "text": "I sometimes follow up with people after meaningful conversations, even when there is no task involved."
     },
     {
       "n": 35,
       "subscale": "B2",
-      "text": "The warmth and interest I show important people is greater than the warmth and interest I show less important people.",
+      "text": "I naturally give more warmth and attention to important people than to less important people.",
       "reverse": true,
       "shadow": true
     },
     {
       "n": 36,
       "subscale": "B3",
-      "text": "In a conversation, my follow-up questions are usually about what the other person has said, rather than the topic I had in mind."
+      "text": "My follow-up questions are usually based on what the other person has just said."
     },
     {
       "n": 37,
       "subscale": "B3",
-      "text": "When I meet someone new, I find out something about them beyond what they do for a living."
+      "text": "When I meet someone new, I usually try to learn something about them beyond their job title."
     },
     {
       "n": 38,
       "subscale": "B3",
-      "text": "In conversation, I tend to make a connection to my own experience before I have fully heard the other person's.",
+      "text": "In conversation, I sometimes relate things back to myself before fully hearing the other person.",
       "reverse": true
     },
     {
       "n": 39,
       "subscale": "B3",
-      "text": "When I share an opinion, I usually frame it as my view rather than as a fact."
+      "text": "When discussing opinions, I usually make space for other points of view."
     },
     {
       "n": 40,
       "subscale": "B3",
-      "text": "The version of me that turns up in casual conversation is noticeably different from the version that turns up in formal settings.",
+      "text": "I behave very differently in formal situations compared with informal ones.",
       "reverse": true,
       "shadow": true
     },
     {
       "n": 41,
       "subscale": "B4",
-      "text": "When someone disagrees with me in front of others, I respond at the same volume and pace I was using before."
+      "text": "When someone disagrees with me in front of others, I usually stay steady in how I respond."
     },
     {
       "n": 42,
       "subscale": "B4",
-      "text": "When I am praised for something that involved someone else's contribution, I say so in the room where the praise is happening."
+      "text": "When shared work is praised, I make sure other people receive credit as well."
     },
     {
       "n": 43,
       "subscale": "B4",
-      "text": "When I do not know something, I find a way to talk around it rather than admit it.",
+      "text": "When I do not know something, I sometimes try to hide it rather than admit it.",
       "reverse": true
     },
     {
       "n": 44,
       "subscale": "B4",
-      "text": "When I am the most senior or experienced person in a group, I let others speak before I share my view."
+      "text": "When I am the most senior or experienced person in a group, I usually encourage others to speak first."
     },
     {
       "n": 45,
       "subscale": "B4",
-      "text": "I am more measured in front of people I want to impress than I am with everyone else.",
+      "text": "I am more careful about how I behave with people I want to impress than with everyone else.",
       "reverse": true,
       "shadow": true
     },
     {
       "n": 46,
       "subscale": "B5",
-      "text": "I treat the most junior person in a group with the same quality of attention as the most senior.",
+      "text": "I give the same quality of attention to junior people as I do to senior people.",
       "shadow": true
     },
     {
       "n": 47,
       "subscale": "B5",
-      "text": "There is a version of me that turns up when I am being evaluated, and a different version that turns up when I am not.",
+      "text": "I behave differently when I know I am being judged or evaluated.",
       "reverse": true,
       "shadow": true
     },
     {
       "n": 48,
       "subscale": "B5",
-      "text": "People who see me at work and people who see me outside it would describe me in the same terms.",
+      "text": "People who know me in different parts of my life would probably describe me in similar ways.",
       "shadow": true
     },
     {
       "n": 49,
       "subscale": "B5",
-      "text": "When I am tired or distracted, my warmth and attention drop noticeably.",
+      "text": "When I am tired or distracted, the quality of my attention towards other people drops noticeably.",
       "reverse": true,
       "shadow": true
     },
     {
       "n": 50,
       "subscale": "B5",
-      "text": "I invest in conversations and relationships with people who have nothing to offer me directly.",
+      "text": "I invest time and attention in people even when they have nothing obvious to offer me.",
       "shadow": true
     }
   ],
