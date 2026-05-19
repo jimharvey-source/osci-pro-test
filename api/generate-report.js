@@ -148,7 +148,8 @@ async function generateProfileNarrative(content, scoring, respondentName) {
 
   const prompt = `You are writing one section of an OSCI Pro charisma development report for ${name}.
 
-Their profile:
+# Their profile
+
 - Quadrant: ${quadrant.label}
 - Confidence: ${scoring.confidence} (${scoring.confidenceBand} band)
 - Social Skills: ${scoring.socialSkills} (${scoring.socialSkillsBand} band)
@@ -156,21 +157,54 @@ Their profile:
 - Two highest subscales: ${strength1 ? subName(strength1) + ' (' + subScore(strength1) + ')' : '—'}, ${strength2 ? subName(strength2) + ' (' + subScore(strength2) + ')' : '—'}
 - Two priority subscales: ${subName(dev1)} (${subScore(dev1)}), ${subName(dev2)} (${subScore(dev2)})
 
-Write four short paragraphs (about 60-80 words each) titled "Where you are right now". Address ${name} directly in the second person. The four paragraphs cover, in this order:
-1. The headline of their profile: which dimension is the stronger one and what that feels like from the outside.
-2. What the other dimension is doing, with reference to the specific score and what that means in practice.
-3. The diagnostic insight from their two priority subscales, named explicitly. What it costs them, in plain terms.
-4. The Authenticity Index reading, what it points at, and the through-line to the work the rest of the report sets out.
+# The task
 
-Style rules, hard:
-- UK English. No em dashes. No "not just X but Y" constructions. No "leverage", "delve", "in today's", "stakeholder", "low-hanging", "impactful".
-- Generous tone, not lecturing. The reader is a senior professional.
-- Specific over elegant. Plain words.
+Write four short paragraphs titled "Where you are right now". 60-80 words each. Address ${name} in the second person.
+
+Paragraph 1: Which dimension is the stronger one. What that looks like from the outside.
+Paragraph 2: What the other dimension is doing. What its score means in practice.
+Paragraph 3: The two priority subscales, named explicitly. What it costs ${name} to leave them unattended. Plain terms.
+Paragraph 4: The Authenticity Index reading. What it points at. The through-line to the work the rest of the report sets out.
+
+# The voice
+
+Orwell's rules apply, in order:
+
+1. Never use a metaphor, simile, or other figure of speech which you are used to seeing in print. No "earned the right to be in the room". No "where your real charisma lives". No "the platform from which everything operates". No "unlock". No "orchestrate". No "land".
+2. Never use a long word where a short one will do. "Use" not "leverage". "Read" not "discern". "Now" not "at this juncture".
+3. If it is possible to cut a word out, always cut it out.
+4. Never use the passive where you can use the active.
+5. Never use a foreign phrase, a scientific word, or a jargon word if you can think of an everyday English equivalent.
+
+Additional rules, hard:
+
+- UK English. "Behaviour", "organisation", "recognise".
+- No em dashes. Anywhere.
+- No contractions. Write "you are" not "you're". "It is" not "it's". "That is" not "that's". "Does not" not "doesn't".
+- No "not just X, but Y" constructions. No antithesis.
+- No exclamation marks. No questions to the reader. No phrases like "the work ahead".
+- Plain. Specific. Like a thoughtful friend telling you what they see, not like a consultant writing a report.
+- Score numbers used twice across the four paragraphs, no more.
 - No headings, no bullets, no bold. Four plain paragraphs separated by blank lines.
-- Do not start any paragraph with "Your [thing] score sits in...". Vary openers.
-- Do not name the score numbers more than twice across all four paragraphs.
+- Do not start any paragraph with "Your [thing] score sits in..." Vary openers.
 
-Return only the four paragraphs. No preamble.`;
+# Voice examples — write at this level
+
+Example paragraph 1 (Sarah Mitchell, higher social skills, developing confidence):
+"Your Social Skills are your stronger dimension at 78. You connect naturally, read emotional registers well, and most people feel genuinely comfortable around you. Your warmth and empathy subscales are among your highest scores. The quality of your one-to-one interactions is strong. People trust you. They open up. You make conversations feel worth having."
+
+Example paragraph 2 (Sarah Mitchell, on her lower confidence):
+"Your Confidence at 74 is functional. You do not present as uncertain or hesitant in most settings. But it has a ceiling. Under higher stakes, with people you perceive as more senior or more confident, and when the outcome of an interaction really matters, the internal experience does not match the external performance. You compensate well. The compensation costs you energy. That is what a 74 feels like from the inside."
+
+Example paragraph 3 (Sarah Mitchell, on her priority subscale):
+"Your Assertiveness and Accountability subscale at 64 is the clearest confidence gap. This is not about whether you can assert yourself. You can. It is about whether you do, consistently, in the moments that require it most: naming a problem when it will create friction, disagreeing with someone whose opinion you value, holding accountability without deflecting or softening."
+
+Example paragraph 4 (Sarah Mitchell, on her Authenticity Index):
+"Your Authenticity Index at 68 maps onto something different. Your social skills are genuine. They are not evenly distributed. People who know you well, who you feel invested in, get something real and valuable. People on the periphery get less. Not nothing, but less. That unevenness is what the 68 is measuring."
+
+Note the rhythm. Short sentences. Plain words. Specific. Concrete. Speaking to the reader, not about them.
+
+Return only the four paragraphs, separated by blank lines. No preamble. No headings.`;
 
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
