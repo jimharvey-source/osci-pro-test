@@ -2,9 +2,33 @@
 //
 // The real OSCI Pro PDF report generator.
 //
+// v6 changes (from v5 to v6):
+//   1.  Fixed the "Week 3: use the The five-minutes practice" duplication bug.
+//   2.  Removed redundant repeat paragraph at the end of the four-week plan.
+//   3.  Rewrote the trailing conditional sentence on the Authenticity Index
+//       page so it lands whether or not B5 is a priority.
+//   4.  Renamed the development-areas header to "Where to focus next" and
+//       the four-week plan header to "Your four weeks" so the two pages no
+//       longer share register.
+//   5.  Score-tile sub-labels: roman not italic, slightly smaller.
+//   6.  All body prose: left-aligned ragged-right (was justified). Friendlier
+//       to read, no more wide word-spacing on narrow lines.
+//   7.  Strength and development openers vary by subscale instead of every
+//       page starting with "Your X score sits in a strong/lower range."
+//   8.  Cover page: added a second gold rule above the name/date block so
+//       the eye has somewhere to land in the lower third.
+//
+// New pages (v6):
+//   - Quadrant grid (page 4): 2x2 grid with axis labels, four labels, YOU
+//     marker in the respondent's quadrant.
+//   - Subscale profile (page 6): horizontal bars for all ten subscales, two
+//     priority bars in amber/gold.
+//   - Where you are right now (page 7): four-paragraph personalised narrative,
+//     generated via an Anthropic API call with a deterministic fallback.
+//
 // Input: a scoring payload (from assets/scoring.js) plus the respondent's
-// email and optional name. Output: a 15-page personalised PDF assembled
-// from the content library, with an AI-generated headline at the top.
+// email and optional name. Output: a personalised PDF assembled from the
+// content library, with AI-generated headline and personal-profile narrative.
 //
 // In production this is gated by Stripe Checkout session verification.
 // For the 30-person test we are calling it directly from the assessment
@@ -14,7 +38,8 @@ const PDFDocument = require('pdfkit');
 const fs = require('fs');
 const path = require('path');
 
-// ── Anthropic API call ─────────────────────────────────────────────────────
+// ── Anthropic API calls ────────────────────────────────────────────────────
+
 async function generateHeadline(content, scoring, respondentName) {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
@@ -96,10 +121,128 @@ function fallbackHeadline(content, scoring) {
   return quadrant.tagline;
 }
 
+// Personalised four-paragraph narrative for the "Where you are right now" page.
+// Same pattern as the headline call: try the API, fall back to a deterministic
+// build if the call fails or the key is missing.
+async function generateProfileNarrative(content, scoring, respondentName) {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    console.error('[profile] ANTHROPIC_API_KEY not set, using fallback');
+    return fallbackProfileNarrative(content, scoring, respondentName);
+  }
+
+  const quadrant = content.quadrants[scoring.quadrant];
+  const dev1 = scoring.priorityAreas[0];
+  const dev2 = scoring.priorityAreas[1];
+
+  // Two highest subscales after excluding the priority areas
+  const sortedSubscales = Object.entries(scoring.subscaleScores)
+    .filter(([code]) => !scoring.priorityAreas.includes(code))
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+  const strength1 = sortedSubscales[0] ? sortedSubscales[0][0] : null;
+  const strength2 = sortedSubscales[1] ? sortedSubscales[1][0] : null;
+
+  const name = respondentName || 'You';
+  const subName = c => (content.subscales[c] ? content.subscales[c].name : c);
+  const subScore = c => scoring.subscaleScores[c];
+
+  const prompt = `You are writing one section of an OSCI Pro charisma development report for ${name}.
+
+Their profile:
+- Quadrant: ${quadrant.label}
+- Confidence: ${scoring.confidence} (${scoring.confidenceBand} band)
+- Social Skills: ${scoring.socialSkills} (${scoring.socialSkillsBand} band)
+- Authenticity Index: ${scoring.authenticityIndex} (${scoring.authenticityBand || 'unknown'})
+- Two highest subscales: ${strength1 ? subName(strength1) + ' (' + subScore(strength1) + ')' : '—'}, ${strength2 ? subName(strength2) + ' (' + subScore(strength2) + ')' : '—'}
+- Two priority subscales: ${subName(dev1)} (${subScore(dev1)}), ${subName(dev2)} (${subScore(dev2)})
+
+Write four short paragraphs (about 60-80 words each) titled "Where you are right now". Address ${name} directly in the second person. The four paragraphs cover, in this order:
+1. The headline of their profile: which dimension is the stronger one and what that feels like from the outside.
+2. What the other dimension is doing, with reference to the specific score and what that means in practice.
+3. The diagnostic insight from their two priority subscales, named explicitly. What it costs them, in plain terms.
+4. The Authenticity Index reading, what it points at, and the through-line to the work the rest of the report sets out.
+
+Style rules, hard:
+- UK English. No em dashes. No "not just X but Y" constructions. No "leverage", "delve", "in today's", "stakeholder", "low-hanging", "impactful".
+- Generous tone, not lecturing. The reader is a senior professional.
+- Specific over elegant. Plain words.
+- No headings, no bullets, no bold. Four plain paragraphs separated by blank lines.
+- Do not start any paragraph with "Your [thing] score sits in...". Vary openers.
+- Do not name the score numbers more than twice across all four paragraphs.
+
+Return only the four paragraphs. No preamble.`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5',
+        max_tokens: 800,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    if (!res.ok) {
+      const errText = await res.text();
+      console.error('[profile] Anthropic API non-OK', res.status, errText.slice(0, 500));
+      return fallbackProfileNarrative(content, scoring, respondentName);
+    }
+    const data = await res.json();
+    const text = (data.content && data.content[0] && data.content[0].text) || '';
+    const cleaned = text.trim();
+    if (!cleaned) {
+      console.error('[profile] Empty response, using fallback');
+      return fallbackProfileNarrative(content, scoring, respondentName);
+    }
+    // Split into paragraphs on blank lines
+    const paragraphs = cleaned.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
+    if (paragraphs.length < 3) {
+      console.error('[profile] Too few paragraphs returned, using fallback');
+      return fallbackProfileNarrative(content, scoring, respondentName);
+    }
+    console.error('[profile] Got', paragraphs.length, 'paragraphs');
+    return paragraphs;
+  } catch (e) {
+    console.error('[profile] Network/parse error:', e.message);
+    return fallbackProfileNarrative(content, scoring, respondentName);
+  }
+}
+
+function fallbackProfileNarrative(content, scoring, respondentName) {
+  const name = respondentName || 'You';
+  const dev1 = scoring.priorityAreas[0];
+  const dev2 = scoring.priorityAreas[1];
+  const subName = c => (content.subscales[c] ? content.subscales[c].name : c);
+
+  // Which dimension is stronger
+  const cScore = scoring.confidence;
+  const sScore = scoring.socialSkills;
+  const cStronger = cScore >= sScore;
+  const strongerLabel = cStronger ? 'Confidence' : 'Social Skills';
+  const strongerScore = cStronger ? cScore : sScore;
+  const otherLabel = cStronger ? 'Social Skills' : 'Confidence';
+  const otherScore = cStronger ? sScore : cScore;
+
+  const para1 = `${name}, here is what your scores are actually saying. Your ${strongerLabel} is the stronger of the two dimensions at ${strongerScore}. That is the version of you most people in the room are picking up on, and it is doing useful work. The risk at this band is taking it for granted. Strong dimensions stay strong when they are deployed deliberately. They quietly thin when they are not.`;
+
+  const para2 = `Your ${otherLabel} at ${otherScore} is the other half of the picture. It is functional, but not yet doing everything it could. The gap between the two dimensions is where the development conversation usually sits. The priority subscales below name the specific behaviours where attention will most repay the effort.`;
+
+  const para3 = `The two priority subscales identified for you are ${subName(dev1)} and ${subName(dev2)}. These are not character flaws. They are skills that are not yet doing their job reliably. The cost of leaving them unattended is small in any single moment and significant over time. The people around you read these gaps long before they name them.`;
+
+  const para4 = `Your Authenticity Index sits at ${scoring.authenticityIndex}. This measures whether the version of you that turns up is broadly the same regardless of who is in the room. The work the rest of this report sets out is the work of consistency. Not becoming a different person. Making more of the version that already exists available to more of the people around you.`;
+
+  return [para1, para2, para3, para4];
+}
+
 // ── PDF rendering helpers ──────────────────────────────────────────────────
 const COLOURS = {
   navy:   '#1F3A5F',
   gold:   '#B08D57',
+  amber:  '#C9A84C',   // for priority bars on the subscale chart
   cream:  '#F8F5EF',
   soft:   '#F2EEE8',
   ink:    '#1A1A1A',
@@ -111,6 +254,11 @@ const FONT_HEAD = 'Helvetica';
 const FONT_HEAD_BOLD = 'Helvetica-Bold';
 const FONT_BODY = 'Times-Roman';
 const FONT_BODY_ITALIC = 'Times-Italic';
+
+// Standard body alignment for the whole report. Was 'justify' in v5, which
+// produced wide word-spacing on narrow lines. Left-aligned ragged-right reads
+// more naturally and feels less corporate.
+const BODY_ALIGN = 'left';
 
 function eyebrow(doc, text) {
   doc.font(FONT_HEAD_BOLD).fontSize(9).fillColor(COLOURS.gold)
@@ -139,15 +287,15 @@ function h3(doc, text) {
 
 function bodyText(doc, text) {
   doc.font(FONT_BODY).fontSize(11).fillColor(COLOURS.ink)
-     .text(text, { align: 'justify', lineGap: 3 });
+     .text(text, { align: BODY_ALIGN, lineGap: 3 });
   doc.moveDown(0.4);
 }
 
 function bulletPoint(doc, text) {
   const x = doc.x;
   doc.font(FONT_BODY).fontSize(11).fillColor(COLOURS.ink);
-  doc.text('•  ' + text, x + 12, doc.y, { 
-    align: 'justify', lineGap: 3, indent: 0,
+  doc.text('•  ' + text, x + 12, doc.y, {
+    align: BODY_ALIGN, lineGap: 3, indent: 0,
     width: 595 - 72 - 72 - 12
   });
   doc.x = x;
@@ -168,7 +316,8 @@ function ensureSpace(doc, needed) {
   if (doc.y + needed > 760) doc.addPage();
 }
 
-// ── Quadrant background tile for the scores ────────────────────────────────
+// ── Score tiles ────────────────────────────────────────────────────────────
+// Sub-labels now in roman (was italic), slightly smaller, in muted grey.
 function drawScoreTiles(doc, scoring, x, y, width) {
   const tileW = (width - 16) / 3;
   const tiles = [
@@ -183,14 +332,213 @@ function drawScoreTiles(doc, scoring, x, y, width) {
        .text(t.label, tx, y + 10, { width: tileW, align: 'center', characterSpacing: 1.5 });
     doc.font(FONT_HEAD_BOLD).fontSize(28).fillColor(COLOURS.navy)
        .text(String(t.value), tx, y + 24, { width: tileW, align: 'center' });
-    doc.font(FONT_BODY_ITALIC).fontSize(9).fillColor(COLOURS.muted)
-       .text(prettyBand(t.band) || '', tx, y + 60, { width: tileW, align: 'center' });
+    doc.font(FONT_HEAD).fontSize(8).fillColor(COLOURS.muted)
+       .text(prettyBand(t.band) || '', tx, y + 62, { width: tileW, align: 'center' });
   });
 }
 
 function prettyBand(b) {
   if (!b) return '';
   return b.charAt(0).toUpperCase() + b.slice(1);
+}
+
+// ── Quadrant grid (new in v6) ──────────────────────────────────────────────
+// Draws the 2x2 charisma model with axis labels and a YOU marker in the
+// active quadrant. Centred on x with given total size.
+function drawQuadrantGrid(doc, scoring, centerX, topY, size) {
+  const half = size / 2;
+  const left = centerX - half;
+  const top = topY;
+
+  // Map quadrant key to grid position (col, row): col 0 = lower confidence, col 1 = higher
+  //                                               row 0 = top (higher social), row 1 = bottom (lower social)
+  const positions = {
+    courteously_charismatic:    { col: 1, row: 0, label: 'The Courteously\nCharismatic' },
+    unknowingly_influential:    { col: 0, row: 0, label: 'The Unknowingly\nInfluential' },
+    occasionally_overconfident: { col: 1, row: 1, label: 'The Occasionally\nOverconfident' },
+    incidentally_invisible:     { col: 0, row: 1, label: 'The Incidentally\nInvisible' }
+  };
+
+  const activePos = positions[scoring.quadrant] || positions.courteously_charismatic;
+
+  // Draw the four cells
+  const cellW = half;
+  const cellH = half;
+  Object.entries(positions).forEach(([key, pos]) => {
+    const cx = left + pos.col * cellW;
+    const cy = top + pos.row * cellH;
+    const isActive = key === scoring.quadrant;
+
+    // Background — active cell in soft cream, others white
+    doc.rect(cx, cy, cellW, cellH);
+    if (isActive) {
+      doc.fillAndStroke(COLOURS.soft, COLOURS.line);
+    } else {
+      doc.lineWidth(0.5).strokeColor(COLOURS.line).stroke();
+    }
+
+    // Quadrant label, centred
+    doc.font(isActive ? FONT_HEAD_BOLD : FONT_HEAD)
+       .fontSize(10)
+       .fillColor(isActive ? COLOURS.navy : COLOURS.muted)
+       .text(pos.label, cx + 6, cy + cellH / 2 - 14, {
+         width: cellW - 12, align: 'center', lineGap: 1
+       });
+
+    // YOU marker on the active cell — small gold pill with plain text
+    // (Helvetica doesn't include the ▸ glyph, which v6.0 rendered as garbled
+    // characters. Plain text in a box reads cleanly across all PDF viewers.)
+    if (isActive) {
+      const pillW = 44;
+      const pillH = 14;
+      const pillX = cx + (cellW - pillW) / 2;
+      const pillY = cy + cellH - 22;
+      doc.rect(pillX, pillY, pillW, pillH).lineWidth(1).strokeColor(COLOURS.gold).stroke();
+      doc.font(FONT_HEAD_BOLD).fontSize(8).fillColor(COLOURS.gold)
+         .text('YOU', pillX, pillY + 3, {
+           width: pillW, align: 'center', characterSpacing: 1.5
+         });
+    }
+  });
+
+  // Axis labels — Confidence on the x-axis (under the grid)
+  doc.font(FONT_HEAD_BOLD).fontSize(8).fillColor(COLOURS.muted)
+     .text('LOWER CONFIDENCE', left, top + size + 8, {
+       width: cellW, align: 'center', characterSpacing: 1.5
+     })
+     .text('HIGHER CONFIDENCE', left + cellW, top + size + 8, {
+       width: cellW, align: 'center', characterSpacing: 1.5
+     });
+
+  // Social Skills on the y-axis (rotated text to the left of the grid)
+  doc.save();
+  doc.font(FONT_HEAD_BOLD).fontSize(8).fillColor(COLOURS.muted);
+  // Higher social skills label, rotated 90 degrees, positioned left of top half
+  doc.rotate(-90, { origin: [left - 12, top + cellH / 2] })
+     .text('HIGHER SOCIAL SKILLS', left - 12 - 50, top + cellH / 2 - 4, {
+       width: 100, align: 'center', characterSpacing: 1.5
+     });
+  doc.restore();
+  doc.save();
+  doc.font(FONT_HEAD_BOLD).fontSize(8).fillColor(COLOURS.muted);
+  doc.rotate(-90, { origin: [left - 12, top + cellH + cellH / 2] })
+     .text('LOWER SOCIAL SKILLS', left - 12 - 50, top + cellH + cellH / 2 - 4, {
+       width: 100, align: 'center', characterSpacing: 1.5
+     });
+  doc.restore();
+
+  // Restore drawing cursor below the grid
+  doc.x = 72;
+  doc.y = top + size + 30;
+}
+
+// ── Subscale profile (new in v6) ───────────────────────────────────────────
+// Ten horizontal bars, one per subscale, grouped by dimension. Priority
+// subscales rendered in amber; the rest in navy. Score and label beside each.
+function drawSubscaleBars(doc, scoring, content, developmentCodes, x, y, width) {
+  const codes = ['A1','A2','A3','A4','A5','B1','B2','B3','B4','B5'];
+  const labelW = 200;
+  const scoreW = 32;
+  const gapAfterLabel = 8;
+  const gapBeforeScore = 8;
+  const barW = width - labelW - scoreW - gapAfterLabel - gapBeforeScore;
+  const barH = 12;
+  const rowH = 22;
+
+  let cy = y;
+
+  codes.forEach((code, idx) => {
+    // Section header before the first A and first B
+    if (code === 'A1') {
+      doc.font(FONT_HEAD_BOLD).fontSize(9).fillColor(COLOURS.gold)
+         .text('CONFIDENCE SUBSCALES', x, cy, { characterSpacing: 1.5 });
+      cy += 16;
+    }
+    if (code === 'B1') {
+      cy += 8;
+      doc.font(FONT_HEAD_BOLD).fontSize(9).fillColor(COLOURS.gold)
+         .text('SOCIAL SKILLS SUBSCALES', x, cy, { characterSpacing: 1.5 });
+      cy += 16;
+    }
+
+    const sub = content.subscales[code];
+    const score = scoring.subscaleScores[code] || 0;
+    const isPriority = developmentCodes.includes(code);
+    const fill = isPriority ? COLOURS.amber : COLOURS.navy;
+
+    // Label
+    doc.font(FONT_HEAD).fontSize(10).fillColor(COLOURS.ink)
+       .text(`${code}  ${sub ? sub.name : code}`, x, cy + 1, {
+         width: labelW, ellipsis: true
+       });
+
+    // Bar background
+    const barX = x + labelW + gapAfterLabel;
+    doc.rect(barX, cy, barW, barH)
+       .fillAndStroke(COLOURS.soft, COLOURS.line);
+
+    // Bar fill — proportional to score
+    const fillW = Math.max(2, (score / 100) * barW);
+    doc.rect(barX, cy, fillW, barH).fill(fill);
+
+    // Score number
+    doc.font(FONT_HEAD_BOLD).fontSize(10).fillColor(COLOURS.ink)
+       .text(String(score), barX + barW + gapBeforeScore, cy + 1, {
+         width: scoreW, align: 'right'
+       });
+
+    cy += rowH;
+  });
+
+  // Legend
+  cy += 6;
+  const legendY = cy;
+  doc.rect(x, legendY, 10, 10).fill(COLOURS.amber);
+  doc.font(FONT_HEAD).fontSize(9).fillColor(COLOURS.muted)
+     .text('Your two priority subscales. Start the development work here.',
+           x + 16, legendY, { width: width - 16 });
+
+  doc.x = 72;
+  doc.y = cy + 24;
+}
+
+// ── Opener variation (new in v6) ───────────────────────────────────────────
+// v5 had every subscale page opening with "Your [name] score sits in a
+// strong/lower range." Across four consecutive pages the repetition shows.
+// We intercept the first sentence and swap in one of three variants,
+// deterministically selected by the subscale code so the same respondent
+// always gets the same wording.
+
+function varyOpener(originalText, code, frame) {
+  // frame = 'strength' or 'development'
+  // Identify the original opener pattern and replace just the first sentence.
+  const pattern = /^Your [^.]+ score sits in a (strong|lower) range\.\s*/;
+  const match = originalText.match(pattern);
+  if (!match) return originalText;
+
+  const rest = originalText.slice(match[0].length);
+
+  // Deterministic variant pick: hash of code → 0/1/2
+  const variantIdx = (code.charCodeAt(0) + code.charCodeAt(1)) % 3;
+
+  let opener;
+  if (frame === 'strength') {
+    const strengthOpeners = [
+      'This is a relative high point in your profile. ',
+      'The score here is doing useful work for you. ',
+      'This sits among your stronger subscales. '
+    ];
+    opener = strengthOpeners[variantIdx];
+  } else {
+    const devOpeners = [
+      'This subscale is the one most worth attention now. ',
+      'There is real room to develop here, and the work is specific. ',
+      'This is the subscale where deliberate practice will most repay the effort. '
+    ];
+    opener = devOpeners[variantIdx];
+  }
+
+  return opener + rest;
 }
 
 // ── Main entry ─────────────────────────────────────────────────────────────
@@ -225,8 +573,13 @@ module.exports = async (req, res) => {
     return;
   }
 
-  // Generate the headline (with fallback)
-  const headline = await generateHeadline(content, scoring, respondentName);
+  // Two API calls in parallel: headline (cover) and profile narrative (new
+  // "Where you are right now" page). Both have fallbacks. Running in parallel
+  // saves ~half a second of report generation time.
+  const [headline, profileParagraphs] = await Promise.all([
+    generateHeadline(content, scoring, respondentName),
+    generateProfileNarrative(content, scoring, respondentName)
+  ]);
 
   // Identify the strengths and development areas.
   // Critical: a subscale must never appear in both lists. Where scores are
@@ -281,15 +634,14 @@ module.exports = async (req, res) => {
   res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
   doc.pipe(res);
 
-  renderReport(doc, content, scoring, headline, respondentName, strengthCodes, developmentCodes, chosenMethods);
+  renderReport(doc, content, scoring, headline, profileParagraphs, respondentName, strengthCodes, developmentCodes, chosenMethods);
 
   doc.end();
 };
 
 // ── The report itself ──────────────────────────────────────────────────────
-function renderReport(doc, content, scoring, headline, respondentName, strengthCodes, developmentCodes, chosenMethods) {
+function renderReport(doc, content, scoring, headline, profileParagraphs, respondentName, strengthCodes, developmentCodes, chosenMethods) {
   const quadrant = content.quadrants[scoring.quadrant];
-  const totalPagesEstimate = 15;
   const today = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
   // ─── Page 1: Cover ──────────────────────────────────────────────────────
@@ -309,7 +661,14 @@ function renderReport(doc, content, scoring, headline, respondentName, strengthC
   doc.moveDown(1.2);
   doc.font(FONT_BODY_ITALIC).fontSize(13).fillColor(COLOURS.ink)
      .text(headline, { align: 'left', lineGap: 4, width: 400 });
-  doc.moveDown(6);
+
+  // Second gold rule lower in the page — gives the lower third somewhere to
+  // anchor instead of dead space. Thinner than the headline rule.
+  doc.moveDown(5);
+  doc.lineWidth(0.5).strokeColor(COLOURS.gold)
+     .moveTo(72, doc.y).lineTo(180, doc.y).stroke();
+  doc.moveDown(0.8);
+
   doc.font(FONT_HEAD).fontSize(10).fillColor(COLOURS.muted)
      .text(respondentName ? `Prepared for ${respondentName}` : 'Prepared for you');
   doc.text(today);
@@ -319,9 +678,6 @@ function renderReport(doc, content, scoring, headline, respondentName, strengthC
   eyebrow(doc, 'Opening summary');
   h1(doc, 'There is a lot here to build on');
 
-  // Lead with the manifesto (the through-line of the whole report).
-  // Page 1 has carried the quadrant name and the headline. Page 2 picks
-  // that up and frames what comes next.
   if (content.manifesto && content.manifesto.front) {
     content.manifesto.front.paragraphs.forEach(p => bodyText(doc, p));
   }
@@ -333,7 +689,7 @@ function renderReport(doc, content, scoring, headline, respondentName, strengthC
   doc.y += 90;
   doc.x = 72;
 
-  // ─── Pages 3-4: Your quadrant ──────────────────────────────────────────
+  // ─── Page 3: Your quadrant ─────────────────────────────────────────────
   doc.addPage();
   eyebrow(doc, 'Your quadrant');
   h1(doc, quadrant.label);
@@ -344,6 +700,16 @@ function renderReport(doc, content, scoring, headline, respondentName, strengthC
   bodyText(doc, quadrant.what_the_quadrant_means);
   h2(doc, 'Common patterns at this position');
   bodyText(doc, quadrant.common_blind_spots);
+
+  // ─── Page 4: Quadrant grid (new in v6) ─────────────────────────────────
+  doc.addPage();
+  eyebrow(doc, 'The charisma quadrants');
+  h1(doc, 'Where you sit in the model');
+  bodyText(doc, `The model maps charisma onto two dimensions: Confidence on the horizontal axis, Social Skills on the vertical. The four quadrants describe how the two combine in practice. Your scores place you in the highlighted quadrant. The other three are not failure modes. They are different working configurations, each with its own strengths and its own development edges.`);
+  doc.moveDown(1.2);
+  // Grid: centred on the page (page width 595, content width 451, center = 297.5)
+  // Use 320pt size, leaving space for axis labels on the left and below.
+  drawQuadrantGrid(doc, scoring, 297.5, doc.y, 320);
 
   // ─── Page 5: The two dimensions ────────────────────────────────────────
   doc.addPage();
@@ -357,7 +723,21 @@ function renderReport(doc, content, scoring, headline, respondentName, strengthC
   h2(doc, 'On the Social Skills dimension');
   bodyText(doc, socialSkillsBandSummary(scoring.socialSkillsBand));
 
-  // ─── Page 6: The Authenticity Index ────────────────────────────────────
+  // ─── Page 6: Subscale profile (new in v6) ──────────────────────────────
+  doc.addPage();
+  eyebrow(doc, 'Your full profile');
+  h1(doc, 'All ten subscales at a glance');
+  bodyText(doc, `The two dimensions are built from ten subscales: five for Confidence, five for Social Skills. The bars below show how each of yours is scoring. The two amber bars are your priority subscales, identified by the scoring engine as the most useful focus for development now. The rest of this report builds on this picture.`);
+  doc.moveDown(0.6);
+  drawSubscaleBars(doc, scoring, content, developmentCodes, 72, doc.y, 451);
+
+  // ─── Page 7: Where you are right now (new in v6) ───────────────────────
+  doc.addPage();
+  eyebrow(doc, 'Your profile in plain words');
+  h1(doc, 'Where you are right now');
+  profileParagraphs.forEach(p => bodyText(doc, p));
+
+  // ─── Page 8: The Authenticity Index ────────────────────────────────────
   doc.addPage();
   eyebrow(doc, 'The Authenticity Index');
   h1(doc, `Your Authenticity Index: ${scoring.authenticityIndex}`);
@@ -382,7 +762,19 @@ function renderReport(doc, content, scoring, headline, respondentName, strengthC
     }
     if (authBand.how_to_make_it_stronger) {
       h2(doc, 'How to make it stronger');
-      bodyText(doc, authBand.how_to_make_it_stronger);
+      // Strip the conditional B5 reference if it's the last sentence. The v5
+      // text ends with "...if B5 has shown up as one of your priority subscales."
+      // That sentence only lands if B5 is actually a priority, which for most
+      // respondents it is not.
+      let text = authBand.how_to_make_it_stronger;
+      // The broadly_consistent and selectively_deployed bands end with a
+      // sentence that only lands if B5 is a priority subscale. If it isn't,
+      // strip that trailing sentence outright. The preceding sentence already
+      // closes the paragraph cleanly.
+      if (!developmentCodes.includes('B5')) {
+        text = text.replace(/\s*The development pages[^.]*B5[^.]*\.\s*$/, '');
+      }
+      bodyText(doc, text);
     }
     if (authBand.how_to_use_it_even_better) {
       h2(doc, 'How to use it even better');
@@ -398,7 +790,7 @@ function renderReport(doc, content, scoring, headline, respondentName, strengthC
     }
   }
 
-  // ─── Pages 7-9: Your key strengths ─────────────────────────────────────
+  // ─── Your key strengths ─────────────────────────────────────────────────
   doc.addPage();
   eyebrow(doc, 'Your key strengths');
   h1(doc, 'What is already working');
@@ -418,17 +810,17 @@ function renderReport(doc, content, scoring, headline, respondentName, strengthC
     doc.moveDown(0.6);
 
     h2(doc, 'What this suggests');
-    bodyText(doc, block.what_this_suggests);
+    bodyText(doc, varyOpener(block.what_this_suggests, code, 'strength'));
     h2(doc, 'Why it matters');
     bodyText(doc, block.why_it_matters);
     h2(doc, 'How to use it even better');
     bodyText(doc, block.how_to_use_it_even_better);
   });
 
-  // ─── Pages 10-12: Your key development areas ───────────────────────────
+  // ─── Your key development areas ─────────────────────────────────────────
   doc.addPage();
   eyebrow(doc, 'Your key development areas');
-  h1(doc, 'Where to put your attention next');
+  h1(doc, 'Where to focus next');
   bodyText(doc, `Two subscales have been identified as the most useful focus for your development now. These are the areas where some deliberate practice over the next four to six weeks will produce visible change. Pick one to start with. Work on it. Then come back to the other.`);
   bodyText(doc, `The framing the rest of this report uses is important. A low score on a subscale does not mean you are deficient as a person. It means that particular skill is not yet doing its job reliably. The work is incremental, visible, and entirely doable in the real meetings and conversations of your working week.`);
 
@@ -445,7 +837,7 @@ function renderReport(doc, content, scoring, headline, respondentName, strengthC
     doc.moveDown(0.6);
 
     h2(doc, 'What may be happening');
-    bodyText(doc, block.what_may_be_happening);
+    bodyText(doc, varyOpener(block.what_may_be_happening, code, 'development'));
     h2(doc, 'Why this matters');
     bodyText(doc, block.why_this_matters);
     h2(doc, 'The skill to build');
@@ -454,7 +846,7 @@ function renderReport(doc, content, scoring, headline, respondentName, strengthC
     block.what_to_try_next.forEach(b => bulletPoint(doc, b));
   });
 
-  // ─── Page 13: Methods worth knowing ────────────────────────────────────
+  // ─── Methods worth knowing ─────────────────────────────────────────────
   doc.addPage();
   eyebrow(doc, 'Methods worth knowing');
   h1(doc, 'Four methods for your profile');
@@ -465,10 +857,10 @@ function renderReport(doc, content, scoring, headline, respondentName, strengthC
     renderMethodCard(doc, m, idx === chosenMethods.length - 1);
   });
 
-  // ─── Page 14: A four-week development plan ─────────────────────────────
+  // ─── A four-week plan ──────────────────────────────────────────────────
   doc.addPage();
   eyebrow(doc, 'Your four-week plan');
-  h1(doc, 'Where to start');
+  h1(doc, 'Your four weeks');
   bodyText(doc, `Most development plans fail because they are too long or too vague. Yours has four weeks, with one or two specific things to do in each. Small enough to actually run alongside your normal work.`);
   bodyText(doc, `Focus on your first priority subscale: ${content.subscales[developmentCodes[0]] ? content.subscales[developmentCodes[0]].name : 'your first priority'}. The plan below uses the activities from that subscale. After four weeks, come back to this report and decide whether to keep going or to move on to your second priority.`);
 
@@ -478,9 +870,10 @@ function renderReport(doc, content, scoring, headline, respondentName, strengthC
     bodyText(doc, week.detail);
   });
 
-  bodyText(doc, `Re-read the development pages at the end of week four. Notice what has changed in how you behave, and notice what the people around you have started doing differently. Both are evidence. The shift in your own behaviour is the first thing. The shift in theirs is the second, and the more important one.`);
+  // (v5's redundant trailing paragraph here has been removed. Week 4's text
+  // already covers the audit/notice instruction.)
 
-  // ─── Pages 15-17: Goal-setting exercise ──────────────────────────────
+  // ─── Goal-setting exercise ──────────────────────────────────────────────
   if (content.goal_setting) {
     renderGoalSettingIntro(doc, content.goal_setting);
     developmentCodes.forEach((code, idx) => {
@@ -491,7 +884,7 @@ function renderReport(doc, content, scoring, headline, respondentName, strengthC
     renderGoalSettingClosing(doc, content.goal_setting);
   }
 
-  // ─── Final page: Closing ──────────────────────────────────────────────────
+  // ─── Final page: Closing ──────────────────────────────────────────────
   doc.addPage();
   eyebrow(doc, 'A final note');
   const backManifesto = (content.manifesto && content.manifesto.back) || null;
@@ -499,7 +892,6 @@ function renderReport(doc, content, scoring, headline, respondentName, strengthC
   if (backManifesto) {
     backManifesto.paragraphs.forEach(p => bodyText(doc, p));
   } else {
-    // Fallback if manifesto block missing
     bodyText(doc, `The point is not to become a different person. It is to make the best of who you already are more consistent, more visible, and more useful to the people around you.`);
   }
 
@@ -555,8 +947,14 @@ function buildWeeklyPlan(content, developmentCodes, chosenMethods) {
     });
   }
   if (chosenMethods[0]) {
+    // v5 bug fix: method names often start with "The " (e.g. "The five-minutes
+    // practice"), which combined with the template "Week 3: use the ${name}"
+    // produced "Week 3: use the The five-minutes practice". Strip the leading
+    // "The " so the title reads naturally.
+    const rawName = chosenMethods[0].name || '';
+    const cleanName = rawName.replace(/^The\s+/i, '');
     plan.push({
-      title: `Week 3: use the ${chosenMethods[0].name}`,
+      title: `Week 3: use the ${cleanName}`,
       detail: `Find three real situations this week to put this method to work. The first time will feel awkward. The second time will be less awkward. By the third, the practice will be building muscle. ${chosenMethods[0].summary.split('. ')[0]}.`
     });
   } else if (acts[2]) {
@@ -604,7 +1002,7 @@ function renderGoalSettingExercise(doc, gs, code, sub, score, n, total) {
        .text('What moving up one level might look like');
     doc.moveDown(0.2);
     doc.font(FONT_BODY).fontSize(11).fillColor(COLOURS.ink)
-       .text(sub.next_level_up, { align: 'justify', lineGap: 3 });
+       .text(sub.next_level_up, { align: BODY_ALIGN, lineGap: 3 });
     doc.moveDown(0.6);
   }
 
@@ -644,7 +1042,7 @@ function renderGoalSettingClosing(doc, gs) {
   doc.moveDown(0.5);
   ensureSpace(doc, 120);
   doc.font(FONT_BODY_ITALIC).fontSize(11).fillColor(COLOURS.muted)
-     .text(gs.closing_paragraph, { align: 'justify', lineGap: 3 });
+     .text(gs.closing_paragraph, { align: BODY_ALIGN, lineGap: 3 });
 }
 
 // Helpers for the goal-setting exercise
@@ -685,13 +1083,7 @@ function drawWriteBox(doc, height) {
 }
 
 // ── Method card renderer ───────────────────────────────────────────────────
-// Renders a single method as a soft-cream card with the method name in navy.
-// Pages flow normally; cards split across pages if necessary.
-
 function renderMethodCard(doc, method, isLast) {
-  // Estimate height needed for this card. If not enough space remains on
-  // the current page, the card starts a new page. We measure by laying out
-  // the text in a hidden pass.
   const x = 72;
   const w = 451;
   const padding = 16;
@@ -715,11 +1107,10 @@ function renderMethodCard(doc, method, isLast) {
   // Title
   doc.fillColor(COLOURS.navy).font(FONT_HEAD_BOLD).fontSize(13)
      .text(method.name, x + padding, startY + padding, { width: w - 2 * padding });
-  // Body
+  // Body — left-aligned to match the rest of the report
   doc.fillColor(COLOURS.ink).font(FONT_BODY).fontSize(10.5)
      .text(method.summary, x + padding, startY + padding + titleHeight + 4,
-           { width: w - 2 * padding, lineGap: 3, align: 'justify' });
+           { width: w - 2 * padding, lineGap: 3, align: BODY_ALIGN });
   doc.y = startY + cardHeight + (isLast ? 8 : 14);
   doc.x = 72;
 }
-
