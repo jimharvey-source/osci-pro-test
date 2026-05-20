@@ -430,11 +430,26 @@ async function generateReport() {
       body: JSON.stringify({ email: userEmail, scoring: lastScoring, respondentName: userName })
     });
     if (!res.ok) throw new Error('Server returned ' + res.status);
+
+    // Read the filename from the server's Content-Disposition header.
+    // Prefer the RFC 5987 filename* form (UTF-8 safe) and fall back to the
+    // plain filename="..." form. Fall back to a sensible default if neither
+    // is present.
+    const disposition = res.headers.get('Content-Disposition') || '';
+    let filename = 'OSCI Report.pdf';
+    const utf8Match = disposition.match(/filename\*=UTF-8''([^;]+)/i);
+    const plainMatch = disposition.match(/filename="([^"]+)"/i);
+    if (utf8Match) {
+      filename = decodeURIComponent(utf8Match[1]);
+    } else if (plainMatch) {
+      filename = plainMatch[1];
+    }
+
     const blob = await res.blob();
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'OSCI_Pro_Test_Report.pdf';
+    a.download = filename;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
