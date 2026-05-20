@@ -373,7 +373,12 @@ function drawScoreTiles(doc, scoring, x, y, width) {
 
 function prettyBand(b) {
   if (!b) return '';
-  return b.charAt(0).toUpperCase() + b.slice(1);
+  // Band keys come in as 'higher', 'lower', 'broadly_consistent',
+  // 'selectively_deployed' etc. Convert underscores to spaces and
+  // uppercase only the first letter, so we get 'Broadly consistent'
+  // not 'Broadly_consistent' or 'Broadly Consistent'.
+  const spaced = b.replace(/_/g, ' ');
+  return spaced.charAt(0).toUpperCase() + spaced.slice(1);
 }
 
 // ── Quadrant grid (new in v6) ──────────────────────────────────────────────
@@ -649,29 +654,121 @@ module.exports = async (req, res) => {
     chosenMethods.push(fromOtherDimension || wildcards[0]);
   }
 
-  // Build the PDF
+  // Build the PDF.
+  // bufferPages: true is REQUIRED so we can come back at the end and stamp
+  // the header, footer and "Page X of Y" on every page once the total page
+  // count is known. Without buffering, pages flush as they're built and
+  // we'd be unable to write "Page 1 of 22" because we don't yet know it's 22.
+  const titleForMetadata = respondentName ? `${respondentName} OSCI Report` : 'OSCI Pro Report';
   const doc = new PDFDocument({
     size: 'A4',
     margins: { top: 72, bottom: 72, left: 72, right: 72 },
+    bufferPages: true,
     info: {
-      Title: 'OSCI Pro Report',
+      Title: titleForMetadata,
       Author: 'Jim Harvey | The Message Business',
       Subject: 'Personalised charisma development report'
     }
   });
 
-  // Build the filename: include name if present
-  const safeName = respondentName ? respondentName.replace(/[^a-zA-Z0-9_-]+/g, '_') : '';
-  const filename = safeName ? `OSCI_Pro_Report_${safeName}.pdf` : 'OSCI_Pro_Report.pdf';
+  // Filename for the download. Format: "[Name] OSCI Report.pdf"
+  // Strip anything that's awkward in a filename but preserve the space so
+  // the saved file reads as natural English on the user's desktop.
+  const safeNameForFilename = respondentName
+    ? respondentName.replace(/[^a-zA-Z0-9 _-]+/g, '').trim()
+    : '';
+  const filename = safeNameForFilename
+    ? `${safeNameForFilename} OSCI Report.pdf`
+    : 'OSCI Report.pdf';
 
   res.setHeader('Content-Type', 'application/pdf');
-  res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+  // Quoted filename so the space survives the HTTP header. Also include
+  // filename* (RFC 5987) for browsers that need a UTF-8-safe form.
+  res.setHeader(
+    'Content-Disposition',
+    `attachment; filename="${filename}"; filename*=UTF-8''${encodeURIComponent(filename)}`
+  );
   doc.pipe(res);
 
   renderReport(doc, content, scoring, headline, profileParagraphs, respondentName, strengthCodes, developmentCodes, chosenMethods);
 
+  // Second pass: stamp header, footer and "Page X of Y" on every page now
+  // that we know how many pages there are. Skip page 1 (the cover) — a
+  // cover with "Private and Confidential" stamped across it looks wrong,
+  // and the page number ("Page 1 of 22") would also be ugly on the cover.
+  stampHeadersAndFooters(doc, respondentName);
+
   doc.end();
 };
+
+// Walk every buffered page and add the header (top), footer text (bottom
+// left) and page indicator (bottom right). Skip the cover page.
+function stampHeadersAndFooters(doc, respondentName) {
+  const range = doc.bufferedPageRange(); // { start, count }
+  const totalPages = range.count;
+  const headerText = respondentName
+    ? `${respondentName} OSCI Report  ·  Private and Confidential`
+    : 'OSCI Report  ·  Private and Confidential';
+  const footerLeft = '© James G Harvey 2026';
+
+  // A4 page dimensions in points
+  const pageWidth = 595.28;
+  const pageHeight = 841.89;
+  const sideMargin = 72;
+
+  for (let i = range.start; i < range.start + range.count; i++) {
+    doc.switchToPage(i);
+    if (i === 0) continue; // skip the cover
+
+    // pdfkit's high-level text() call advances doc.y after writing, and if
+    // a subsequent call's y position appears to be below the bottom margin,
+    // pdfkit will auto-add a new page before writing. That behaviour ruins
+    // a stamping pass like this one (one stamp triggers a new page, that
+    // page gets stamped, and so on). To stop that, we drop the bottom
+    // margin to zero for the duration of the stamping pass on each page,
+    // then restore. We also use `lineBreak: false` so the text never wraps.
+    const originalBottomMargin = doc.page.margins.bottom;
+    const originalTopMargin = doc.page.margins.top;
+    doc.page.margins.bottom = 0;
+    doc.page.margins.top = 0;
+
+    // Header text: muted, centred, in the top page gutter.
+    doc.font(FONT_HEAD).fontSize(8).fillColor(COLOURS.muted)
+       .text(headerText, sideMargin, 36, {
+         width: pageWidth - 2 * sideMargin,
+         align: 'center',
+         lineBreak: false
+       });
+
+    // Thin gold rule under the header — a quiet brand cue.
+    doc.lineWidth(0.4).strokeColor(COLOURS.gold)
+       .moveTo(sideMargin, 50)
+       .lineTo(pageWidth - sideMargin, 50)
+       .stroke();
+
+    // Footer: copyright on the left, page indicator on the right.
+    const footerY = pageHeight - 40;
+    const halfWidth = (pageWidth - 2 * sideMargin) / 2;
+
+    doc.font(FONT_HEAD).fontSize(8).fillColor(COLOURS.muted)
+       .text(footerLeft, sideMargin, footerY, {
+         width: halfWidth,
+         align: 'left',
+         lineBreak: false
+       });
+
+    doc.font(FONT_HEAD).fontSize(8).fillColor(COLOURS.muted)
+       .text(`Page ${i + 1} of ${totalPages}`, sideMargin + halfWidth, footerY, {
+         width: halfWidth,
+         align: 'right',
+         lineBreak: false
+       });
+
+    // Restore the margins so any further pdfkit operations behave normally.
+    doc.page.margins.bottom = originalBottomMargin;
+    doc.page.margins.top = originalTopMargin;
+  }
+}
 
 // ── The report itself ──────────────────────────────────────────────────────
 function renderReport(doc, content, scoring, headline, profileParagraphs, respondentName, strengthCodes, developmentCodes, chosenMethods) {
