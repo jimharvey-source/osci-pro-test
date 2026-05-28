@@ -8,13 +8,27 @@
 // Authenticity Index and the two priority subscales.
 
 function scoreOSCIPro(answers, questionnaire) {
-  const { items, subscales, reverseItems, shadowItems, cutPoints, authenticityBands } = questionnaire;
+  const { items, subscales, reverseItems, shadowItems, cutPoints, authenticityBands,
+          personalImpact, personalImpactBands } = questionnaire;
 
   // 1. Invert reverse-scored items. Formula: 6 - raw.
+  //    Q1-50 (the ten subscales) are mandatory and still throw if missing.
+  //    Q51-60 (Personal Impact) are optional: if a respondent's payload
+  //    predates the Personal Impact stream, those items are simply skipped
+  //    and the Personal Impact reading is omitted downstream. This keeps the
+  //    function backward-compatible with any 50-answer payloads in flight.
+  const personalImpactItemSet = (questionnaire.personalImpact &&
+    Array.isArray(questionnaire.personalImpact.items))
+    ? new Set(questionnaire.personalImpact.items)
+    : new Set();
+
   const inverted = {};
   for (const item of items) {
     const raw = answers[item.n];
     if (typeof raw !== "number" || raw < 1 || raw > 5) {
+      if (personalImpactItemSet.has(item.n)) {
+        continue; // optional Personal Impact item, not yet answered
+      }
       throw new Error("Missing or invalid answer for Q" + item.n);
     }
     inverted[item.n] = reverseItems.includes(item.n) ? (6 - raw) : raw;
@@ -81,6 +95,59 @@ function scoreOSCIPro(answers, questionnaire) {
     b => authenticityIndex >= b.min && authenticityIndex <= b.max
   );
 
+  // 7b. Personal Impact. Mean of its ten items (Q51-60, post-reverse), scaled
+  //     to 0-100, with two component readings: Message Craft (Q51-55) and
+  //     Voice and Presence (Q56-60). Reported as a band.
+  //
+  //     The multiplier rule (framework section 7): a high Personal Impact
+  //     score is only good news when the social skills underneath it are
+  //     strong. High impact over Social Skills below the Higher threshold is
+  //     "polish the room will eventually see through". We compute a flag the
+  //     report uses to choose which framing to print. The score is the same;
+  //     the meaning depends on the substance beneath it.
+  //
+  //     Guarded so that an older 50-answer payload (no Q51-60) still scores
+  //     cleanly: if the PI items are absent, personalImpact is returned null
+  //     and the report simply omits the Personal Impact reading.
+  let personalImpactResult = null;
+  if (personalImpact && Array.isArray(personalImpact.items)) {
+    const piItems = personalImpact.items;
+    const havePI = piItems.every(n => typeof inverted[n] === "number");
+    if (havePI) {
+      const scale = arr => {
+        const m = arr.reduce((a, n) => a + inverted[n], 0) / arr.length; // 1-5
+        return Math.round(((m - 1) / 4) * 100); // 0-100
+      };
+      const piScore = scale(piItems);
+      const components = {};
+      for (const key in personalImpact.components) {
+        const comp = personalImpact.components[key];
+        components[key] = {
+          name: comp.name,
+          score: scale(comp.items)
+        };
+      }
+      const piBand = (personalImpactBands || []).find(
+        b => piScore >= b.min && piScore <= b.max
+      );
+
+      // Multiplier flag: is the Social Skills foundation strong enough to
+      // support the impact score? "Thin" = Social Skills below the Higher
+      // threshold (the developingToHigher cut point).
+      const socialSkillsIsHigher = socialSkills >= cutPoints.socialSkills.developingToHigher;
+      const impactIsHigh = piScore >= 70; // "Lands in most rooms" or better
+      const impactOutrunsSubstance = impactIsHigh && !socialSkillsIsHigher;
+
+      personalImpactResult = {
+        score: piScore,
+        band: piBand ? piBand.label : null,
+        description: piBand ? piBand.description : null,
+        components,
+        impactOutrunsSubstance
+      };
+    }
+  }
+
   // 8. Two priority subscales: the two lowest scores. Tie-break by
   //    subscale order (A1 < A2 < ... < B5) so the result is deterministic.
   const ordered = Object.entries(subscaleScores)
@@ -98,6 +165,7 @@ function scoreOSCIPro(answers, questionnaire) {
     authenticityIndex,
     authenticityBand: authBand ? authBand.label : null,
     authenticityDescription: authBand ? authBand.description : null,
+    personalImpact: personalImpactResult,
     priorityAreas: priority,
     version: questionnaire.version
   };

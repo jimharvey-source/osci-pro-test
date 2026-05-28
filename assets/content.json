@@ -498,5 +498,28 @@
         "If you would value going further, the companion book, Open-Source Charisma, sets out the full model with stories, characters, and ten practical chapters of practice. For workshops, coaching, or licensed use of the Pro instrument with your team or clients, contact Jim at jim.harvey@themessagebusiness.com. Go well."
       ]
     }
+  },
+  "personal_impact": {
+    "intro": "Personal Impact measures whether your message lands. Not whether you are confident or warm, but whether the thing you most need a person to take away actually gets through. It runs as a separate reading because the substance and the delivery are two different skills. A person can have a great deal to say and lose it in the telling. Another can hold a room with very little underneath. This score is about the telling.",
+    "components": {
+      "message_craft": "how the message is built: finding the one thing that matters, making it concrete, and cutting everything that buries it.",
+      "voice_presence": "how the message is carried: pace, emphasis, and the nerve to leave a short silence after a point rather than rushing past it."
+    },
+    "bands": {
+      "Lands reliably": {
+        "what_this_suggests": "Your message gets through in most rooms, to most people, most of the time. You find the thing that matters and you deliver it so it carries. This is a real strength and a rare one. Most people are stronger on substance than on getting it across. The development edge is to keep this working under pressure and in the rooms where the stakes are highest, which is exactly where delivery tends to slip."
+      },
+      "Lands in most rooms": {
+        "what_this_suggests": "Your message gets through in familiar settings, with some loss in harder ones. The craft is mostly there. What varies is consistency: the same point that lands cleanly in a one-to-one can thin out in a larger room or under time pressure. The work is to notice where the loss happens and to bring the same deliberate delivery to those moments that you bring to the easy ones."
+      },
+      "Inconsistent": {
+        "what_this_suggests": "Your message gets through some of the time. Often the substance is there and the delivery loses it. This is common and very fixable, because the gap is in the telling rather than the thinking. The two parts below show you where the loss is happening: whether the point is getting buried before it leaves your mouth, or whether it is the delivery that flattens it on the way out."
+      },
+      "Not yet landing": {
+        "what_this_suggests": "Your message is not reliably getting through, even when the underlying thinking is sound. That last part matters: this is not a comment on your ideas. It is a comment on the channel between your ideas and the people who need them. The good news is that craft and delivery are both learnable, and small changes here tend to produce visible results quickly. The two parts below show you where to start."
+      }
+    },
+    "multiplier_overrun": "Your Personal Impact score is high, but your Social Skills sit below the higher band. That combination is worth naming plainly. Impact built on delivery rather than on genuine connection is polish, and a room will eventually see through it. The work is not more delivery. It is the social skills underneath: the listening, the warmth, the consistency that give the delivery something real to carry. Read this score as a prompt to strengthen the foundation, not to add more shine.",
+    "multiplier_sound": "Your Personal Impact rests on a solid social foundation. The delivery is carrying real substance, which is what makes it land rather than merely impress. The development edge here is consistency: making sure the message lands as reliably in the hard rooms as it does in the easy ones."
   }
 }

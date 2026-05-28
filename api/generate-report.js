@@ -353,21 +353,37 @@ function ensureSpace(doc, needed) {
 // ── Score tiles ────────────────────────────────────────────────────────────
 // Sub-labels now in roman (was italic), slightly smaller, in muted grey.
 function drawScoreTiles(doc, scoring, x, y, width) {
-  const tileW = (width - 16) / 3;
   const tiles = [
     { label: 'CONFIDENCE',         value: scoring.confidence,        band: scoring.confidenceBand },
     { label: 'SOCIAL SKILLS',      value: scoring.socialSkills,      band: scoring.socialSkillsBand },
     { label: 'AUTHENTICITY INDEX', value: scoring.authenticityIndex, band: scoring.authenticityBand }
   ];
+  // Add the Personal Impact tile when the reading is present (60-item payloads).
+  if (scoring.personalImpact && typeof scoring.personalImpact.score === 'number') {
+    tiles.push({
+      label: 'PERSONAL IMPACT',
+      value: scoring.personalImpact.score,
+      band: scoring.personalImpact.band
+    });
+  }
+
+  const gap = 8;
+  const n = tiles.length;
+  const tileW = (width - gap * (n - 1)) / n;
+  // Four tiles are narrower, so the score figure and label sizes step down a
+  // little to keep everything inside the tile without crowding.
+  const valueSize = n >= 4 ? 24 : 28;
+  const labelSize = n >= 4 ? 7 : 8;
+
   tiles.forEach((t, idx) => {
-    const tx = x + idx * (tileW + 8);
+    const tx = x + idx * (tileW + gap);
     doc.rect(tx, y, tileW, 80).lineWidth(0.5).strokeColor(COLOURS.line).stroke();
-    doc.font(FONT_HEAD_BOLD).fontSize(8).fillColor(COLOURS.muted)
-       .text(t.label, tx, y + 10, { width: tileW, align: 'center', characterSpacing: 1.5 });
-    doc.font(FONT_HEAD_BOLD).fontSize(28).fillColor(COLOURS.navy)
-       .text(String(t.value), tx, y + 24, { width: tileW, align: 'center' });
-    doc.font(FONT_HEAD).fontSize(8).fillColor(COLOURS.muted)
-       .text(prettyBand(t.band) || '', tx, y + 62, { width: tileW, align: 'center' });
+    doc.font(FONT_HEAD_BOLD).fontSize(labelSize).fillColor(COLOURS.muted)
+       .text(t.label, tx + 2, y + 10, { width: tileW - 4, align: 'center', characterSpacing: 1.2 });
+    doc.font(FONT_HEAD_BOLD).fontSize(valueSize).fillColor(COLOURS.navy)
+       .text(String(t.value), tx, y + 26, { width: tileW, align: 'center' });
+    doc.font(FONT_HEAD).fontSize(7).fillColor(COLOURS.muted)
+       .text(prettyBand(t.band) || '', tx + 2, y + 63, { width: tileW - 4, align: 'center' });
   });
 }
 
@@ -539,6 +555,55 @@ function drawSubscaleBars(doc, scoring, content, developmentCodes, x, y, width) 
 
   doc.x = 72;
   doc.y = cy + 24;
+}
+
+// ── Personal Impact page (new in v9) ───────────────────────────────────────
+function renderPersonalImpactPage(doc, content, scoring) {
+  const pi = scoring.personalImpact;
+  const copy = (content.personal_impact && content.personal_impact.bands &&
+    content.personal_impact.bands[pi.band]) || null;
+
+  doc.addPage();
+  eyebrow(doc, 'How your message lands');
+  h1(doc, `Your Personal Impact: ${pi.score}`);
+  doc.font(FONT_BODY_ITALIC).fontSize(13).fillColor(COLOURS.muted)
+     .text(pi.band || '');
+  doc.moveDown(0.8);
+
+  // What this measures (shared opener, from content.json or a sensible default)
+  const intro = (content.personal_impact && content.personal_impact.intro) ||
+    'Personal Impact measures whether your message lands. Not whether you are confident or warm, but whether the thing you most need a person to take away actually gets through. It runs as a separate reading because the substance and the delivery are different skills, and a person can be strong in one and not the other.';
+  h2(doc, 'What this measures');
+  bodyText(doc, intro);
+
+  // The band reading
+  if (copy && copy.what_this_suggests) {
+    h2(doc, 'What this suggests');
+    bodyText(doc, copy.what_this_suggests);
+  }
+
+  // The two component readings, with their scores
+  h2(doc, 'The two parts of impact');
+  const mc = pi.components.message_craft;
+  const vp = pi.components.voice_presence;
+  const mcCopy = (content.personal_impact && content.personal_impact.components &&
+    content.personal_impact.components.message_craft) || 'how the message is built: relevant, clear, and concrete enough to survive the meeting.';
+  const vpCopy = (content.personal_impact && content.personal_impact.components &&
+    content.personal_impact.components.voice_presence) || 'how the message is delivered: pace, emphasis, and the willingness to leave a point room to land.';
+  bodyText(doc, `Message Craft, ${mc.score} of 100. This is ${mcCopy}`);
+  bodyText(doc, `Voice and Presence, ${vp.score} of 100. This is ${vpCopy}`);
+
+  // The multiplier framing: which version prints depends on the substance beneath.
+  h2(doc, 'Reading this score honestly');
+  if (pi.impactOutrunsSubstance) {
+    const overrun = (content.personal_impact && content.personal_impact.multiplier_overrun) ||
+      'Your Personal Impact score is high, but your Social Skills sit below the higher band. That combination is worth naming plainly. Impact built on delivery rather than on genuine connection is polish, and a room will eventually see through it. The work is not more delivery. It is the social skills underneath: the listening, the warmth, the consistency that give the delivery something real to carry. Read this score as a prompt to strengthen the foundation, not to add more shine.';
+    bodyText(doc, overrun);
+  } else {
+    const sound = (content.personal_impact && content.personal_impact.multiplier_sound) ||
+      'Your Personal Impact rests on a solid social foundation. The delivery is carrying real substance, which is what makes it land rather than merely impress. The development edge here is consistency: making sure the message lands as reliably in the hard rooms as it does in the easy ones.';
+    bodyText(doc, sound);
+  }
 }
 
 // ── Opener variation (new in v6) ───────────────────────────────────────────
@@ -919,6 +984,15 @@ function renderReport(doc, content, scoring, headline, profileParagraphs, respon
       h2(doc, 'What to try next');
       authBand.what_to_try_next.forEach(b => bulletPoint(doc, b));
     }
+  }
+
+  // ─── Personal Impact (new in v9) ───────────────────────────────────────
+  // Only rendered when the reading is present (60-item payloads). The page
+  // reads the score against the Social Skills foundation: the multiplier
+  // rule means a high impact score over thin social skills carries a
+  // different message from the same score over strong ones.
+  if (scoring.personalImpact && typeof scoring.personalImpact.score === 'number') {
+    renderPersonalImpactPage(doc, content, scoring);
   }
 
   // ─── Your key strengths ─────────────────────────────────────────────────

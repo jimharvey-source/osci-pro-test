@@ -1,7 +1,7 @@
 {
-  "version": "pro-test-1.2",
-  "title": "OSCI Pro \u2014 Charisma Quadrant Assessment",
-  "subtitle": "50 questions. Ten subscales. About 8 minutes.",
+  "version": "pro-test-1.3",
+  "title": "OSCI Pro — Charisma Quadrant Assessment",
+  "subtitle": "60 questions. Ten subscales plus Personal Impact. About 10 minutes.",
   "likert": [
     {
       "value": 1,
@@ -156,7 +156,11 @@
     43,
     45,
     47,
-    49
+    49,
+    53,
+    55,
+    59,
+    60
   ],
   "shadowItems": [
     35,
@@ -446,6 +450,70 @@
       "subscale": "B5",
       "text": "I invest time and attention in people even when they have nothing obvious to offer me.",
       "shadow": true
+    },
+    {
+      "n": 51,
+      "stream": "PI",
+      "component": "message_craft",
+      "text": "Before an important conversation, I work out the one thing I most need the other person to take away."
+    },
+    {
+      "n": 52,
+      "stream": "PI",
+      "component": "message_craft",
+      "text": "I can find the single most important thing in what I want to get across."
+    },
+    {
+      "n": 53,
+      "stream": "PI",
+      "component": "message_craft",
+      "reverse": true,
+      "text": "When I am short of time, I cram everything in rather than cutting to what matters."
+    },
+    {
+      "n": 54,
+      "stream": "PI",
+      "component": "message_craft",
+      "text": "I make my points concrete, with an example or a picture, rather than leaving them abstract."
+    },
+    {
+      "n": 55,
+      "stream": "PI",
+      "component": "message_craft",
+      "reverse": true,
+      "text": "My points often run longer than they need to, and the main thing gets lost in the middle."
+    },
+    {
+      "n": 56,
+      "stream": "PI",
+      "component": "voice_presence",
+      "text": "When I want a point to land, I slow down and put verbal emphasis on the words that carry it."
+    },
+    {
+      "n": 57,
+      "stream": "PI",
+      "component": "voice_presence",
+      "text": "I can tell from the room whether what I am saying is landing, and change course if it is not."
+    },
+    {
+      "n": 58,
+      "stream": "PI",
+      "component": "voice_presence",
+      "text": "I am comfortable leaving a short silence after an important point rather than filling it."
+    },
+    {
+      "n": 59,
+      "stream": "PI",
+      "component": "voice_presence",
+      "reverse": true,
+      "text": "Under pressure my delivery speeds up and flattens, so what I say carries less than it should."
+    },
+    {
+      "n": 60,
+      "stream": "PI",
+      "component": "voice_presence",
+      "reverse": true,
+      "text": "I deliver important messages in a way that makes them sound less important than they are."
     }
   ],
   "cutPoints": {
@@ -501,5 +569,67 @@
       "label": "The Courteously Charismatic",
       "tagline": "Competent and connected. The work is consistency. Closing the gap between best and average."
     }
-  }
+  },
+  "personalImpact": {
+    "items": [
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60
+    ],
+    "components": {
+      "message_craft": {
+        "name": "Message Craft",
+        "items": [
+          51,
+          52,
+          53,
+          54,
+          55
+        ]
+      },
+      "voice_presence": {
+        "name": "Voice and Presence",
+        "items": [
+          56,
+          57,
+          58,
+          59,
+          60
+        ]
+      }
+    }
+  },
+  "personalImpactBands": [
+    {
+      "min": 85,
+      "max": 100,
+      "label": "Lands reliably",
+      "description": "The message gets through in most rooms, to most people, most of the time."
+    },
+    {
+      "min": 70,
+      "max": 84,
+      "label": "Lands in most rooms",
+      "description": "The message gets through in familiar settings, with some loss in harder ones."
+    },
+    {
+      "min": 55,
+      "max": 69,
+      "label": "Inconsistent",
+      "description": "The message gets through some of the time. Often the substance is there but the delivery loses it."
+    },
+    {
+      "min": 0,
+      "max": 54,
+      "label": "Not yet landing",
+      "description": "The message is not reliably getting through, even when the underlying thinking is sound."
+    }
+  ]
 }
