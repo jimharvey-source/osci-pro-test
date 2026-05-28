@@ -7,6 +7,57 @@
 <title>Open-Source Charisma Pro — The Charisma Quadrant Assessment</title>
 <link href="https://fonts.googleapis.com/css2?family=Calibri:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/site.css">
+<style>
+  /* Page-local styles. Use site palette variables if defined; fall back to literals. */
+  .four-up {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin: 32px 0;
+  }
+  .four-up .tile {
+    background: #F2EEE8;
+    border-left: 3px solid #B08D57;
+    padding: 20px 18px;
+    border-radius: 2px;
+  }
+  .four-up .tile h3 {
+    margin: 0 0 6px 0;
+    font-size: 1.05rem;
+    color: #1F3A5F;
+  }
+  .four-up .tile .band {
+    font-style: italic;
+    color: #555;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+  }
+  .four-up .tile p {
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.45;
+  }
+  @media (max-width: 720px) {
+    .four-up { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .quadrant-block {
+    margin: 40px auto;
+    max-width: 560px;
+    text-align: center;
+  }
+  .quadrant-caption {
+    margin-top: 14px;
+    font-style: italic;
+    color: #555;
+    font-size: 0.95rem;
+  }
+  .quadrant-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+</style>
 </head>
 <body>
 
@@ -15,17 +66,15 @@
   <div class="eyebrow">OSCI Pro</div>
   <h1>The Charisma Quadrant Assessment</h1>
   <div class="gold-rule"></div>
-  <p class="subtitle">Ten subscales. Fifty questions. About eight minutes. A finer reading of how you come across, and what to work on.</p>
+  <p class="subtitle">Sixty questions. Ten subscales. Around ten minutes. A precise reading of how you come across, whether your message lands, and where the next ten weeks of work will most repay you.</p>
 
-  <p>The Open-Source Charisma Indicator measures two dimensions: Confidence and Social Skills. The free version, taken by thousands of people, places you in one of four charisma quadrants and gives you a broad reading of where to focus.</p>
+  <p>The Pro instrument measures two dimensions: Confidence and Social Skills. It places you in one of four charisma quadrants, gives you a banded interpretation of each of ten subscales, and produces two further readings the free version cannot see. An Authenticity Index that picks up the gap between how you behave with people who matter to you and everyone else. A Personal Impact score that picks up whether what you say actually lands.</p>
 
-  <p>The Pro version goes further. Ten subscales rather than four. An Authenticity Index that picks up the gap between how you behave with the people who matter to you and everyone else. A banded interpretation that tells you which two skills will most repay attention now.</p>
-
-  <p>This is the test build. It is hosted here for development and review. It does not yet include payment, the full practice report, or the analytics that come with the launched product. The fifty questions and the scoring are exactly as they will be in production.</p>
+  <p>The result is a personalised report of around twenty-three pages, naming the two skills where the next development work will most repay your attention, and the specific practices to start on this week.</p>
 
   <div class="hero-stats">
     <div>
-      <div class="stat-value">50</div>
+      <div class="stat-value">60</div>
       <div class="stat-label">Questions</div>
     </div>
     <div>
@@ -33,43 +82,108 @@
       <div class="stat-label">Subscales</div>
     </div>
     <div>
-      <div class="stat-value">8'</div>
+      <div class="stat-value">10'</div>
       <div class="stat-label">Average time</div>
     </div>
   </div>
 
-  <div style="text-align: center; margin: 48px 0 32px;">
+  <div style="text-align: center; margin: 40px 0 24px;">
     <a class="btn primary" href="/assessment.html">Take the assessment</a>
   </div>
 
-  <h2>What you get back</h2>
+  <h2>What the report gives you</h2>
 
-  <div class="three-up">
+  <p>Four readings, banded in plain language. Each one tells you something different about how you land.</p>
+
+  <div class="four-up">
     <div class="tile">
-      <h3>Three scores</h3>
-      <p>Confidence, Social Skills, and the Authenticity Index. Each one banded as Lower, Developing, or Higher with a description of what that range means in practice.</p>
+      <h3>Confidence</h3>
+      <div class="band">Lower &middot; Developing &middot; Higher</div>
+      <p>How you carry yourself internally and externally. Self-worth, composure under pressure, willingness to say the difficult thing, capacity to adapt.</p>
     </div>
     <div class="tile">
-      <h3>Your quadrant type</h3>
-      <p>Where you sit across the two dimensions. Courteously Charismatic, Unknowingly Influential, Occasionally Overconfident, or Incidentally Invisible.</p>
+      <h3>Social Skills</h3>
+      <div class="band">Lower &middot; Developing &middot; Higher</div>
+      <p>What you actually do with and for the people around you. Listening, warmth, conversational craft, emotional control.</p>
     </div>
     <div class="tile">
-      <h3>Two priority subscales</h3>
-      <p>The two skills where the work will most repay your attention now, with specific practices to start on this week.</p>
+      <h3>Authenticity Index</h3>
+      <div class="band">Consistently available to Significantly instrumental</div>
+      <p>Whether your warmth and attention are reliably available across audiences, or visibly conditional on stakes, status, or usefulness.</p>
     </div>
+    <div class="tile">
+      <h3>Personal Impact</h3>
+      <div class="band">Lands reliably to Not yet landing</div>
+      <p>Whether what you say actually lands. Two components: how you build the message, and how you deliver it. Read as a multiplier on the social skills underneath.</p>
+    </div>
+  </div>
+
+  <h2>The model in one picture</h2>
+
+  <div class="quadrant-block">
+    <svg class="quadrant-svg" viewBox="0 0 520 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The Charisma Quadrant. Two axes: Confidence vertical, Social Skills horizontal. Four quadrants named Incidentally Invisible, Unknowingly Influential, Occasionally Overconfident, Courteously Charismatic.">
+      <!-- Background -->
+      <rect x="0" y="0" width="520" height="480" fill="#F8F5EF"/>
+
+      <!-- Outer grid frame -->
+      <rect x="80" y="40" width="400" height="360" fill="none" stroke="#D9D9D9" stroke-width="1"/>
+
+      <!-- Axes (centre lines) -->
+      <line x1="280" y1="40" x2="280" y2="400" stroke="#1F3A5F" stroke-width="1.5"/>
+      <line x1="80" y1="220" x2="480" y2="220" stroke="#1F3A5F" stroke-width="1.5"/>
+
+      <!-- Quadrant labels -->
+      <!-- Top-left: Lower C / Higher SS? No. Vertical is Confidence: top = higher. Horizontal is SS: right = higher. -->
+      <!-- Top-left: Higher C, Lower SS = Occasionally Overconfident -->
+      <text x="180" y="125" text-anchor="middle" font-family="Calibri, sans-serif" font-size="14" font-weight="700" fill="#1F3A5F">Occasionally</text>
+      <text x="180" y="143" text-anchor="middle" font-family="Calibri, sans-serif" font-size="14" font-weight="700" fill="#1F3A5F">Overconfident</text>
+
+      <!-- Top-right: Higher C, Higher SS = Courteously Charismatic -->
+      <text x="380" y="125" text-anchor="middle" font-family="Calibri, sans-serif" font-size="14" font-weight="700" fill="#1F3A5F">Courteously</text>
+      <text x="380" y="143" text-anchor="middle" font-family="Calibri, sans-serif" font-size="14" font-weight="700" fill="#1F3A5F">Charismatic</text>
+
+      <!-- Bottom-left: Lower C, Lower SS = Incidentally Invisible -->
+      <text x="180" y="305" text-anchor="middle" font-family="Calibri, sans-serif" font-size="14" font-weight="700" fill="#1F3A5F">Incidentally</text>
+      <text x="180" y="323" text-anchor="middle" font-family="Calibri, sans-serif" font-size="14" font-weight="700" fill="#1F3A5F">Invisible</text>
+
+      <!-- Bottom-right: Lower C, Higher SS = Unknowingly Influential -->
+      <text x="380" y="305" text-anchor="middle" font-family="Calibri, sans-serif" font-size="14" font-weight="700" fill="#1F3A5F">Unknowingly</text>
+      <text x="380" y="323" text-anchor="middle" font-family="Calibri, sans-serif" font-size="14" font-weight="700" fill="#1F3A5F">Influential</text>
+
+      <!-- Y-axis label (Confidence) -->
+      <text x="280" y="28" text-anchor="middle" font-family="Calibri, sans-serif" font-size="13" font-weight="600" fill="#B08D57" letter-spacing="1.5">CONFIDENCE</text>
+      <text x="280" y="420" text-anchor="middle" font-family="Calibri, sans-serif" font-size="11" fill="#555">Lower</text>
+      <text x="280" y="56" text-anchor="middle" font-family="Calibri, sans-serif" font-size="11" fill="#555">Higher</text>
+
+      <!-- X-axis label (Social Skills) -->
+      <text x="280" y="460" text-anchor="middle" font-family="Calibri, sans-serif" font-size="13" font-weight="600" fill="#B08D57" letter-spacing="1.5">SOCIAL SKILLS</text>
+      <text x="92" y="225" text-anchor="start" font-family="Calibri, sans-serif" font-size="11" fill="#555">Lower</text>
+      <text x="468" y="225" text-anchor="end" font-family="Calibri, sans-serif" font-size="11" fill="#555">Higher</text>
+    </svg>
+    <p class="quadrant-caption">Confidence and Social Skills produce four positions. The Pro tells you which one you currently occupy, and which two of ten skills will most move you.</p>
+  </div>
+
+  <div style="text-align: center; margin: 40px 0 24px;">
+    <a class="btn primary" href="/assessment.html">Take the assessment</a>
   </div>
 
   <h2>Who this is for</h2>
 
-  <p>The Pro instrument is built for people who already know they want to develop, and want something sharper than a generic personality test. Senior managers, sales professionals, consultants, partners in professional services firms, coaches working with their own clients. Anyone whose work depends on whether the people in the room leave it better than they came in.</p>
+  <p>People whose work depends on the people in the room leaving it better than they came in. Anyone who already knows roughly where they want to develop, and wants something more precise than a personality test.</p>
 
-  <p>It does not assess personality in the traditional sense. It does not test intelligence, knowledge, or potential. It measures the behaviours that produce the effect we call charisma in working life, and where those behaviours are still uneven.</p>
+  <ul>
+    <li>Senior managers and leaders</li>
+    <li>Sales professionals and account directors</li>
+    <li>Consultants and partners in professional services firms</li>
+    <li>Coaches working with their own clients</li>
+    <li>L&amp;D and people-development specialists</li>
+  </ul>
 
-  <p>If you have not yet taken the free Open-Source Charisma Indicator, that is the better place to start. You can find it at <a class="inline-link" href="https://opensourcecharisma.com/assessment">opensourcecharisma.com/assessment</a>.</p>
+  <p>The Pro does not test personality, intelligence, knowledge or potential. It measures the behaviours that produce the effect we call charisma in working life, and identifies where those behaviours are still uneven. If you have not yet taken the free Open-Source Charisma Indicator, that is the better place to start. You can find it at <a class="inline-link" href="https://opensourcecharisma.com/assessment">opensourcecharisma.com/assessment</a>.</p>
 
   <h2>The science behind it</h2>
 
-  <p>The Pro instrument draws on five lines of research: the literature on self-awareness in leadership (Eurich), metacognitive monitoring (Flavell), emotional labour (Hochschild, Grandey), authenticity in organisational psychology (Kernis, Goldman, Wood), and the empirical validation work the original Indicator was built on. The <a class="inline-link" href="/methodology.html">Methodology page</a> sets out the construct rationale and the references in full.</p>
+  <p>The Pro draws on the literature on self-awareness in leadership, metacognitive monitoring, emotional labour, authenticity in organisational psychology, and the empirical validation work the original Indicator was built on. The <a class="inline-link" href="/methodology.html">Methodology page</a> sets out the construct rationale, the scoring spec, the validation status, and the references in full.</p>
 
   <div style="text-align: center; margin: 48px 0 16px;">
     <a class="btn primary" href="/assessment.html">Take the assessment</a>
