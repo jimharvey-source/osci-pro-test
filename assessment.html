@@ -237,41 +237,24 @@ let answers = {};
 let userEmail = null;
 let userName = null;
 let lastScoring = null;
-
 // Dimension intro copy
 const DIMENSION_INTROS = {
   Confidence: {
-    eyebrow: "Part A of 2",
+    eyebrow: "Part 1 of 3",
     title: "Confidence",
     subtitle: "How you carry yourself. Twenty-five questions across five subscales: self-esteem, resilience, assertiveness, growth, and situational self-awareness."
   },
   "Social Skills": {
-    eyebrow: "Part B of 2",
+    eyebrow: "Part 2 of 3",
     title: "Social Skills",
     subtitle: "How you behave with other people. Twenty-five questions across five subscales: empathy, warmth, conversation, emotional control, and consistency across audiences."
+  },
+  "Personal Impact": {
+    eyebrow: "Part 3 of 3",
+    title: "Personal Impact",
+    subtitle: "Whether your message lands. Ten questions across two areas: how you build a message, and how you carry it."
   }
-};
-
-async function loadQuestionnaire() {
-  try {
-    const res = await fetch('/assets/questionnaire.json');
-    QUESTIONNAIRE = await res.json();
-  } catch (e) {
-    alert("Failed to load questionnaire. Reload the page.");
-    console.error(e);
-  }
-}
-loadQuestionnaire();
-
-function goToScreen(name) {
-  ['email','questions','results'].forEach(s => {
-    document.getElementById('screen-' + s).classList.add('hidden');
-  });
-  document.getElementById('screen-' + name).classList.remove('hidden');
-  window.scrollTo({ top: 0, behavior: 'instant' });
-}
-
-function submitEmail() {
+};function submitEmail() {
   const nameInput = document.getElementById('name-input');
   const input = document.getElementById('email-input');
   const error = document.getElementById('email-error');
@@ -290,6 +273,30 @@ function submitEmail() {
 function renderQuestions() {
   const list = document.getElementById('questions-list');
   list.innerHTML = '';
+
+  // Helper: render one question item into the list. Used by both the
+  // subscale loop and the Personal Impact section so the markup matches.
+  function renderItem(item) {
+    const q = document.createElement('div');
+    q.className = 'question';
+    q.id = 'q-' + item.n;
+    q.innerHTML = `
+      <div class="question-number">Question ${item.n} of ${QUESTIONNAIRE.items.length}</div>
+      <div class="question-text">${item.text}</div>
+      <div class="likert">
+        ${QUESTIONNAIRE.likert.map(l => `
+          <label>
+            <input type="radio" name="q${item.n}" value="${l.value}" onchange="recordAnswer(${item.n}, ${l.value})">
+            <span class="likert-text">
+              <span class="likert-value">${l.value}</span>
+              ${l.label}
+            </span>
+          </label>
+        `).join('')}
+      </div>
+    `;
+    list.appendChild(q);
+  }
 
   // Group items by subscale, in the order they appear in the JSON
   // (questionnaire.json subscales is already ordered A1..A5, B1..B5)
@@ -325,141 +332,43 @@ function renderQuestions() {
     // The five items for this subscale
     sub.items.forEach(n => {
       const item = QUESTIONNAIRE.items.find(i => i.n === n);
-      const q = document.createElement('div');
-      q.className = 'question';
-      q.id = 'q-' + item.n;
-      q.innerHTML = `
-        <div class="question-number">Question ${item.n} of ${QUESTIONNAIRE.items.length}</div>
-        <div class="question-text">${item.text}</div>
-        <div class="likert">
-          ${QUESTIONNAIRE.likert.map(l => `
-            <label>
-              <input type="radio" name="q${item.n}" value="${l.value}" onchange="recordAnswer(${item.n}, ${l.value})">
-              <span class="likert-text">
-                <span class="likert-value">${l.value}</span>
-                ${l.label}
-              </span>
-            </label>
-          `).join('')}
-        </div>
+      renderItem(item);
+    });
+  });
+
+  // Personal Impact section. These items are not part of any subscale; they
+  // form their own stream with two components. Rendered after the subscales,
+  // with a dimension banner and one subscale-style heading per component.
+  if (QUESTIONNAIRE.personalImpact && QUESTIONNAIRE.personalImpact.components) {
+    const piIntro = DIMENSION_INTROS['Personal Impact'];
+    if (piIntro) {
+      const banner = document.createElement('div');
+      banner.className = 'dimension-banner';
+      banner.innerHTML = `
+        <div class="dimension-eyebrow">${piIntro.eyebrow}</div>
+        <h2>${piIntro.title}</h2>
+        <p>${piIntro.subtitle}</p>
       `;
-      list.appendChild(q);
+      list.appendChild(banner);
+    }
+
+    const components = QUESTIONNAIRE.personalImpact.components;
+    Object.keys(components).forEach(key => {
+      const comp = components[key];
+      const heading = document.createElement('div');
+      heading.className = 'subscale-heading';
+      heading.innerHTML = `
+        <div class="subscale-eyebrow">Personal Impact</div>
+        <h3>${comp.name}</h3>
+      `;
+      list.appendChild(heading);
+
+      comp.items.forEach(n => {
+        const item = QUESTIONNAIRE.items.find(i => i.n === n);
+        renderItem(item);
+      });
     });
-  });
+  }
 
   updateProgress();
 }
-
-function recordAnswer(n, v) {
-  answers[n] = v;
-  updateProgress();
-  if (window.innerWidth > 600) {
-    const nextItem = QUESTIONNAIRE.items.find(i => answers[i.n] === undefined);
-    if (nextItem) {
-      const el = document.getElementById('q-' + nextItem.n);
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-  }
-}
-
-function updateProgress() {
-  const total = QUESTIONNAIRE.items.length;
-  const done = Object.keys(answers).length;
-  const pct = Math.round((done / total) * 100);
-  document.getElementById('progress-fill').style.width = pct + '%';
-  document.getElementById('progress-label').textContent = `${done} of ${total} answered`;
-  document.getElementById('submit-btn').disabled = (done < total);
-}
-
-function submitAnswers() {
-  try {
-    lastScoring = window.scoreOSCIPro(answers, QUESTIONNAIRE);
-    renderResults(lastScoring);
-    goToScreen('results');
-  } catch (e) {
-    alert("Scoring failed: " + e.message);
-    console.error(e);
-  }
-}
-
-function renderResults(s) {
-  const q = QUESTIONNAIRE.quadrants[s.quadrant];
-  document.getElementById('quadrant-label').textContent = q.label;
-  document.getElementById('quadrant-tagline').textContent = q.tagline;
-
-  document.getElementById('score-confidence').textContent = s.confidence;
-  document.getElementById('band-confidence').textContent = bandPretty(s.confidenceBand);
-  document.getElementById('score-social').textContent = s.socialSkills;
-  document.getElementById('band-social').textContent = bandPretty(s.socialSkillsBand);
-  document.getElementById('score-auth').textContent = s.authenticityIndex;
-  document.getElementById('band-auth').textContent = s.authenticityBand || '';
-
-  const tbody = document.querySelector('#subscale-table tbody');
-  tbody.innerHTML = '';
-  const priority = s.priorityAreas;
-  Object.keys(s.subscaleScores).forEach(code => {
-    const sub = QUESTIONNAIRE.subscales[code];
-    const isPriority = priority.includes(code);
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td><strong>${code}</strong> ${sub.name}${isPriority ? ' <span class="priority-flag">Priority</span>' : ''}</td>
-      <td>${s.subscaleScores[code]}</td>
-      <td>${bandPretty(s.subscaleBands[code])}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
-function bandPretty(b) {
-  return b ? b.charAt(0).toUpperCase() + b.slice(1) + ' band' : '';
-}
-
-function showDebug() {
-  const area = document.getElementById('debug-area');
-  const out = document.getElementById('debug-output');
-  out.textContent = JSON.stringify({ name: userName, email: userEmail, answers, scoring: lastScoring }, null, 2);
-  area.classList.remove('hidden');
-}
-
-async function generateReport() {
-  if (!lastScoring) { alert("No scoring data yet."); return; }
-  try {
-    const res = await fetch('/api/generate-report', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: userEmail, scoring: lastScoring, respondentName: userName })
-    });
-    if (!res.ok) throw new Error('Server returned ' + res.status);
-
-    // Read the filename from the server's Content-Disposition header.
-    // Prefer the RFC 5987 filename* form (UTF-8 safe) and fall back to the
-    // plain filename="..." form. Fall back to a sensible default if neither
-    // is present.
-    const disposition = res.headers.get('Content-Disposition') || '';
-    let filename = 'OSCI Report.pdf';
-    const utf8Match = disposition.match(/filename\*=UTF-8''([^;]+)/i);
-    const plainMatch = disposition.match(/filename="([^"]+)"/i);
-    if (utf8Match) {
-      filename = decodeURIComponent(utf8Match[1]);
-    } else if (plainMatch) {
-      filename = plainMatch[1];
-    }
-
-    const blob = await res.blob();
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  } catch (e) {
-    alert("PDF generation failed: " + e.message);
-    console.error(e);
-  }
-}
-</script>
-
-</body>
-</html>
