@@ -10,22 +10,25 @@
   --muted:  #555555;
   --line:   #D9D9D9;
   --soft-cream: #F2EEE8;
+
+  --serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --sans:  'Outfit', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
 }
 
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
 body {
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: var(--sans);
   color: var(--ink);
   background: var(--cream);
-  line-height: 1.55;
+  line-height: 1.6;
   font-size: 17px;
 }
 
 /* ─── Test banner (visible on every page until launch) ─────────────────── */
 .test-banner {
   background: #FFE9A8; color: #6B4F00; padding: 8px 16px; text-align: center;
-  font-family: system-ui, -apple-system, sans-serif; font-size: 13px;
+  font-family: var(--sans); font-size: 13px;
   border-bottom: 1px solid #E0C870;
 }
 
@@ -45,9 +48,9 @@ body {
   flex-wrap: wrap;
 }
 .site-logo {
-  font-family: 'Calibri', system-ui, sans-serif;
+  font-family: var(--sans);
   font-size: 20px;
-  font-weight: 700;
+  font-weight: 600;
   color: white;
   text-decoration: none;
   letter-spacing: 0.02em;
@@ -57,7 +60,7 @@ body {
   background: var(--gold);
   color: white;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
   padding: 3px 7px;
   margin-left: 8px;
   border-radius: 2px;
@@ -71,9 +74,9 @@ body {
   flex-wrap: wrap;
 }
 .site-nav a {
-  font-family: 'Calibri', system-ui, sans-serif;
+  font-family: var(--sans);
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 500;
   color: rgba(255,255,255,0.85);
   text-decoration: none;
   padding: 6px 0;
@@ -94,7 +97,7 @@ body {
   color: rgba(255,255,255,0.75);
   margin-top: 96px;
   padding: 32px 24px;
-  font-family: 'Calibri', system-ui, sans-serif;
+  font-family: var(--sans);
   font-size: 14px;
 }
 .site-footer-inner {
@@ -122,20 +125,20 @@ body {
 }
 
 h1, h2, h3 {
-  font-family: 'Calibri', system-ui, sans-serif;
+  font-family: var(--serif);
   color: var(--navy);
   margin-top: 0;
 }
-h1 { font-size: 40px; font-weight: 700; line-height: 1.15; margin-bottom: 8px; }
-h2 { font-size: 26px; font-weight: 700; margin: 48px 0 12px; }
-h3 { font-size: 19px; font-weight: 600; margin: 32px 0 8px; }
+h1 { font-size: 44px; font-weight: 600; line-height: 1.1; margin-bottom: 8px; letter-spacing: -0.01em; }
+h2 { font-size: 28px; font-weight: 600; margin: 48px 0 12px; }
+h3 { font-size: 19px; font-weight: 600; margin: 32px 0 8px; font-family: var(--sans); }
 
 p { margin: 0 0 16px; }
 
 .eyebrow {
-  font-family: 'Calibri', system-ui, sans-serif;
+  font-family: var(--sans);
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.18em;
   color: var(--gold);
   text-transform: uppercase;
@@ -148,9 +151,10 @@ p { margin: 0 0 16px; }
   width: 80px;
 }
 .subtitle {
-  font-family: Georgia, serif;
-  font-size: 20px;
+  font-family: var(--serif);
+  font-size: 22px;
   font-style: italic;
+  font-weight: 400;
   color: var(--muted);
   margin: 0 0 32px;
   line-height: 1.4;
@@ -161,8 +165,8 @@ a.inline-link:hover { color: var(--gold); }
 
 /* ─── Buttons ────────────────────────────────────────────────────────────── */
 button, .btn {
-  font-family: 'Calibri', system-ui, sans-serif;
-  font-weight: 700;
+  font-family: var(--sans);
+  font-weight: 600;
   border-radius: 3px;
   cursor: pointer;
   border: 0;
@@ -214,16 +218,17 @@ button.secondary:hover, .btn.secondary:hover { background: var(--soft-cream); }
   text-align: center;
 }
 .hero-stats .stat-value {
-  font-family: 'Calibri', system-ui, sans-serif;
-  font-size: 48px;
-  font-weight: 700;
+  font-family: var(--serif);
+  font-size: 56px;
+  font-weight: 600;
   color: var(--navy);
   line-height: 1;
   margin-bottom: 8px;
 }
 .hero-stats .stat-label {
-  font-family: 'Calibri', system-ui, sans-serif;
+  font-family: var(--sans);
   font-size: 13px;
+  font-weight: 500;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--muted);
@@ -235,8 +240,8 @@ button.secondary:hover, .btn.secondary:hover { background: var(--soft-cream); }
   .site-nav { gap: 16px; }
   .site-nav a { font-size: 14px; }
   .container, .container-wide { padding: 32px 16px 64px; }
-  h1 { font-size: 30px; }
-  h2 { font-size: 22px; }
+  h1 { font-size: 32px; }
+  h2 { font-size: 24px; }
   .three-up, .hero-stats { grid-template-columns: 1fr; }
   .site-footer-inner { flex-direction: column; gap: 12px; }
 }
