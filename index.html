@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Open-Source Charisma Pro — The Charisma Quadrant Assessment</title>
+<title>Open-Source Charisma Pro — Find Out What's Actually Getting in Your Way</title>
 <!-- Google Analytics 4 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-3S96VP3093"></script>
 <script>
@@ -17,56 +17,94 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/site.css">
 <style>
-  /* Page-local styles. Use site palette variables if defined; fall back to literals. */
-  .four-up {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
+  .lede {
+    font-family: var(--serif);
+    font-size: 26px;
+    line-height: 1.35;
+    color: var(--navy);
+    margin: 8px 0 32px;
+    font-weight: 500;
+  }
+  .promise {
+    background: var(--soft-cream);
+    border-left: 3px solid var(--gold);
+    padding: 24px 28px;
     margin: 32px 0;
+    font-size: 18px;
   }
-  .four-up .tile {
-    background: #F2EEE8;
-    border-left: 3px solid #B08D57;
-    padding: 20px 18px;
-    border-radius: 2px;
-  }
-  .four-up .tile h3 {
-    margin: 0 0 6px 0;
-    font-size: 1.05rem;
-    color: #1F3A5F;
-  }
-  .four-up .tile .band {
-    font-style: italic;
-    color: #555;
-    font-size: 0.9rem;
-    margin-bottom: 8px;
-  }
-  .four-up .tile p {
-    margin: 0;
-    font-size: 0.92rem;
-    line-height: 1.45;
-  }
-  @media (max-width: 720px) {
-    .four-up { grid-template-columns: repeat(2, 1fr); }
-  }
+  .promise p { margin-bottom: 12px; }
+  .promise p:last-child { margin-bottom: 0; }
 
-  .quadrant-block {
-    margin: 40px auto;
-    max-width: 560px;
+  .sample-block { margin: 48px 0; }
+  .sample-block .caption {
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--muted);
+    margin-top: 12px;
     text-align: center;
-  }
-  .quadrant-caption {
-    margin-top: 14px;
     font-style: italic;
-    color: #555;
-    font-size: 0.95rem;
   }
-  .quadrant-img {
+  .sample-block img {
     width: 100%;
-    max-width: 560px;
+    max-width: 720px;
     height: auto;
     display: block;
     margin: 0 auto;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    box-shadow: 0 4px 16px rgba(31, 58, 95, 0.08);
+  }
+
+  .price-block {
+    background: var(--navy);
+    color: white;
+    padding: 40px 32px;
+    border-radius: 4px;
+    margin: 48px 0;
+    text-align: center;
+  }
+  .price-block .price-amount {
+    font-family: var(--serif);
+    font-size: 64px;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--gold);
+    margin: 8px 0;
+  }
+  .price-block .price-context {
+    font-family: var(--sans);
+    font-size: 15px;
+    opacity: 0.85;
+    margin-bottom: 24px;
+  }
+  .price-block .btn.primary {
+    background: var(--gold);
+    color: var(--navy);
+    font-size: 17px;
+    padding: 16px 32px;
+  }
+  .price-block .btn.primary:hover { background: #c69a60; }
+
+  .who-list { list-style: none; padding: 0; margin: 16px 0 32px; }
+  .who-list li {
+    padding: 8px 0 8px 24px;
+    position: relative;
+    font-size: 17px;
+  }
+  .who-list li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+    font-weight: 600;
+  }
+
+  .cta-row { text-align: center; margin: 40px 0; }
+
+  @media (max-width: 700px) {
+    .lede { font-size: 22px; }
+    .price-block .price-amount { font-size: 48px; }
+    .price-block { padding: 28px 20px; }
   }
 </style>
 </head>
@@ -75,93 +113,122 @@
 <main class="container">
 
   <div class="eyebrow">OSCI Pro</div>
-  <h1>The Charisma Quadrant Assessment</h1>
+  <h1>Find out what's actually getting in your way.</h1>
   <div class="gold-rule"></div>
-  <p class="subtitle">Sixty questions. Ten subscales. Around ten minutes. A precise reading of how you come across, whether your message lands, and where the next ten weeks of work will most repay you.</p>
 
-  <p>The Pro instrument measures two dimensions: Confidence and Social Skills. It places you in one of four charisma quadrants, gives you a banded interpretation of each of ten subscales, and produces two further readings the free version cannot see. An Authenticity Index that picks up the gap between how you behave with people who matter to you and everyone else. A Personal Impact score that picks up whether what you say actually lands.</p>
+  <p class="lede">You know you're good at your job. You also know something isn't quite landing. This is the assessment that tells you what.</p>
 
-  <p>The result is a personalised report of around twenty-three pages, naming the two skills where the next development work will most repay your attention, and the specific practices to start on this week.</p>
+  <p>Most professionals never get a clear answer to the question that matters most: how do I actually come across? They get vague feedback. Generic 360s. A personality test that tells them they're an ENTJ. None of it tells them what to do on Monday morning.</p>
 
-  <div class="hero-stats">
-    <div>
-      <div class="stat-value">60</div>
-      <div class="stat-label">Questions</div>
-    </div>
-    <div>
-      <div class="stat-value">10</div>
-      <div class="stat-label">Subscales</div>
-    </div>
-    <div>
-      <div class="stat-value">10'</div>
-      <div class="stat-label">Average time</div>
-    </div>
+  <p>The Open-Source Charisma Pro Assessment is built for the person who wants the specific answer. Sixty questions, ten minutes, and a personalised twenty-three-page report that names the two skills where the next ten weeks of work will most repay you.</p>
+
+  <div class="cta-row">
+    <a class="btn primary" href="/assessment.html">Take the assessment &mdash; &pound;39</a>
   </div>
 
-  <div style="text-align: center; margin: 40px 0 24px;">
+  <h2>Why charisma is the skill that multiplies the others</h2>
+
+  <p>Take two people with the same expertise, the same hours in the job, the same intelligence. One leaves every room a little stronger than they found it. The other leaves it the same. Over five years, the first one runs the team. The second wonders what happened.</p>
+
+  <p>The difference is not luck. It is not personality. It is a specific set of behaviours that anyone can develop once they know which ones are missing. We call them charisma because it is the easiest word for the effect they produce. The effect is real, measurable, and learnable.</p>
+
+  <div class="promise">
+    <p><strong>What this assessment gives you:</strong></p>
+    <p>A precise reading of how you currently land with the people around you. The two specific skills where you have the biggest gap between your potential and your current impact. A four-week plan to close that gap with practice you can run inside your normal working week.</p>
+  </div>
+
+  <h2>What you get back, in plain English</h2>
+
+  <p>The Pro report is twenty-three pages. The screenshots below are from a real sample. The name has been changed; the scores, the analysis and the development pages are exactly what you receive.</p>
+
+  <div class="sample-block">
+    <img src="/assets/sample-report/readings.png" alt="Opening summary page of the OSCI Pro report showing four scores: Confidence 61, Social Skills 82, Authenticity Index 78, Personal Impact 60.">
+    <p class="caption">Page 2: Your four readings. Confidence and Social Skills produce your quadrant. Authenticity Index and Personal Impact pick up what the dimensions cannot see.</p>
+  </div>
+
+  <div class="sample-block">
+    <img src="/assets/sample-report/subscales.png" alt="Bar chart of ten subscales scored from 52 to 92. Two amber bars mark the priority subscales for development.">
+    <p class="caption">Page 6: All ten subscales scored from 0 to 100. The two amber bars are your priority subscales, picked by the scoring engine as the most useful focus now.</p>
+  </div>
+
+  <h2>It tells you what's working</h2>
+
+  <p>Most assessments find the gaps. This one starts with the strengths. Knowing what is already working is more useful than a list of what is not, because the fastest way to develop is to extend what already lands.</p>
+
+  <div class="sample-block">
+    <img src="/assets/sample-report/strength.png" alt="A key strength page from the report: B4 Emotional Control and Humility, scored 92 out of 100. The page describes what the score suggests, why it matters, and how to use the strength even better.">
+    <p class="caption">Page 11: Each of your two top strengths gets a dedicated page. What it looks like in practice, why it matters, and how to make it work harder for you.</p>
+  </div>
+
+  <h2>It names the two specific things to work on</h2>
+
+  <p>Not ten things. Two. The reason is simple: nobody develops ten things in parallel. The scoring engine picks the two that will move you furthest, fastest. Each gets its own page, with the underlying mechanics laid out and four concrete practices to run this week.</p>
+
+  <div class="sample-block">
+    <img src="/assets/sample-report/development.png" alt="A development area page showing A1 Self-Esteem and Self-Worth, scored 52 out of 100. The page covers what may be happening, why it matters, the skill to build, and four specific things to try next.">
+    <p class="caption">Page 13: Your priority development areas, in full. What's going on under the score, why it matters, the skill to build, and four practices to try this week.</p>
+  </div>
+
+  <h2>It gives you a four-week plan</h2>
+
+  <p>Most development plans fail because they are too vague or too long. The Pro plan is four weeks, with one or two specific actions per week, sized to fit alongside your normal job.</p>
+
+  <div class="sample-block">
+    <img src="/assets/sample-report/plan.png" alt="A four-week development plan. Week 1 starts small, Week 2 introduces the harder version, Week 3 uses a structured feedback method, Week 4 audits the shift.">
+    <p class="caption">Page 18: The four-week plan. Small enough to actually run. Specific enough to see what changed.</p>
+  </div>
+
+  <h2>It gives you a tool to set your own goals</h2>
+
+  <p>The report closes with a structured goal-setting exercise for each of your priority subscales. Five short steps. Ten minutes per exercise. The method is solution-focused scaling, used in coaching for thirty years for the same reason: it produces one specific next step.</p>
+
+  <div class="sample-block">
+    <img src="/assets/sample-report/goals.png" alt="A goal-setting exercise using solution-focused scaling. Five steps: where are you now, what is already working, what helped you get here, what changes if you move up, what is the next small step.">
+    <p class="caption">Page 20: One goal-setting page per priority subscale. The exercise is built to produce one specific action this week, not a vague intention.</p>
+  </div>
+
+  <div class="price-block">
+    <p class="price-context">Open-Source Charisma Pro Assessment</p>
+    <div class="price-amount">&pound;39</div>
+    <p class="price-context">Sixty questions. Ten minutes. A twenty-three-page report you can act on this week.</p>
     <a class="btn primary" href="/assessment.html">Take the assessment</a>
   </div>
 
-  <h2>What the report gives you</h2>
+  <h2>Who this is built for</h2>
 
-  <p>Four readings, banded in plain language. Each one tells you something different about how you land.</p>
+  <p>The Pro is for the person whose job has more to do with how they land than how clever they are. You probably know who you are. Some pointers:</p>
 
-  <div class="four-up">
-    <div class="tile">
-      <h3>Confidence</h3>
-      <div class="band">Lower &middot; Developing &middot; Higher</div>
-      <p>How you carry yourself internally and externally. Self-worth, composure under pressure, willingness to say the difficult thing, capacity to adapt.</p>
-    </div>
-    <div class="tile">
-      <h3>Social Skills</h3>
-      <div class="band">Lower &middot; Developing &middot; Higher</div>
-      <p>What you actually do with and for the people around you. Listening, warmth, conversational craft, emotional control.</p>
-    </div>
-    <div class="tile">
-      <h3>Authenticity Index</h3>
-      <div class="band">Consistently available to Significantly instrumental</div>
-      <p>Whether your warmth and attention are reliably available across audiences, or visibly conditional on stakes, status, or usefulness.</p>
-    </div>
-    <div class="tile">
-      <h3>Personal Impact</h3>
-      <div class="band">Lands reliably to Not yet landing</div>
-      <p>Whether what you say actually lands. Two components: how you build the message, and how you deliver it. Read as a multiplier on the social skills underneath.</p>
-    </div>
-  </div>
-
-  <h2>The model in one picture</h2>
-
-  <div class="quadrant-block">
-    <img class="quadrant-img" src="/assets/quadrant.png" alt="The Charisma Quadrant. Two axes: Confidence vertical, Social Skills horizontal. Four quadrants: Occasionally Overconfident (higher Confidence, lower Social Skills), Courteously Charismatic (higher on both), Incidentally Invisible (lower on both), Unknowingly Influential (lower Confidence, higher Social Skills).">
-
-    <p class="quadrant-caption">Confidence and Social Skills produce four positions. The Pro tells you which one you currently occupy, and which two of ten skills will most move you.</p>
-  </div>
-
-  <div style="text-align: center; margin: 40px 0 24px;">
-    <a class="btn primary" href="/assessment.html">Take the assessment</a>
-  </div>
-
-  <h2>Who this is for</h2>
-
-  <p>People whose work depends on the people in the room leaving it better than they came in. Anyone who already knows roughly where they want to develop, and wants something more precise than a personality test.</p>
-
-  <ul>
-    <li>Senior managers and leaders</li>
-    <li>Sales professionals and account directors</li>
-    <li>Consultants and partners in professional services firms</li>
-    <li>Coaches working with their own clients</li>
-    <li>L&amp;D and people-development specialists</li>
+  <ul class="who-list">
+    <li>A senior professional who has just had feedback they can't quite parse</li>
+    <li>A leader who knows their team is performing below what it could</li>
+    <li>A consultant or coach who wants the same tool to use with their own clients</li>
+    <li>Anyone who has done a personality test and thought, this tells me nothing I can use</li>
+    <li>Anyone who suspects the gap between their potential and their current impact is bigger than it should be</li>
   </ul>
 
-  <p>The Pro does not test personality, intelligence, knowledge or potential. It measures the behaviours that produce the effect we call charisma in working life, and identifies where those behaviours are still uneven. If you have not yet taken the free Open-Source Charisma Indicator, that is the better place to start. You can find it at <a class="inline-link" href="https://opensourcecharisma.com/assessment">opensourcecharisma.com/assessment</a>.</p>
+  <h2>Common questions</h2>
 
-  <h2>The science behind it</h2>
+  <h3>How is this different from a personality test?</h3>
+  <p>A personality test tells you who you are. The Pro tells you what you do. We measure behaviours, not traits. People with very different personalities can produce identical Pro scores, because the instrument is silent on what is going on underneath. What it sees is whether the behaviours that produce charisma in working life are present, and where they are not.</p>
 
-  <p>The Pro draws on the literature on self-awareness in leadership, metacognitive monitoring, emotional labour, authenticity in organisational psychology, and the empirical validation work the original Indicator was built on. The <a class="inline-link" href="/methodology.html">Methodology page</a> sets out the construct rationale, the scoring spec, the validation status, and the references in full.</p>
+  <h3>Why not just take the free version?</h3>
+  <p>Take the free version first if you have not already. It places you in your quadrant and gives you a broad reading of where to focus. The Pro answers a different question: which of ten specific skills are doing the work, which are the gaps, and what should you do about it. The free Indicator points you at the country. The Pro gives you the postcode.</p>
 
-  <div style="text-align: center; margin: 48px 0 16px;">
-    <a class="btn primary" href="/assessment.html">Take the assessment</a>
+  <h3>What if my score is low?</h3>
+  <p>A low score on a subscale is not a verdict on you as a person. It is a reading of a specific skill that is not yet doing its job reliably. The work is incremental, visible, and doable inside the normal meetings of your working week. Most of the development pages in the report are specific enough to start on within twenty-four hours.</p>
+
+  <h3>Is this for use with my team or clients?</h3>
+  <p>Yes. The Pro is licensed for individual use at &pound;39. For coaching networks, L&amp;D departments, and consulting firms running the Pro with multiple clients or colleagues, bulk licences are at a lower per-seat rate. Contact Jim at <a class="inline-link" href="mailto:jim.harvey@themessagebusiness.com">jim.harvey@themessagebusiness.com</a> for details.</p>
+
+  <div class="cta-row">
+    <a class="btn primary" href="/assessment.html">Take the assessment &mdash; &pound;39</a>
   </div>
+
+  <h2>Who built it</h2>
+
+  <p>The Open-Source Charisma project is the work of Jim Harvey at <a class="inline-link" href="https://themessagebusiness.com">The Message Business</a>. Thirty years of practice with senior leaders, sales teams and consultants in firms including JP Morgan, Mercer, Ford and Rolls-Royce. The instrument is the empirical end of that practice, built to make the model usable for people who are not in the room with a coach.</p>
+
+  <p>The methodology, scoring spec, and validation status are set out in full on the <a class="inline-link" href="/methodology.html">Methodology page</a>. The companion book, <a class="inline-link" href="/book.html"><em>Open-Source Charisma</em></a>, sets out the model in narrative form with stories, characters, and ten chapters of practice.</p>
 
 </main>
 
