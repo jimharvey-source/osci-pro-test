@@ -2,10 +2,23 @@
 //
 // The real OSCI Pro PDF report generator.
 //
+// v3 (sub-pass C) changes:
+//   A.  Subscale development pages now render the locked four-header
+//       structure: What this score tells you / What it costs to leave this
+//       alone / How to close the gap / Where you might start. Multi-paragraph
+//       fields are split via splitParas(); the final field renders as bullets.
+//   B.  Weekly plan now sources its activities from development.where_you_might_start
+//       (was development.what_to_try_next).
+//   C.  varyOpener no longer applied to development frames (locked pages carry
+//       their own openers); still applied to strength frames.
+//   D.  Fixed pre-existing crash on the Charismatic Consistency Index page:
+//       removed three dead branches referencing the undefined `authBand`
+//       (leftover from the Authenticity Index rename). Index page now renders.
+//
 // v6 changes (from v5 to v6):
 //   1.  Fixed the "Week 3: use the The five-minutes practice" duplication bug.
 //   2.  Removed redundant repeat paragraph at the end of the four-week plan.
-//   3.  Rewrote the trailing conditional sentence on the Authenticity Index
+//   3.  Renamed Authenticity Index to Charismatic Consistency Index (v3.8). Field references throughout the file follow the new naming. The construct is unchanged. Updated the band content to the new opportunity-framed copy.
 //       page so it lands whether or not B5 is a priority.
 //   4.  Renamed the development-areas header to "Where to focus next" and
 //       the four-week plan header to "Your four weeks" so the two pages no
@@ -65,8 +78,8 @@ async function generateHeadline(content, scoring, respondentName) {
     .replace(/\{confidence_band\}/g, scoring.confidenceBand)
     .replace(/\{social_skills\}/g, scoring.socialSkills)
     .replace(/\{social_skills_band\}/g, scoring.socialSkillsBand)
-    .replace(/\{authenticity_index\}/g, scoring.authenticityIndex)
-    .replace(/\{authenticity_band\}/g, scoring.authenticityBand || 'unknown')
+    .replace(/\{consistency_index\}/g, scoring.consistencyIndex)
+    .replace(/\{consistency_band\}/g, scoring.consistencyBand || 'unknown')
     .replace(/\{priority_1_code\}/g, priority1Code)
     .replace(/\{priority_1_name\}/g, content.subscales[priority1Code].name)
     .replace(/\{priority_1_score\}/g, scoring.subscaleScores[priority1Code])
@@ -153,7 +166,7 @@ async function generateProfileNarrative(content, scoring, respondentName) {
 - Quadrant: ${quadrant.label}
 - Confidence: ${scoring.confidence} (${scoring.confidenceBand} band)
 - Social Skills: ${scoring.socialSkills} (${scoring.socialSkillsBand} band)
-- Authenticity Index: ${scoring.authenticityIndex} (${scoring.authenticityBand || 'unknown'})
+- Charismatic Consistency Index: ${scoring.consistencyIndex} (${scoring.consistencyBand || 'unknown'})
 - Two highest subscales: ${strength1 ? subName(strength1) + ' (' + subScore(strength1) + ')' : '—'}, ${strength2 ? subName(strength2) + ' (' + subScore(strength2) + ')' : '—'}
 - Two priority subscales: ${subName(dev1)} (${subScore(dev1)}), ${subName(dev2)} (${subScore(dev2)})
 
@@ -161,48 +174,58 @@ async function generateProfileNarrative(content, scoring, respondentName) {
 
 Write four short paragraphs titled "Where you are right now". 60-80 words each. Address ${name} in the second person.
 
-Paragraph 1: Which dimension is the stronger one. What that looks like from the outside.
-Paragraph 2: What the other dimension is doing. What its score means in practice.
-Paragraph 3: The two priority subscales, named explicitly. What it costs ${name} to leave them unattended. Plain terms.
-Paragraph 4: The Authenticity Index reading. What it points at. The through-line to the work the rest of the report sets out.
+Paragraph 1: Which dimension is the stronger one. What that looks like from the outside (the experience the people around them have).
+Paragraph 2: What the other dimension is doing. What its score means in practice, in plain terms.
+Paragraph 3: The two priority subscales, named explicitly. The cost of leaving them unattended, in plain terms. Frame these as opportunities, not deficits.
+Paragraph 4: The Charismatic Consistency Index reading. What it points at. The through-line to the work the rest of the report sets out.
 
 # The voice
 
-Orwell's rules apply, in order:
+The OSCI Pro report follows a strict voice. The principles below catch the most common failure modes. Follow all of them.
 
-1. Never use a metaphor, simile, or other figure of speech which you are used to seeing in print. No "earned the right to be in the room". No "where your real charisma lives". No "the platform from which everything operates". No "unlock". No "orchestrate". No "land".
-2. Never use a long word where a short one will do. "Use" not "leverage". "Read" not "discern". "Now" not "at this juncture".
-3. If it is possible to cut a word out, always cut it out.
-4. Never use the passive where you can use the active.
-5. Never use a foreign phrase, a scientific word, or a jargon word if you can think of an everyday English equivalent.
+1. Opportunity framing, not deficit framing. Name what the reader has and where the next move is, not what they lack. "The work is widening the reach" not "the gap is reach". Never name a band, score, or pattern as a weakness, deficit, problem, or shortfall.
 
-Additional rules, hard:
+2. Plain register. UK English ("behaviour", "organisation", "recognise"). Short words. Cut every word that does not earn its place. "Use" not "leverage". "Read" not "discern". "Now" not "at this juncture".
 
-- UK English. "Behaviour", "organisation", "recognise".
-- No em dashes. Anywhere.
-- No contractions. Write "you are" not "you're". "It is" not "it's". "That is" not "that's". "Does not" not "doesn't".
-- No "not just X, but Y" constructions. No antithesis.
-- No exclamation marks. No questions to the reader. No phrases like "the work ahead".
-- Plain. Specific. Like a thoughtful friend telling you what they see, not like a consultant writing a report.
-- Score numbers used twice across the four paragraphs, no more.
-- No headings, no bullets, no bold. Four plain paragraphs separated by blank lines.
-- Do not start any paragraph with "Your [thing] score sits in..." Vary openers.
+3. No antithesis. No "not just X but Y", no "not A, B", no "not only... but also". Just say the thing.
+
+4. No clichés or pop-business idioms. No "unlock", "land", "show up", "shows up", "earned the right to be in the room", "where your real charisma lives", "the next chapter", "growth journey", "moving the needle", "the platform from which", "orchestrate".
+
+5. No "version of you" or "the real you" language. The construct is consistency of warmth and attention across audiences, not authenticity. The reader is one person whose warmth and attention may reach further or less far.
+
+6. Describe by effect on others where possible, not internal state of the reader. "People hear what you mean" rather than "you communicate clearly". The instrument measures patterns visible from outside.
+
+7. No em dashes anywhere. No contractions ("you are" not "you're", "it is" not "it's", "does not" not "doesn't"). No exclamation marks. No questions to the reader.
+
+8. Specific over elegant. "Read the room well" not "have strong situational intelligence". Use a concrete word over a generalising one wherever possible.
+
+9. The reader is a senior professional. Write at the level of a thoughtful friend, not a coach or consultant. No therapy language. No coaching language. No "your journey".
+
+10. Score numbers used at most twice across the four paragraphs. The numbers are not the point. The pattern they describe is the point.
+
+11. No headings, no bullets, no bold. Four plain paragraphs separated by blank lines.
+
+12. Vary openers. Do not start any paragraph with "Your [thing] score sits in..."
+
+13. Tendency voice for patterns. "Higher" not "high". "Tends to" not "always". "Can" not "will". The instrument reads tendencies, not certainties.
+
+14. When the report makes a claim about itself, frame from the reader's perspective. "The work this report sets out" not "the framework this report provides".
 
 # Voice examples — write at this level
 
 Example paragraph 1 (Sarah Mitchell, higher social skills, developing confidence):
-"Your Social Skills are your stronger dimension at 78. You connect naturally, read emotional registers well, and most people feel genuinely comfortable around you. Your warmth and empathy subscales are among your highest scores. The quality of your one-to-one interactions is strong. People trust you. They open up. You make conversations feel worth having."
+"Your Social Skills are your stronger dimension at 78. You connect naturally, read emotional registers well, and most people feel genuinely comfortable around you. Your warmth and empathy subscales are among your highest. The quality of your one-to-one interactions is strong. People trust you. They open up. They tell you their colleagues should also be talking to you."
 
 Example paragraph 2 (Sarah Mitchell, on her lower confidence):
-"Your Confidence at 74 is functional. You do not present as uncertain or hesitant in most settings. But it has a ceiling. Under higher stakes, with people you perceive as more senior or more confident, and when the outcome of an interaction really matters, the internal experience does not match the external performance. You compensate well. The compensation costs you energy. That is what a 74 feels like from the inside."
+"Your Confidence at 74 is functional, with room to grow. You do not present as uncertain or hesitant in most settings. The ceiling shows up under higher stakes, with people you perceive as more senior or more confident, and when the outcome of an interaction really matters. The internal experience does not quite match the external performance. You compensate well. The compensation costs you energy. That is what a 74 feels like from the inside."
 
-Example paragraph 3 (Sarah Mitchell, on her priority subscale):
-"Your Assertiveness and Accountability subscale at 64 is the clearest confidence gap. This is not about whether you can assert yourself. You can. It is about whether you do, consistently, in the moments that require it most: naming a problem when it will create friction, disagreeing with someone whose opinion you value, holding accountability without deflecting or softening."
+Example paragraph 3 (Sarah Mitchell, on her priority subscales):
+"Your Assertiveness and Accountability subscale at 64 is the clearest confidence opportunity. The question is not whether you can assert yourself. You can. It is whether you do, consistently, in the moments that require it most: naming a problem when it creates friction, disagreeing with someone whose opinion you value, holding accountability without softening. The cost of leaving this unattended is the contribution that does not get heard, which over time becomes the contribution that does not get made."
 
-Example paragraph 4 (Sarah Mitchell, on her Authenticity Index):
-"Your Authenticity Index at 68 maps onto something different. Your social skills are genuine. They are not evenly distributed. People who know you well, who you feel invested in, get something real and valuable. People on the periphery get less. Not nothing, but less. That unevenness is what the 68 is measuring."
+Example paragraph 4 (Sarah Mitchell, on her Charismatic Consistency Index):
+"Your Charismatic Consistency Index at 68 maps onto something different. Your social skills are real. They are not evenly distributed. People who know you well, who you feel engaged with, get something valuable. People at the fringes get less. Not nothing, but less. That unevenness is what the 68 is measuring. Widening the reach of what you already have is the work the rest of this report sets out."
 
-Note the rhythm. Short sentences. Plain words. Specific. Concrete. Speaking to the reader, not about them.
+Note the rhythm. Short sentences. Plain words. Specific. Concrete. Speaking to the reader, not about them. Naming the experience the people around the reader have, not the reader's internal state.
 
 Return only the four paragraphs, separated by blank lines. No preamble. No headings.`;
 
@@ -267,7 +290,7 @@ function fallbackProfileNarrative(content, scoring, respondentName) {
 
   const para3 = `The two priority subscales identified for you are ${subName(dev1)} and ${subName(dev2)}. These are not character flaws. They are skills that are not yet doing their job reliably. The cost of leaving them unattended is small in any single moment and significant over time. The people around you read these gaps long before they name them.`;
 
-  const para4 = `Your Authenticity Index sits at ${scoring.authenticityIndex}. This measures whether the version of you that turns up is broadly the same regardless of who is in the room. The work the rest of this report sets out is the work of consistency. Not becoming a different person. Making more of the version that already exists available to more of the people around you.`;
+  const para4 = `Your Charismatic Consistency Index sits at ${scoring.consistencyIndex}. This measures how reliably your warmth and attention are available across the audiences and situations in your life. The work the rest of this report sets out is the work of widening the reach of what you already have. Not becoming a different person. Making more of the version that already exists available to more of the people around you.`;
 
   return [para1, para2, para3, para4];
 }
@@ -325,6 +348,14 @@ function bodyText(doc, text) {
   doc.moveDown(0.4);
 }
 
+// Split a field that may contain multiple paragraphs (joined by blank lines)
+// into an array, so each renders with its own spacing. Single-paragraph
+// fields return a one-element array.
+function splitParas(text) {
+  if (!text) return [];
+  return String(text).split(/\n\s*\n/).map(s => s.trim()).filter(Boolean);
+}
+
 function bulletPoint(doc, text) {
   const x = doc.x;
   doc.font(FONT_BODY).fontSize(11).fillColor(COLOURS.ink);
@@ -356,7 +387,7 @@ function drawScoreTiles(doc, scoring, x, y, width) {
   const tiles = [
     { label: 'CONFIDENCE',         value: scoring.confidence,        band: scoring.confidenceBand },
     { label: 'SOCIAL SKILLS',      value: scoring.socialSkills,      band: scoring.socialSkillsBand },
-    { label: 'AUTHENTICITY INDEX', value: scoring.authenticityIndex, band: scoring.authenticityBand }
+    { label: 'CHARISMATIC CONSISTENCY', value: scoring.consistencyIndex, band: scoring.consistencyBand }
   ];
   // Add the Personal Impact tile when the reading is present (60-item payloads).
   if (scoring.personalImpact && typeof scoring.personalImpact.score === 'number') {
@@ -836,6 +867,116 @@ function stampHeadersAndFooters(doc, respondentName) {
 }
 
 // ── The report itself ──────────────────────────────────────────────────────
+// ── The locked preface ─────────────────────────────────────────────────────
+// Four pages of locked concept content that set the voice and explain the
+// instrument before the reader meets any of their own numbers. Source: the
+// locked collation (preface_p1_v7 .. preface_p4_v2). These render verbatim;
+// the only substitution is the live score where the locked text carries a
+// [put the number here] placeholder.
+function renderPreface(doc, content, scoring) {
+  const pf = content.preface;
+  if (!pf) return;
+
+  // ── Preface 1: What we mean by charisma ──
+  doc.addPage();
+  eyebrow(doc, pf.page1.eyebrow);
+  h1(doc, pf.page1.title);
+  pf.page1.paras.forEach(p => bodyText(doc, p));
+
+  // ── Preface 2: The two dimensions ──
+  doc.addPage();
+  eyebrow(doc, pf.page2.eyebrow);
+  h1(doc, pf.page2.title);
+  pf.page2.intro.forEach(p => bodyText(doc, p));
+  h2(doc, 'Confidence');
+  pf.page2.confidence.forEach(p => bodyText(doc, p));
+  h2(doc, 'Social Skills');
+  pf.page2.social_skills.forEach(p => bodyText(doc, p));
+  h2(doc, pf.page2.combine_head);
+  pf.page2.combine.forEach(p => bodyText(doc, p));
+
+  // ── Preface 3: The four readings ──
+  doc.addPage();
+  eyebrow(doc, pf.page3.eyebrow);
+  h1(doc, pf.page3.title);
+  pf.page3.intro.forEach(p => bodyText(doc, p));
+  // Each reading carries a live score where the locked text had a placeholder.
+  const readingScores = {
+    'Your Confidence score': scoring.confidence,
+    'Your Social Skills score': scoring.socialSkills,
+    'Your Charismatic Consistency Index': scoring.consistencyIndex,
+    'Your Personal Impact': (scoring.personalImpact && typeof scoring.personalImpact.score === 'number')
+      ? scoring.personalImpact.score : null
+  };
+  pf.page3.readings.forEach(r => {
+    const sc = readingScores[r.head];
+    const headWithScore = (sc !== null && sc !== undefined) ? `${r.head}: ${sc}` : r.head;
+    h2(doc, headWithScore);
+    r.paras.forEach(p => bodyText(doc, p));
+  });
+  h2(doc, pf.page3.together_head);
+  pf.page3.together.forEach(p => bodyText(doc, p));
+
+  // ── Preface 4: The four positions ──
+  doc.addPage();
+  eyebrow(doc, pf.page4.eyebrow);
+  h1(doc, pf.page4.title);
+  pf.page4.intro.forEach(p => bodyText(doc, p));
+
+  // Quadrant image on its own clean band, centred, if available on disk.
+  try {
+    const imgPath = path.join(__dirname, '..', 'assets', 'quadrant.png');
+    if (fs.existsSync(imgPath)) {
+      const imgWidth = 340;
+      const imgHeight = 340; // square source
+      if (doc.y + imgHeight > 740) doc.addPage();
+      const x = (595.28 - imgWidth) / 2;
+      const top = doc.y + 6;
+      doc.image(imgPath, x, top, { width: imgWidth });
+      doc.y = top + imgHeight + 18; // doc.image does not advance the cursor
+      doc.x = 72;
+    }
+  } catch (e) {
+    // image is decorative; never block the report on it
+  }
+
+  pf.page4.positions.forEach(pos => {
+    h2(doc, pos.name);
+    doc.font(FONT_BODY_ITALIC).fontSize(11).fillColor(COLOURS.muted).text(pos.sub);
+    doc.moveDown(0.3);
+    pos.paras.forEach(p => bodyText(doc, p));
+  });
+  h2(doc, pf.page4.closing_head);
+  pf.page4.closing.forEach(p => bodyText(doc, p));
+}
+
+// ── The Charismatic Consistency Index page (locked) ─────────────────────────
+// Renders from content.consistency_page (the locked Charismatic_Consistency
+// page) rather than the band-card structure. Structure: a concept note, the
+// band-specific paragraph for the reader's band, then the shared "How to
+// extend your reach" close.
+function renderConsistencyPage(doc, content, scoring) {
+  const cp = content.consistency_page;
+  doc.addPage();
+  eyebrow(doc, cp.eyebrow);
+  h1(doc, `${cp.title}: ${scoring.consistencyIndex}`);
+  doc.font(FONT_BODY_ITALIC).fontSize(13).fillColor(COLOURS.muted)
+     .text(scoring.consistencyBand || '');
+  doc.moveDown(0.8);
+
+  h2(doc, cp.concept_intro_head);
+  cp.concept.forEach(p => bodyText(doc, p));
+
+  h2(doc, cp.case_head);
+  const bandKey = (scoring.consistencyBand || '').toLowerCase()
+    .replace(/\s+/g, '_').replace(/-/g, '_');
+  const bandPara = cp.bands[bandKey];
+  if (bandPara) bodyText(doc, bandPara);
+
+  h2(doc, cp.extend_head);
+  cp.extend.forEach(p => bodyText(doc, p));
+}
+
 function renderReport(doc, content, scoring, headline, profileParagraphs, respondentName, strengthCodes, developmentCodes, chosenMethods) {
   const quadrant = content.quadrants[scoring.quadrant];
   const today = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -869,7 +1010,13 @@ function renderReport(doc, content, scoring, headline, profileParagraphs, respon
      .text(respondentName ? `Prepared for ${respondentName}` : 'Prepared for you');
   doc.text(today);
 
-  // ─── Page 2: Opening summary ────────────────────────────────────────────
+  // ─── The locked preface (concept, instrument, how to use the results) ───
+  // Four locked pages that set the voice and explain the four readings before
+  // the reader meets any of their own numbers. This is the tone-setting front
+  // matter; everything after it is personalised.
+  renderPreface(doc, content, scoring);
+
+  // ─── Opening summary (first personalised page) ──────────────────────────
   doc.addPage();
   eyebrow(doc, 'Opening summary');
   h1(doc, 'There is a lot here to build on');
@@ -885,7 +1032,7 @@ function renderReport(doc, content, scoring, headline, profileParagraphs, respon
   doc.y += 90;
   doc.x = 72;
 
-  // ─── Page 3: Your quadrant ─────────────────────────────────────────────
+  // ─── Your quadrant: placement + the grid on one spread ─────────────────
   doc.addPage();
   eyebrow(doc, 'Your quadrant');
   h1(doc, quadrant.label);
@@ -897,29 +1044,15 @@ function renderReport(doc, content, scoring, headline, profileParagraphs, respon
   h2(doc, 'Common patterns at this position');
   bodyText(doc, quadrant.common_blind_spots);
 
-  // ─── Page 4: Quadrant grid (new in v6) ─────────────────────────────────
+  // The grid drawing stays — it shows the reader their own placement. The
+  // four positions are already explained in the preface, so this page no
+  // longer repeats that text; it just plots where they sit.
   doc.addPage();
-  eyebrow(doc, 'The charisma quadrants');
-  h1(doc, 'Where you sit in the model');
-  bodyText(doc, `The model maps charisma onto two dimensions: Confidence on the horizontal axis, Social Skills on the vertical. The four quadrants describe how the two combine in practice. Your scores place you in the highlighted quadrant. The other three are not failure modes. They are different working configurations, each with its own strengths and its own development edges.`);
+  eyebrow(doc, 'Where you sit on the map');
+  h1(doc, 'Your position');
+  bodyText(doc, `The map below plots your two dimension scores against each other. Your placement is highlighted. The four positions are described earlier in this report; this is where your own scores put you now.`);
   doc.moveDown(1.2);
-  // Grid: centred on the page (page width 595, content width 451, center = 297.5)
-  // Use 320pt size, leaving space for axis labels on the left and below.
   drawQuadrantGrid(doc, scoring, 297.5, doc.y, 320);
-
-  // ─── Page 5: The two dimensions ────────────────────────────────────────
-  doc.addPage();
-  eyebrow(doc, 'Your two dimensions');
-  h1(doc, 'Confidence and Social Skills');
-  bodyText(doc, `Your Confidence score is ${scoring.confidence}, in the ${prettyBand(scoring.confidenceBand).toLowerCase()} band. Your Social Skills score is ${scoring.socialSkills}, in the ${prettyBand(scoring.socialSkillsBand).toLowerCase()} band. The two together produce your quadrant placement, and the way you read them as you develop matters more than the headline numbers.`);
-
-  h2(doc, 'On the Confidence dimension');
-  bodyText(doc, confidenceBandSummary(scoring.confidenceBand));
-
-  h2(doc, 'On the Social Skills dimension');
-  bodyText(doc, socialSkillsBandSummary(scoring.socialSkillsBand));
-
-  // ─── Page 6: Subscale profile (new in v6) ──────────────────────────────
   doc.addPage();
   eyebrow(doc, 'Your full profile');
   h1(doc, 'All ten subscales at a glance');
@@ -933,58 +1066,8 @@ function renderReport(doc, content, scoring, headline, profileParagraphs, respon
   h1(doc, 'Where you are right now');
   profileParagraphs.forEach(p => bodyText(doc, p));
 
-  // ─── Page 8: The Authenticity Index ────────────────────────────────────
-  doc.addPage();
-  eyebrow(doc, 'The Authenticity Index');
-  h1(doc, `Your Authenticity Index: ${scoring.authenticityIndex}`);
-  doc.font(FONT_BODY_ITALIC).fontSize(13).fillColor(COLOURS.muted)
-     .text(scoring.authenticityBand || '');
-  doc.moveDown(0.8);
-
-  const authBandKey = (scoring.authenticityBand || '').toLowerCase().replace(/\s+/g, '_');
-  const authBand = content.authenticity_bands[authBandKey];
-  if (authBand) {
-    if (authBand.what_this_suggests) {
-      h2(doc, 'What this suggests');
-      bodyText(doc, authBand.what_this_suggests);
-    }
-    if (authBand.why_this_matters) {
-      h2(doc, 'Why this matters');
-      bodyText(doc, authBand.why_this_matters);
-    }
-    if (authBand.why_it_matters) {
-      h2(doc, 'Why it matters');
-      bodyText(doc, authBand.why_it_matters);
-    }
-    if (authBand.how_to_make_it_stronger) {
-      h2(doc, 'How to make it stronger');
-      // Strip the conditional B5 reference if it's the last sentence. The v5
-      // text ends with "...if B5 has shown up as one of your priority subscales."
-      // That sentence only lands if B5 is actually a priority, which for most
-      // respondents it is not.
-      let text = authBand.how_to_make_it_stronger;
-      // The broadly_consistent and selectively_deployed bands end with a
-      // sentence that only lands if B5 is a priority subscale. If it isn't,
-      // strip that trailing sentence outright. The preceding sentence already
-      // closes the paragraph cleanly.
-      if (!developmentCodes.includes('B5')) {
-        text = text.replace(/\s*The development pages[^.]*B5[^.]*\.\s*$/, '');
-      }
-      bodyText(doc, text);
-    }
-    if (authBand.how_to_use_it_even_better) {
-      h2(doc, 'How to use it even better');
-      bodyText(doc, authBand.how_to_use_it_even_better);
-    }
-    if (authBand.the_skill_to_build) {
-      h2(doc, 'The skill to build');
-      bodyText(doc, authBand.the_skill_to_build);
-    }
-    if (authBand.what_to_try_next && authBand.what_to_try_next.length) {
-      h2(doc, 'What to try next');
-      authBand.what_to_try_next.forEach(b => bulletPoint(doc, b));
-    }
-  }
+  // ─── The Charismatic Consistency Index (locked page) ──────────────────
+  renderConsistencyPage(doc, content, scoring);
 
   // ─── Personal Impact (new in v9) ───────────────────────────────────────
   // Only rendered when the reading is present (60-item payloads). The page
@@ -1041,14 +1124,14 @@ function renderReport(doc, content, scoring, headline, profileParagraphs, respon
        .text(`Score: ${scoring.subscaleScores[code]} of 100`);
     doc.moveDown(0.6);
 
-    h2(doc, 'What may be happening');
-    bodyText(doc, varyOpener(block.what_may_be_happening, code, 'development'));
-    h2(doc, 'Why this matters');
-    bodyText(doc, block.why_this_matters);
-    h2(doc, 'The skill to build');
-    bodyText(doc, block.the_skill_to_build);
-    h2(doc, 'What to try next');
-    block.what_to_try_next.forEach(b => bulletPoint(doc, b));
+    h2(doc, 'What this score tells you');
+    splitParas(block.what_this_score_tells_you).forEach(p => bodyText(doc, p));
+    h2(doc, 'What it costs to leave this alone');
+    splitParas(block.what_it_costs_to_leave_this_alone).forEach(p => bodyText(doc, p));
+    h2(doc, 'How to close the gap');
+    splitParas(block.how_to_close_the_gap).forEach(p => bodyText(doc, p));
+    h2(doc, 'Where you might start');
+    block.where_you_might_start.forEach(b => bulletPoint(doc, b));
   });
 
   // ─── Methods worth knowing ─────────────────────────────────────────────
@@ -1137,7 +1220,7 @@ function buildWeeklyPlan(content, developmentCodes, chosenMethods) {
   // and notice the shift in other people.
   const plan = [];
   const primarySub = content.subscales[developmentCodes[0]];
-  const acts = (primarySub && primarySub.development && primarySub.development.what_to_try_next) || [];
+  const acts = (primarySub && primarySub.development && primarySub.development.where_you_might_start) || [];
 
   if (acts[0]) {
     plan.push({
