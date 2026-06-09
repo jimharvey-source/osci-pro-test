@@ -166,7 +166,7 @@ async function generateProfileNarrative(content, scoring, respondentName) {
 - Quadrant: ${quadrant.label}
 - Confidence: ${scoring.confidence} (${scoring.confidenceBand} band)
 - Social Skills: ${scoring.socialSkills} (${scoring.socialSkillsBand} band)
-- Charismatic Consistency Index: ${scoring.consistencyIndex} (${scoring.consistencyBand || 'unknown'})
+- Charismatic Consistency Index: ${(typeof scoring.consistencyIndex === 'number' && Number.isFinite(scoring.consistencyIndex)) ? scoring.consistencyIndex + ' (' + (scoring.consistencyBand || 'unknown') + ')' : 'not available for this profile'}
 - Two highest subscales: ${strength1 ? subName(strength1) + ' (' + subScore(strength1) + ')' : '—'}, ${strength2 ? subName(strength2) + ' (' + subScore(strength2) + ')' : '—'}
 - Two priority subscales: ${subName(dev1)} (${subScore(dev1)}), ${subName(dev2)} (${subScore(dev2)})
 
@@ -177,7 +177,7 @@ Write four short paragraphs titled "Where you are right now". 60-80 words each. 
 Paragraph 1: Which dimension is the stronger one. What that looks like from the outside (the experience the people around them have).
 Paragraph 2: What the other dimension is doing. What its score means in practice, in plain terms.
 Paragraph 3: The two priority subscales, named explicitly. The cost of leaving them unattended, in plain terms. Frame these as opportunities, not deficits.
-Paragraph 4: The Charismatic Consistency Index reading. What it points at. The through-line to the work the rest of the report sets out.
+Paragraph 4: The Charismatic Consistency Index reading. What it points at. The through-line to the work the rest of the report sets out. If the Index is "not available for this profile", omit this paragraph entirely and write only three paragraphs; do not mention that it is unavailable.
 
 # The voice
 
@@ -412,7 +412,7 @@ function drawScoreTiles(doc, scoring, x, y, width) {
     doc.font(FONT_HEAD_BOLD).fontSize(labelSize).fillColor(COLOURS.muted)
        .text(t.label, tx + 2, y + 10, { width: tileW - 4, align: 'center', characterSpacing: 1.2 });
     doc.font(FONT_HEAD_BOLD).fontSize(valueSize).fillColor(COLOURS.navy)
-       .text(String(t.value), tx, y + 26, { width: tileW, align: 'center' });
+       .text((typeof t.value === 'number' && Number.isFinite(t.value)) ? String(t.value) : '–', tx, y + 26, { width: tileW, align: 'center' });
     doc.font(FONT_HEAD).fontSize(7).fillColor(COLOURS.muted)
        .text(prettyBand(t.band) || '', tx + 2, y + 63, { width: tileW - 4, align: 'center' });
   });
@@ -957,21 +957,31 @@ function renderPreface(doc, content, scoring) {
 // extend your reach" close.
 function renderConsistencyPage(doc, content, scoring) {
   const cp = content.consistency_page;
+  // A valid index is a finite number; a valid band resolves to band copy. If
+  // either is missing (e.g. the questionnaire is missing its consistencyBands),
+  // render the concept and general advice without ever printing "undefined".
+  const idx = scoring.consistencyIndex;
+  const hasIndex = (typeof idx === 'number' && Number.isFinite(idx));
+  const bandKey = (scoring.consistencyBand || '').toLowerCase()
+    .replace(/\s+/g, '_').replace(/-/g, '_');
+  const bandPara = bandKey ? cp.bands[bandKey] : null;
+
   doc.addPage();
   eyebrow(doc, cp.eyebrow);
-  h1(doc, `${cp.title}: ${scoring.consistencyIndex}`);
-  doc.font(FONT_BODY_ITALIC).fontSize(13).fillColor(COLOURS.muted)
-     .text(scoring.consistencyBand || '');
+  h1(doc, hasIndex ? `${cp.title}: ${idx}` : cp.title);
+  if (scoring.consistencyBand) {
+    doc.font(FONT_BODY_ITALIC).fontSize(13).fillColor(COLOURS.muted)
+       .text(scoring.consistencyBand);
+  }
   doc.moveDown(0.8);
 
   h2(doc, cp.concept_intro_head);
   cp.concept.forEach(p => bodyText(doc, p));
 
-  h2(doc, cp.case_head);
-  const bandKey = (scoring.consistencyBand || '').toLowerCase()
-    .replace(/\s+/g, '_').replace(/-/g, '_');
-  const bandPara = cp.bands[bandKey];
-  if (bandPara) bodyText(doc, bandPara);
+  if (bandPara) {
+    h2(doc, cp.case_head);
+    bodyText(doc, bandPara);
+  }
 
   h2(doc, cp.extend_head);
   cp.extend.forEach(p => bodyText(doc, p));
