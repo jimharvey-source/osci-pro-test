@@ -213,7 +213,7 @@
         <div class="score-band" id="band-social">&nbsp;</div>
       </div>
       <div class="score-tile">
-        <div class="score-label">Authenticity Index</div>
+        <div class="score-label">Charismatic Consistency</div>
         <div class="score-value" id="score-auth">&nbsp;</div>
         <div class="score-band" id="band-auth">&nbsp;</div>
       </div>
@@ -446,8 +446,8 @@ function renderResults(s) {
   document.getElementById('band-confidence').textContent = bandPretty(s.confidenceBand);
   document.getElementById('score-social').textContent = s.socialSkills;
   document.getElementById('band-social').textContent = bandPretty(s.socialSkillsBand);
-  document.getElementById('score-auth').textContent = s.authenticityIndex;
-  document.getElementById('band-auth').textContent = s.authenticityBand || '';
+  document.getElementById('score-auth').textContent = s.consistencyIndex;
+  document.getElementById('band-auth').textContent = s.consistencyBand || '';
 
   const tbody = document.querySelector('#subscale-table tbody');
   tbody.innerHTML = '';

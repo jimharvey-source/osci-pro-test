@@ -5,10 +5,10 @@
 //   answers: object keyed by question number, value 1-5 raw Likert response
 //   questionnaire: the questionnaire.json object
 // Returns a scoring payload with subscale scores, dimension scores, quadrant,
-// Authenticity Index and the two priority subscales.
+// Charismatic Consistency Index and the two priority subscales.
 
 function scoreOSCIPro(answers, questionnaire) {
-  const { items, subscales, reverseItems, shadowItems, cutPoints, authenticityBands,
+  const { items, subscales, reverseItems, shadowItems, cutPoints, consistencyBands,
           personalImpact, personalImpactBands } = questionnaire;
 
   // 1. Invert reverse-scored items. Formula: 6 - raw.
@@ -84,15 +84,18 @@ function scoreOSCIPro(answers, questionnaire) {
     subscaleBands[code] = bandFor(subscaleScores[code], cuts);
   }
 
-  // 7. Authenticity Index. Mean of the eight shadow items (post-reverse),
-  //    scaled to 0-100. Each item is 1-5 after reversal, so mean is 1-5;
-  //    scale: ((mean - 1) / 4) * 100.
+  // 7. Charismatic Consistency Index. Mean of the eight shadow items
+  //    (post-reverse), scaled to 0-100. Each item is 1-5 after reversal, so
+  //    mean is 1-5; scale: ((mean - 1) / 4) * 100. The Index reads how
+  //    consistently the respondent's warmth and attention are available
+  //    across audiences and across the respondent's own states. Renamed
+  //    from Authenticity Index at v3.8; the construct is unchanged.
   const shadowSum = shadowItems.reduce((acc, n) => acc + inverted[n], 0);
   const shadowMean = shadowSum / shadowItems.length;
-  const authenticityIndex = Math.round(((shadowMean - 1) / 4) * 100);
+  const consistencyIndex = Math.round(((shadowMean - 1) / 4) * 100);
 
-  const authBand = authenticityBands.find(
-    b => authenticityIndex >= b.min && authenticityIndex <= b.max
+  const consistencyBand = consistencyBands.find(
+    b => consistencyIndex >= b.min && consistencyIndex <= b.max
   );
 
   // 7b. Personal Impact. Mean of its ten items (Q51-60, post-reverse), scaled
@@ -162,9 +165,9 @@ function scoreOSCIPro(answers, questionnaire) {
     quadrant,
     subscaleScores,
     subscaleBands,
-    authenticityIndex,
-    authenticityBand: authBand ? authBand.label : null,
-    authenticityDescription: authBand ? authBand.description : null,
+    consistencyIndex,
+    consistencyBand: consistencyBand ? consistencyBand.label : null,
+    consistencyDescription: consistencyBand ? consistencyBand.description : null,
     personalImpact: personalImpactResult,
     priorityAreas: priority,
     version: questionnaire.version
