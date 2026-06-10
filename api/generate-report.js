@@ -187,7 +187,7 @@ The OSCI Pro report follows a strict voice. The principles below catch the most 
 
 2. Plain register. UK English ("behaviour", "organisation", "recognise"). Short words. Cut every word that does not earn its place. "Use" not "leverage". "Read" not "discern". "Now" not "at this juncture".
 
-3. No antithesis. No "not just X but Y", no "not A, B", no "not only... but also". Just say the thing.
+3. No antithesis. This is the most common failure, so read it carefully. Antithesis is defining something by first stating what it is NOT. ALL of these forms are banned, not only the first one: "not just X but Y"; "not X, but Y"; "X rather than Y" used to define (e.g. "steady rather than effusive"); "less about X than about Y"; "not only X but also Y"; and the split form "It is not about X. It is about Y." or "This is not X. Y." THE TEST: if a sentence reaches its point by first telling the reader what the thing is not, delete the negative half and state what the thing IS, directly. "steady rather than effusive" becomes "a steady, reliable presence". "not about competence, it is about belonging" becomes "you are competent; the work is the internal sense of belonging". The only permitted contrast is a genuine either/or the reader must choose between (enumerating two distinct patterns they might recognise), which carries real information and is not definition-by-negation.
 
 4. No clichés or pop-business idioms. No "unlock", "land", "show up", "shows up", "earned the right to be in the room", "where your real charisma lives", "the next chapter", "growth journey", "moving the needle", "the platform from which", "orchestrate".
 
@@ -213,19 +213,19 @@ The OSCI Pro report follows a strict voice. The principles below catch the most 
 
 # Voice examples — write at this level
 
-Example paragraph 1 (Sarah Mitchell, higher social skills, developing confidence):
-"Your Social Skills are your stronger dimension at 78. You connect naturally, read emotional registers well, and most people feel genuinely comfortable around you. Your warmth and empathy subscales are among your highest. The quality of your one-to-one interactions is strong. People trust you. They open up. They tell you their colleagues should also be talking to you."
+Example paragraph 1 (higher social skills, developing confidence):
+"Your Social Skills at 78 mean people experience you as a steady, reliable presence. You connect naturally, read emotional registers well, and most people feel genuinely comfortable around you. Your warmth and empathy subscales are among your highest. The quality of your one-to-one interactions is strong. People trust you. They open up."
 
-Example paragraph 2 (Sarah Mitchell, on her lower confidence):
-"Your Confidence at 74 is functional, with room to grow. You do not present as uncertain or hesitant in most settings. The ceiling shows up under higher stakes, with people you perceive as more senior or more confident, and when the outcome of an interaction really matters. The internal experience does not quite match the external performance. You compensate well. The compensation costs you energy. That is what a 74 feels like from the inside."
+Example paragraph 2 (developing confidence — note: states what IS, no "the question is not... it is"):
+"Your Confidence score at 74 shows you are prepared and you follow through. The challenge appears in moments of exposure, in front of a larger group or dealing with uncertainty you cannot fully control. You are competent. The work is building the internal sense of belonging in those high-stakes moments. That gap between internal and external is where your energy, and sometimes your impact, falls."
 
-Example paragraph 3 (Sarah Mitchell, on her priority subscales):
-"Your Assertiveness and Accountability subscale at 64 is the clearest confidence opportunity. The question is not whether you can assert yourself. You can. It is whether you do, consistently, in the moments that require it most: naming a problem when it creates friction, disagreeing with someone whose opinion you value, holding accountability without softening. The cost of leaving this unattended is the contribution that does not get heard, which over time becomes the contribution that does not get made."
+Example paragraph 3 (a priority subscale — states the opportunity directly):
+"Your Assertiveness and Accountability subscale at 64 is your clearest confidence opportunity. You can assert yourself. The work is doing it consistently in the moments that require it most: naming a problem when it creates friction, disagreeing with someone whose opinion you value, holding accountability without softening. The cost of leaving this is the contribution that does not get heard, which over time becomes the contribution that does not get made."
 
-Example paragraph 4 (Sarah Mitchell, on her Charismatic Consistency Index):
-"Your Charismatic Consistency Index at 68 maps onto something different. Your social skills are real. They are not evenly distributed. People who know you well, who you feel engaged with, get something valuable. People at the fringes get less. Not nothing, but less. That unevenness is what the 68 is measuring. Widening the reach of what you already have is the work the rest of this report sets out."
+Example paragraph 4 (the Charismatic Consistency Index):
+"Your Charismatic Consistency Index at 68 tells you something direct. Your social skills are real, and they reach some audiences more fully than others. People you know well get something valuable. People at the fringes get less of it. That unevenness is what the 68 is measuring. Widening the reach of what you already have is the work the rest of this report sets out."
 
-Note the rhythm. Short sentences. Plain words. Specific. Concrete. Speaking to the reader, not about them. Naming the experience the people around the reader have, not the reader's internal state.
+Note the rhythm. Short sentences. Plain words. Specific. Concrete. Speaking to the reader, not about them. Naming the experience the people around the reader have, not the reader's internal state. End paragraphs on the lived consequence ("where your impact falls"), not an abstract formulation ("where your energy goes"). Describe what the reader IS, positively; never reach the point by first saying what they are not, and never name the band inside the prose.
 
 Return only the four paragraphs, separated by blank lines. No preamble. No headings.`;
 
