@@ -2,6 +2,17 @@
 //
 // The real OSCI Pro PDF report generator.
 //
+// v4.1 (12 June) changes:
+//   A.  Headline and narrative prompts: hard constraint that praise must never
+//       describe a skill measured by a development priority (the live test
+//       praised the respondent's lowest subscale on the cover). The live
+//       failure is now a labelled bad example in the headline prompt, and a
+//       guard line stops the good examples being borrowed as content.
+//   B.  "method (page 16)" stale cross-reference replaced with "method from
+//       the companion book" across all seven subscale pages that carried it.
+//   C.  One contraction in the Sistine passage corrected for the report rule
+//       (aren't -> are not).
+//
 // v4 (newspaper reorder, 12 June) changes:
 //   A.  Page sequence reordered: the reader meets the dashboard on page 3.
 //       New order: cover → what we mean by charisma → opening summary with
@@ -193,6 +204,8 @@ Paragraph 1: Which dimension is the stronger one. What that looks like from the 
 Paragraph 2: What the other dimension is doing. What its score means in practice, in plain terms.
 Paragraph 3: The two priority subscales, named explicitly. The cost of leaving them unattended, in plain terms. Frame these as opportunities, not deficits.
 Paragraph 4: The Charismatic Consistency Index reading. What it points at. The through-line to the work the rest of the report sets out. If the Index is "not available for this profile", omit this paragraph entirely and write only three paragraphs; do not mention that it is unavailable.
+
+One hard constraint above every voice rule: never attribute to ${name} a strength that either priority subscale measures. Their priorities are ${subName(dev1)} and ${subName(dev2)}. Before writing any complimentary sentence, check it against those two names: if the compliment describes the skill one of them measures (for example reading the room, reading cues, or reading the moment when Situational Self-Awareness is a priority; or consistent warmth across audiences when Authentic vs Performed Social Behaviour is a priority), cut it and draw the praise from the two highest subscales instead. This page must not contradict the development pages that follow it.
 
 # The voice
 
