@@ -2,6 +2,21 @@
 //
 // The real OSCI Pro PDF report generator.
 //
+// v4 (newspaper reorder, 12 June) changes:
+//   A.  Page sequence reordered: the reader meets the dashboard on page 3.
+//       New order: cover → what we mean by charisma → opening summary with
+//       score tiles → the four positions → your map → your quadrant → ten
+//       bars → plain words → the two dimensions (background) → Index → rest.
+//   B.  Preface page 3 (the four readings) dissolved: it duplicated the
+//       Consistency Index and Personal Impact pages. Its "four lenses"
+//       paragraph now renders beneath the score tiles on the opening summary.
+//   C.  renderPreface split into renderPrefaceCharisma / renderPrefaceDimensions
+//       / renderPrefacePositions so each page renders where it earns its place.
+//   D.  Three success-log lines downgraded from console.error to console.log
+//       so genuine errors stand out in the Vercel logs.
+//   E.  Fallback narrative: "deployed deliberately" → "used deliberately",
+//       matching the deploy sweep applied across content.json.
+//
 // v3 (sub-pass C) changes:
 //   A.  Subscale development pages now render the locked four-header
 //       structure: What this score tells you / What it costs to leave this
@@ -59,7 +74,7 @@ async function generateHeadline(content, scoring, respondentName) {
     console.error('[headline] ANTHROPIC_API_KEY not set in environment');
     return fallbackHeadline(content, scoring);
   }
-  console.error('[headline] API key present, length:', apiKey.length);
+  console.log('[headline] API key present, length:', apiKey.length);
 
   const quadrant = content.quadrants[scoring.quadrant];
   const priority1Code = scoring.priorityAreas[0];
@@ -121,7 +136,7 @@ async function generateHeadline(content, scoring, respondentName) {
       console.error('[headline] Empty response from API, data keys:', Object.keys(data));
       return fallbackHeadline(content, scoring);
     }
-    console.error('[headline] Got headline:', cleaned.slice(0, 120));
+    console.log('[headline] Got headline:', cleaned.slice(0, 120));
     return cleaned;
   } catch (e) {
     console.error('[headline] Network/parse error:', e.message);
@@ -261,7 +276,7 @@ Return only the four paragraphs, separated by blank lines. No preamble. No headi
       console.error('[profile] Too few paragraphs returned, using fallback');
       return fallbackProfileNarrative(content, scoring, respondentName);
     }
-    console.error('[profile] Got', paragraphs.length, 'paragraphs');
+    console.log('[profile] Got', paragraphs.length, 'paragraphs');
     return paragraphs;
   } catch (e) {
     console.error('[profile] Network/parse error:', e.message);
@@ -284,7 +299,7 @@ function fallbackProfileNarrative(content, scoring, respondentName) {
   const otherLabel = cStronger ? 'Social Skills' : 'Confidence';
   const otherScore = cStronger ? sScore : cScore;
 
-  const para1 = `${name}, here is what your scores are actually saying. Your ${strongerLabel} is the stronger of the two dimensions at ${strongerScore}. That is the version of you most people in the room are picking up on, and it is doing useful work. The risk at this band is taking it for granted. Strong dimensions stay strong when they are deployed deliberately. They quietly thin when they are not.`;
+  const para1 = `${name}, here is what your scores are actually saying. Your ${strongerLabel} is the stronger of the two dimensions at ${strongerScore}. That is the version of you most people in the room are picking up on, and it is doing useful work. The risk at this band is taking it for granted. Strong dimensions stay strong when they are used deliberately. They quietly thin when they are not.`;
 
   const para2 = `Your ${otherLabel} at ${otherScore} is the other half of the picture. It is functional, but not yet doing everything it could. The gap between the two dimensions is where the development conversation usually sits. The priority subscales below name the specific behaviours where attention will most repay the effort.`;
 
@@ -873,17 +888,34 @@ function stampHeadersAndFooters(doc, respondentName) {
 // locked collation (preface_p1_v7 .. preface_p4_v2). These render verbatim;
 // the only substitution is the live score where the locked text carries a
 // [put the number here] placeholder.
-function renderPreface(doc, content, scoring) {
+// ── The preface, split into placeable pages (newspaper reorder, 12 June) ───
+// The old renderPreface ran four concept pages back to back before the reader
+// met a single number. The reorder puts the news first: the reader now meets
+// the dashboard on page 3. The concept pages render individually, where each
+// earns its place:
+//   page1 (What we mean by charisma)  → stays up front; it sells the model.
+//   page4 (The four positions)        → sits directly before the reader's map.
+//   page2 (The two dimensions)        → background, after the plain-words
+//                                       narrative; the Sistine passage is now
+//                                       read by an invested reader.
+//   page3 (The four readings)         → dissolved. It duplicated the CCI and
+//                                       Personal Impact pages; its useful
+//                                       "four lenses" paragraph now renders
+//                                       beneath the score tiles on the
+//                                       opening summary.
+
+function renderPrefaceCharisma(doc, content) {
   const pf = content.preface;
   if (!pf) return;
-
-  // ── Preface 1: What we mean by charisma ──
   doc.addPage();
   eyebrow(doc, pf.page1.eyebrow);
   h1(doc, pf.page1.title);
   pf.page1.paras.forEach(p => bodyText(doc, p));
+}
 
-  // ── Preface 2: The two dimensions ──
+function renderPrefaceDimensions(doc, content) {
+  const pf = content.preface;
+  if (!pf) return;
   doc.addPage();
   eyebrow(doc, pf.page2.eyebrow);
   h1(doc, pf.page2.title);
@@ -894,30 +926,11 @@ function renderPreface(doc, content, scoring) {
   pf.page2.social_skills.forEach(p => bodyText(doc, p));
   h2(doc, pf.page2.combine_head);
   pf.page2.combine.forEach(p => bodyText(doc, p));
+}
 
-  // ── Preface 3: The four readings ──
-  doc.addPage();
-  eyebrow(doc, pf.page3.eyebrow);
-  h1(doc, pf.page3.title);
-  pf.page3.intro.forEach(p => bodyText(doc, p));
-  // Each reading carries a live score where the locked text had a placeholder.
-  const readingScores = {
-    'Your Confidence score': scoring.confidence,
-    'Your Social Skills score': scoring.socialSkills,
-    'Your Charismatic Consistency Index': scoring.consistencyIndex,
-    'Your Personal Impact': (scoring.personalImpact && typeof scoring.personalImpact.score === 'number')
-      ? scoring.personalImpact.score : null
-  };
-  pf.page3.readings.forEach(r => {
-    const sc = readingScores[r.head];
-    const headWithScore = (sc !== null && sc !== undefined) ? `${r.head}: ${sc}` : r.head;
-    h2(doc, headWithScore);
-    r.paras.forEach(p => bodyText(doc, p));
-  });
-  h2(doc, pf.page3.together_head);
-  pf.page3.together.forEach(p => bodyText(doc, p));
-
-  // ── Preface 4: The four positions ──
+function renderPrefacePositions(doc, content) {
+  const pf = content.preface;
+  if (!pf) return;
   doc.addPage();
   eyebrow(doc, pf.page4.eyebrow);
   h1(doc, pf.page4.title);
@@ -1020,13 +1033,12 @@ function renderReport(doc, content, scoring, headline, profileParagraphs, respon
      .text(respondentName ? `Prepared for ${respondentName}` : 'Prepared for you');
   doc.text(today);
 
-  // ─── The locked preface (concept, instrument, how to use the results) ───
-  // Four locked pages that set the voice and explain the four readings before
-  // the reader meets any of their own numbers. This is the tone-setting front
-  // matter; everything after it is personalised.
-  renderPreface(doc, content, scoring);
+  // ─── Front matter: one page only ────────────────────────────────────────
+  // What we mean by charisma. The rest of the old preface now renders where
+  // each page earns its place (see the preface functions above).
+  renderPrefaceCharisma(doc, content);
 
-  // ─── Opening summary (first personalised page) ──────────────────────────
+  // ─── Opening summary (the news) ──────────────────────────────────────────
   doc.addPage();
   eyebrow(doc, 'Opening summary');
   h1(doc, 'There is a lot here to build on');
@@ -1042,7 +1054,24 @@ function renderReport(doc, content, scoring, headline, profileParagraphs, respon
   doc.y += 90;
   doc.x = 72;
 
-  // ─── Your quadrant: placement + the grid on one spread ─────────────────
+  // The "four lenses" paragraph from the dissolved four-readings page now
+  // lives beneath the tiles, where it orients the numbers it sits under.
+  if (content.preface && content.preface.page3 && content.preface.page3.together) {
+    doc.moveDown(0.4);
+    content.preface.page3.together.forEach(p => bodyText(doc, p));
+  }
+
+  // ─── The four positions, then the reader's own placement ────────────────
+  renderPrefacePositions(doc, content);
+
+  doc.addPage();
+  eyebrow(doc, 'Where you sit on the map');
+  h1(doc, 'Your position');
+  bodyText(doc, `The map below plots your two dimension scores against each other. Your placement is highlighted. The four positions are described earlier in this report; this is where your own scores put you now.`);
+  doc.moveDown(1.2);
+  drawQuadrantGrid(doc, scoring, 297.5, doc.y, 320);
+
+  // ─── Your quadrant in detail ─────────────────────────────────────────────
   doc.addPage();
   eyebrow(doc, 'Your quadrant');
   h1(doc, quadrant.label);
@@ -1054,15 +1083,6 @@ function renderReport(doc, content, scoring, headline, profileParagraphs, respon
   h2(doc, 'Common patterns at this position');
   bodyText(doc, quadrant.common_blind_spots);
 
-  // The grid drawing stays — it shows the reader their own placement. The
-  // four positions are already explained in the preface, so this page no
-  // longer repeats that text; it just plots where they sit.
-  doc.addPage();
-  eyebrow(doc, 'Where you sit on the map');
-  h1(doc, 'Your position');
-  bodyText(doc, `The map below plots your two dimension scores against each other. Your placement is highlighted. The four positions are described earlier in this report; this is where your own scores put you now.`);
-  doc.moveDown(1.2);
-  drawQuadrantGrid(doc, scoring, 297.5, doc.y, 320);
   doc.addPage();
   eyebrow(doc, 'Your full profile');
   h1(doc, 'All ten subscales at a glance');
@@ -1075,6 +1095,9 @@ function renderReport(doc, content, scoring, headline, profileParagraphs, respon
   eyebrow(doc, 'Your profile in plain words');
   h1(doc, 'Where you are right now');
   profileParagraphs.forEach(p => bodyText(doc, p));
+
+  // ─── The model underneath (background, read by an invested reader) ─────
+  renderPrefaceDimensions(doc, content);
 
   // ─── The Charismatic Consistency Index (locked page) ──────────────────
   renderConsistencyPage(doc, content, scoring);
