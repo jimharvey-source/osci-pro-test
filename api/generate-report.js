@@ -2,6 +2,20 @@
 //
 // The real OSCI Pro PDF report generator.
 //
+// v4.2 (12 June) changes:
+//   A.  Voice enforcement layer: voiceViolations() checks every AI output
+//       for em/en dashes, the banned phrase list, contractions, exclamation
+//       marks, and questions. One corrective retry naming the violations,
+//       then mechanical dash repair. Unresolved violations log as errors and
+//       never block generation. (Leo's live report leaked two em dashes and
+//       one "show up" past the prompt rules; prompts request, this enforces.)
+//   B.  Anthropic fetch factored into anthropicText() shared by both calls
+//       and their retries.
+//   C.  Courteously Charismatic opening paragraph stops claiming "higher on
+//       both" bands; Developing-band respondents land in the quadrant too
+//       and the old line contradicted the tiles beneath it.
+//   D.  One contraction fixed on the A1 page (can't -> cannot).
+//
 // v4.1 (12 June) changes:
 //   A.  Headline and narrative prompts: hard constraint that praise must never
 //       describe a skill measured by a development priority (the live test
@@ -79,6 +93,77 @@ const path = require('path');
 
 // ── Anthropic API calls ────────────────────────────────────────────────────
 
+// ── Voice enforcement (v4.2) ────────────────────────────────────────────
+// The prompts request the voice rules; this enforces the mechanically
+// checkable ones on every AI output. Each call gets one corrective retry
+// that names the violations. After the retry, em and en dashes are
+// repaired mechanically and anything still unresolved is logged as an
+// error. Violations never block report generation: a paying customer
+// always gets their PDF.
+
+const VOICE_BANNED_PHRASES = [
+  // From voice rule 4 in both prompts (clichés and pop-business idioms)
+  'unlock', 'land', 'lands', 'show up', 'shows up', 'showing up',
+  'earned the right to be in the room', 'where your real charisma lives',
+  'the next chapter', 'growth journey', 'moving the needle',
+  'the platform from which', 'orchestrate', 'leverage',
+  // From voice rule 3 (the two lexical antithesis markers)
+  'not just', 'not only',
+  // From voice rules 5 and 9
+  'version of you', 'the real you', 'your journey'
+];
+
+const VOICE_CONTRACTIONS = /\b(you're|you've|you'll|you'd|it's|that's|there's|here's|what's|who's|they're|we're|i'm|don't|doesn't|didn't|isn't|aren't|wasn't|weren't|won't|can't|couldn't|wouldn't|shouldn't|hasn't|haven't|hadn't|let's)\b/i;
+
+function voiceViolations(text) {
+  const violations = [];
+  if (/[\u2014\u2013]/.test(text)) violations.push({ rule: 'no em or en dashes', match: 'dash' });
+  for (const phrase of VOICE_BANNED_PHRASES) {
+    const re = new RegExp('\\b' + phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i');
+    if (re.test(text)) violations.push({ rule: 'banned phrase', match: phrase });
+  }
+  const contraction = text.match(VOICE_CONTRACTIONS);
+  if (contraction) violations.push({ rule: 'no contractions', match: contraction[0] });
+  if (text.includes('!')) violations.push({ rule: 'no exclamation marks', match: '!' });
+  if (text.includes('?')) violations.push({ rule: 'no questions to the reader', match: '?' });
+  return violations;
+}
+
+function describeViolations(violations) {
+  return violations.map(v => `${v.rule} ("${v.match}")`).join('; ');
+}
+
+// Mechanical last resort for dashes only. Digit ranges become "X to Y";
+// every other em or en dash becomes a comma.
+function repairDashes(text) {
+  return text
+    .replace(/(\d)\s*[\u2014\u2013]\s*(\d)/g, '$1 to $2')
+    .replace(/\s*[\u2014\u2013]\s*/g, ', ');
+}
+
+async function anthropicText(apiKey, prompt, maxTokens, tag) {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01'
+    },
+    body: JSON.stringify({
+      model: 'claude-haiku-4-5',
+      max_tokens: maxTokens,
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
+  if (!res.ok) {
+    const errText = await res.text();
+    console.error(`[${tag}] Anthropic API non-OK`, res.status, errText.slice(0, 500));
+    return null;
+  }
+  const data = await res.json();
+  return (data.content && data.content[0] && data.content[0].text) || '';
+}
+
 async function generateHeadline(content, scoring, respondentName) {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
@@ -122,30 +207,31 @@ async function generateHeadline(content, scoring, respondentName) {
     .replace(/\{strength_2_score\}/g, scoring.subscaleScores[strength2Code]);
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5',
-        max_tokens: 200,
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
-    if (!res.ok) {
-      const errText = await res.text();
-      console.error('[headline] Anthropic API non-OK', res.status, errText.slice(0, 500));
+    const raw = await anthropicText(apiKey, prompt, 200, 'headline');
+    if (raw === null) return fallbackHeadline(content, scoring);
+    let cleaned = raw.trim().replace(/^["']|["']$/g, '');
+    if (!cleaned) {
+      console.error('[headline] Empty response from API');
       return fallbackHeadline(content, scoring);
     }
-    const data = await res.json();
-    const text = (data.content && data.content[0] && data.content[0].text) || '';
-    const cleaned = text.trim().replace(/^["']|["']$/g, '');
-    if (!cleaned) {
-      console.error('[headline] Empty response from API, data keys:', Object.keys(data));
-      return fallbackHeadline(content, scoring);
+
+    let violations = voiceViolations(cleaned);
+    if (violations.length) {
+      console.log('[headline] Voice violations, retrying once:', describeViolations(violations));
+      const retryPrompt = `${prompt}\n\nYour previous attempt was:\n"${cleaned}"\n\nIt broke these voice rules: ${describeViolations(violations)}.\n\nWrite a new headline that keeps the same substance and removes every violation. Return only the headline.`;
+      const retryRaw = await anthropicText(apiKey, retryPrompt, 200, 'headline-retry');
+      if (retryRaw) {
+        const retryCleaned = retryRaw.trim().replace(/^["']|["']$/g, '');
+        if (retryCleaned && voiceViolations(retryCleaned).length < violations.length) {
+          cleaned = retryCleaned;
+        }
+      }
+    }
+
+    cleaned = repairDashes(cleaned);
+    const remaining = voiceViolations(cleaned);
+    if (remaining.length) {
+      console.error('[headline] Unresolved voice violations:', describeViolations(remaining));
     }
     console.log('[headline] Got headline:', cleaned.slice(0, 120));
     return cleaned;
@@ -258,31 +344,34 @@ Note the rhythm. Short sentences. Plain words. Specific. Concrete. Speaking to t
 Return only the four paragraphs, separated by blank lines. No preamble. No headings.`;
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5',
-        max_tokens: 800,
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
-    if (!res.ok) {
-      const errText = await res.text();
-      console.error('[profile] Anthropic API non-OK', res.status, errText.slice(0, 500));
-      return fallbackProfileNarrative(content, scoring, respondentName);
-    }
-    const data = await res.json();
-    const text = (data.content && data.content[0] && data.content[0].text) || '';
-    const cleaned = text.trim();
+    const raw = await anthropicText(apiKey, prompt, 800, 'profile');
+    if (raw === null) return fallbackProfileNarrative(content, scoring, respondentName);
+    let cleaned = raw.trim();
     if (!cleaned) {
       console.error('[profile] Empty response, using fallback');
       return fallbackProfileNarrative(content, scoring, respondentName);
     }
+
+    let violations = voiceViolations(cleaned);
+    if (violations.length) {
+      console.log('[profile] Voice violations, retrying once:', describeViolations(violations));
+      const retryPrompt = `${prompt}\n\nYour previous attempt was:\n\n${cleaned}\n\nIt broke these voice rules: ${describeViolations(violations)}.\n\nWrite the paragraphs again, keeping the same substance and removing every violation. Return only the paragraphs, separated by blank lines.`;
+      const retryRaw = await anthropicText(apiKey, retryPrompt, 800, 'profile-retry');
+      if (retryRaw) {
+        const retryCleaned = retryRaw.trim();
+        const retryParas = retryCleaned.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
+        if (retryCleaned && retryParas.length >= 3 && voiceViolations(retryCleaned).length < violations.length) {
+          cleaned = retryCleaned;
+        }
+      }
+    }
+
+    cleaned = repairDashes(cleaned);
+    const remaining = voiceViolations(cleaned);
+    if (remaining.length) {
+      console.error('[profile] Unresolved voice violations:', describeViolations(remaining));
+    }
+
     // Split into paragraphs on blank lines
     const paragraphs = cleaned.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
     if (paragraphs.length < 3) {
