@@ -1,5 +1,5 @@
 {
-  "version": "content-v3.8",
+  "version": "content-v3.9",
   "_meta": {
     "purpose": "Canonical content blocks for the OSCI Pro PDF report. Each subscale has two frames: strength (when the subscale is a relative high point for the respondent) and development (when it's a relative low point). The report generator selects the right frame at render time. Voice follows OSCI_Feedback_Style_guide.",
     "structure_strength_frame": [
@@ -578,7 +578,7 @@
       "together_head": "How to read the four together",
       "together": [
         "These are four lenses on the same structure. The Confidence and Social Skills scores tell you your charismatic strengths and development areas. The Charismatic Consistency Index tells you how consistently you appear across all areas of your life. The Personal Impact reading tells you how the most visible element of your charisma can be sharpened, even if you already score highly. Together, they produce the most complete picture of your charismatic profile available to you, and they point at the specific places where the next development work will most repay your attention.",
-        "We will look at how the two dimension scores combine into a map next."
+        "Your profile on one page comes next. Then the two dimensions in detail, and the map they combine into."
       ]
     },
     "page4": {

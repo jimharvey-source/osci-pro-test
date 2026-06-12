@@ -2,6 +2,18 @@
 //
 // The real OSCI Pro PDF report generator.
 //
+// v4.6 (13 June) changes:
+//   A.  Opening summary handoff line updated for the v4.5 page order
+//       (content-v3.9): the page after the tiles is now the one-page
+//       summary, and the line says so.
+//   B.  Narrative prompt final-check: capitalise Confidence and Social
+//       Skills as dimension names; UK spelling list (judgement first).
+//       'judgment' also added to the mechanical validator banned list
+//       (word-boundary match cannot touch 'judgement').
+//   C.  Week 3 plan title gains a conditional 'method' suffix, so
+//       "use the Asking for feedback worth getting method" reads whole
+//       while "use the five-minutes practice" stays untouched.
+//
 // v4.5 (13 June) changes:
 //   A.  One-page summary, "Your profile on one page", rendered directly
 //       after the opening summary: two strengths and two development areas,
@@ -151,7 +163,10 @@ const VOICE_BANNED_PHRASES = [
   // From voice rule 3 (the two lexical antithesis markers)
   'not just', 'not only',
   // From voice rules 5 and 9
-  'version of you', 'the real you', 'your journey'
+  'version of you', 'the real you', 'your journey',
+  // v4.6: US spelling caught live (judgement is the UK form and safe:
+  // word-boundary matching means 'judgment' cannot match inside it)
+  'judgment'
 ];
 
 const VOICE_CONTRACTIONS = /\b(you're|you've|you'll|you'd|it's|that's|there's|here's|what's|who's|they're|we're|i'm|don't|doesn't|didn't|isn't|aren't|wasn't|weren't|won't|can't|couldn't|wouldn't|shouldn't|hasn't|haven't|hadn't|let's)\b/i;
@@ -387,6 +402,8 @@ Note the rhythm. Short sentences. Plain words. Specific. Concrete. Speaking to t
 Your output is checked mechanically. Any em dash, en dash, contraction, banned phrase, exclamation mark, or question mark causes the draft to be rejected and regenerated. Before returning, reread each paragraph line by line:
 
 Where you reached for an em dash, use a comma, a full stop, or a colon instead. Where you wrote a contraction, write the words in full. Where a sentence makes its point by saying what something is not, delete the negative half and state what it is.
+
+Capitalise Confidence and Social Skills wherever they name the two dimensions, including mid-sentence. Use UK English spelling throughout: judgement, recognise, organise, behaviour, colour, centre.
 
 Return only the four paragraphs, separated by blank lines. No preamble. No headings.`;
 
@@ -1497,8 +1514,12 @@ function buildWeeklyPlan(content, developmentCodes, chosenMethods) {
     // "The " so the title reads naturally.
     const rawName = chosenMethods[0].name || '';
     const cleanName = rawName.replace(/^The\s+/i, '');
+    // v4.6: "Week 3: use the Asking for feedback worth getting" read as
+    // truncated. Append "method" unless the name already ends in a noun
+    // that carries it (practice, framework, method).
+    const suffix = /(practice|framework|method)$/i.test(cleanName) ? '' : ' method';
     plan.push({
-      title: `Week 3: use the ${cleanName}`,
+      title: `Week 3: use the ${cleanName}${suffix}`,
       detail: `Find three real situations this week to put this method to work. The first time will feel awkward. The second time will be less awkward. By the third, the practice will be building muscle. ${chosenMethods[0].summary.split('. ')[0]}.`
     });
   } else if (acts[2]) {
