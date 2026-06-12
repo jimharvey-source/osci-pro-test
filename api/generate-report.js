@@ -2,6 +2,22 @@
 //
 // The real OSCI Pro PDF report generator.
 //
+// v4.4 (13 June) changes:
+//   A.  High-band variant for development frames. A subscale selected as a
+//       priority while sitting in the higher band (a relative gap) was
+//       being served the locked low-band opening ("A lower score on this
+//       subscale...") against a visible score of 80+. content.json can now
+//       carry development.high_band_variant { replace, with } per subscale;
+//       the renderer swaps the anchored sentences when the respondent's
+//       band qualifies (subscaleBands, score >= 79 fallback). Populated for
+//       A4 in content-v3.7; remaining nine subscales are a content pass.
+//   B.  content-v3.7 also carries four voice fixes: A4 costs paragraph to
+//       tendency voice (removes "You get left behind, and everyone knows
+//       it"), "can get hard-wired", B3 strokes-and-clicks repointed to the
+//       companion book (the methods section never carried it), and the
+//       Unknowingly Influential portrait "not yet caught up" -> "has
+//       further to come".
+//
 // v4.3 (12 June) changes:
 //   A.  "Final check before you answer" block appended to the end of both AI
 //       prompts (headline in content.json, narrative here): names the
@@ -549,6 +565,17 @@ function drawScoreTiles(doc, scoring, x, y, width) {
     doc.font(FONT_HEAD).fontSize(7).fillColor(COLOURS.muted)
        .text(prettyBand(t.band) || '', tx + 2, y + 63, { width: tileW - 4, align: 'center' });
   });
+}
+
+// v4.4: is this subscale in the higher band for this respondent?
+// Primary source: scoring.subscaleBands from the scoring payload. Fallback
+// for older payloads without per-subscale bands: score at or above 79,
+// mirroring the Developing/Higher dimension cut in the framework (above 78).
+function isHighBandSubscale(scoring, code) {
+  const band = scoring.subscaleBands && scoring.subscaleBands[code];
+  if (typeof band === 'string') return band.toLowerCase() === 'higher';
+  const score = scoring.subscaleScores && scoring.subscaleScores[code];
+  return typeof score === 'number' && score >= 79;
 }
 
 function prettyBand(b) {
@@ -1276,7 +1303,20 @@ function renderReport(doc, content, scoring, headline, profileParagraphs, respon
     doc.moveDown(0.6);
 
     h2(doc, 'What this score tells you');
-    splitParas(block.what_this_score_tells_you).forEach(p => bodyText(doc, p));
+    // v4.4: high-band variant. A subscale can be selected as a priority
+    // while sitting in the higher band (a relative gap, not a low score).
+    // The locked low-band opening reads wrongly against a score of 80+.
+    // If content.json carries a high_band_variant for this subscale and
+    // the respondent's band qualifies, swap the anchored sentences. Absent
+    // key or absent anchor: current behaviour, untouched.
+    let tellsYou = block.what_this_score_tells_you;
+    const hv = block.high_band_variant;
+    if (hv && hv.replace && hv.with &&
+        isHighBandSubscale(scoring, code) &&
+        tellsYou.includes(hv.replace)) {
+      tellsYou = tellsYou.replace(hv.replace, hv.with);
+    }
+    splitParas(tellsYou).forEach(p => bodyText(doc, p));
     h2(doc, 'What it costs to leave this alone');
     splitParas(block.what_it_costs_to_leave_this_alone).forEach(p => bodyText(doc, p));
     h2(doc, 'How to close the gap');
