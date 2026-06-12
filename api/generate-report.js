@@ -2,6 +2,16 @@
 //
 // The real OSCI Pro PDF report generator.
 //
+// v4.3 (12 June) changes:
+//   A.  "Final check before you answer" block appended to the end of both AI
+//       prompts (headline in content.json, narrative here): names the
+//       mechanically checked rules at the position the model attends to most,
+//       gives the substitute for each ban (dash -> comma/full stop/colon,
+//       contraction -> words in full, antithesis -> state what it is), and
+//       tells the model the draft is rejected and regenerated on violation.
+//       Goal: cut how often the v4.2 validator retry has to fire. No further
+//       prompt surgery until the validator logs show the live failure rate.
+//
 // v4.2 (12 June) changes:
 //   A.  Voice enforcement layer: voiceViolations() checks every AI output
 //       for em/en dashes, the banned phrase list, contractions, exclamation
@@ -340,6 +350,12 @@ Example paragraph 4 (the Charismatic Consistency Index):
 "Your Charismatic Consistency Index at 68 tells you something direct. Your social skills are real, and they reach some audiences more fully than others. People you know well get something valuable. People at the fringes get less of it. That unevenness is what the 68 is measuring. Widening the reach of what you already have is the work the rest of this report sets out."
 
 Note the rhythm. Short sentences. Plain words. Specific. Concrete. Speaking to the reader, not about them. Naming the experience the people around the reader have, not the reader's internal state. End paragraphs on the lived consequence ("where your impact falls"), not an abstract formulation ("where your energy goes"). Describe what the reader IS, positively; never reach the point by first saying what they are not, and never name the band inside the prose.
+
+# Final check before you answer
+
+Your output is checked mechanically. Any em dash, en dash, contraction, banned phrase, exclamation mark, or question mark causes the draft to be rejected and regenerated. Before returning, reread each paragraph line by line:
+
+Where you reached for an em dash, use a comma, a full stop, or a colon instead. Where you wrote a contraction, write the words in full. Where a sentence makes its point by saying what something is not, delete the negative half and state what it is.
 
 Return only the four paragraphs, separated by blank lines. No preamble. No headings.`;
 
