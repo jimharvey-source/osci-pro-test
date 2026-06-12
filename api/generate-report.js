@@ -2,6 +2,21 @@
 //
 // The real OSCI Pro PDF report generator.
 //
+// v4.5 (13 June) changes:
+//   A.  One-page summary, "Your profile on one page", rendered directly
+//       after the opening summary: two strengths and two development areas,
+//       each with a locked situational line from content.json
+//       (where_it_helps / where_gain_shows, twenty lines, content-v3.8).
+//       No AI text on the page; header uses the static quadrant tagline.
+//   B.  The two dimensions pages (Confidence, Social Skills, Sistine
+//       Chapel) moved from after the plain-words profile to before the
+//       four positions. The reader now meets the axes before the map, the
+//       quadrant, and the subscale bars, and the page's "introduced later
+//       in the report" line is true again.
+//   C.  Header smoothing: five eyebrow/title repeats resolved (What we
+//       mean by charisma, two dimensions, four positions, Consistency
+//       Index, four-week plan). Eyebrows now locate; titles now state.
+//
 // v4.4 (13 June) changes:
 //   A.  High-band variant for development frames. A subscale selected as a
 //       priority while sitting in the higher band (a relative gap) was
@@ -1049,6 +1064,47 @@ function stampHeadersAndFooters(doc, respondentName) {
 //                                       beneath the score tiles on the
 //                                       opening summary.
 
+// ── One-page summary (new in v4.5) ─────────────────────────────────────────
+// The whole profile on a single page, directly after the opening summary:
+// two strengths and two development areas, each with a locked situational
+// line from content.json (where_it_helps / where_gain_shows). No AI text
+// on this page; the header uses the static quadrant tagline.
+function renderOnePageSummary(doc, content, scoring, strengthCodes, developmentCodes) {
+  const quadrant = content.quadrants[scoring.quadrant];
+  doc.addPage();
+  eyebrow(doc, 'The short version');
+  h1(doc, 'Your profile on one page');
+
+  if (quadrant && quadrant.tagline) {
+    doc.font(FONT_BODY_ITALIC).fontSize(12).fillColor(COLOURS.muted)
+       .text(`${quadrant.label}. ${quadrant.tagline}`, { lineGap: 2 });
+    doc.moveDown(0.8);
+  }
+
+  const entry = (code, line) => {
+    const sub = content.subscales[code];
+    if (!sub) return;
+    doc.font(FONT_HEAD_BOLD).fontSize(11).fillColor(COLOURS.navy)
+       .text(`${code}  ${sub.name}  \u00B7  ${scoring.subscaleScores[code]} of 100`);
+    doc.moveDown(0.15);
+    if (line) bodyText(doc, line);
+    doc.moveDown(0.35);
+  };
+
+  h2(doc, 'What is already working');
+  strengthCodes.forEach(code =>
+    entry(code, content.subscales[code] && content.subscales[code].where_it_helps));
+
+  doc.moveDown(0.3);
+  h2(doc, 'Where to focus next');
+  developmentCodes.forEach(code =>
+    entry(code, content.subscales[code] && content.subscales[code].where_gain_shows));
+
+  doc.moveDown(0.4);
+  const firstPriority = content.subscales[developmentCodes[0]];
+  bodyText(doc, `Start with ${firstPriority ? firstPriority.name : 'your first priority subscale'}. The rest of this report explains each of these in detail, and the four-week plan near the back turns the first priority into specific practice.`);
+}
+
 function renderPrefaceCharisma(doc, content) {
   const pf = content.preface;
   if (!pf) return;
@@ -1206,6 +1262,18 @@ function renderReport(doc, content, scoring, headline, profileParagraphs, respon
     content.preface.page3.together.forEach(p => bodyText(doc, p));
   }
 
+  // ─── Your profile on one page (new in v4.5) ──────────────────────────────
+  // The complete takeaway by page 4: two strengths and two development
+  // areas with situational lines, before any further model exposition.
+  renderOnePageSummary(doc, content, scoring, strengthCodes, developmentCodes);
+
+  // ─── The two dimensions (moved in v4.5) ──────────────────────────────────
+  // Confidence, Social Skills, and the Sistine Chapel now render BEFORE the
+  // four positions, the map, and the subscale bars. The reader meets the
+  // axes before anything is plotted on them, and the page's own line "the
+  // five subscales are introduced later in the report" is true again.
+  renderPrefaceDimensions(doc, content);
+
   // ─── The four positions, then the reader's own placement ────────────────
   renderPrefacePositions(doc, content);
 
@@ -1240,9 +1308,6 @@ function renderReport(doc, content, scoring, headline, profileParagraphs, respon
   eyebrow(doc, 'Your profile in plain words');
   h1(doc, 'Where you are right now');
   profileParagraphs.forEach(p => bodyText(doc, p));
-
-  // ─── The model underneath (background, read by an invested reader) ─────
-  renderPrefaceDimensions(doc, content);
 
   // ─── The Charismatic Consistency Index (locked page) ──────────────────
   renderConsistencyPage(doc, content, scoring);
@@ -1338,7 +1403,7 @@ function renderReport(doc, content, scoring, headline, profileParagraphs, respon
 
   // ─── A four-week plan ──────────────────────────────────────────────────
   doc.addPage();
-  eyebrow(doc, 'Your four-week plan');
+  eyebrow(doc, 'Putting it to work');
   h1(doc, 'Your four weeks');
   bodyText(doc, `Most development plans fail because they are too long or too vague. Yours has four weeks, with one or two specific things to do in each. Small enough to actually run alongside your normal work.`);
   bodyText(doc, `Focus on your first priority subscale: ${content.subscales[developmentCodes[0]] ? content.subscales[developmentCodes[0]].name : 'your first priority'}. The plan below uses the activities from that subscale. After four weeks, come back to this report and decide whether to keep going or to move on to your second priority.`);

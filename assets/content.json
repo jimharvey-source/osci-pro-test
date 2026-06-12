@@ -1,5 +1,5 @@
 {
-  "version": "content-v3.7",
+  "version": "content-v3.8",
   "_meta": {
     "purpose": "Canonical content blocks for the OSCI Pro PDF report. Each subscale has two frames: strength (when the subscale is a relative high point for the respondent) and development (when it's a relative low point). The report generator selects the right frame at render time. Voice follows OSCI_Feedback_Style_guide.",
     "structure_strength_frame": [
@@ -65,7 +65,9 @@
         ]
       },
       "subtitle": "The settled internal baseline that does not move much with the most recent event.",
-      "next_level_up": "Moving up here means being less affected by the most recent thing that happened to you. The praise lands but does not inflate you. The criticism lands but does not derail you. The people around you experience someone who is more reliably themselves, and they relax in your company because the version of you they get is steadier than it used to be."
+      "next_level_up": "Moving up here means being less affected by the most recent thing that happened to you. The praise lands but does not inflate you. The criticism lands but does not derail you. The people around you experience someone who is more reliably themselves, and they relax in your company because the version of you they get is steadier than it used to be.",
+      "where_it_helps": "Where this helps you most: the weeks when the feedback is mixed. Praise and criticism both land in proportion, and the people around you get the same steady version either way.",
+      "where_gain_shows": "Where the gain will show first: the view you would otherwise hold back. A steadier internal baseline tends to bring more of your contribution into the room."
     },
     "A2": {
       "name": "Resilience and Composure",
@@ -87,7 +89,9 @@
         ]
       },
       "subtitle": "Staying functional under pressure, without suppressing what you feel.",
-      "next_level_up": "Moving up here means handling difficult moments with the room watching, and not paying for it for days afterwards. You stay in the conversation rather than freezing or escalating. You move on from setbacks within a useful window rather than carrying them. The people around you notice that you are the calmer presence when things get hard, and they bring more of their thinking to you because of it."
+      "next_level_up": "Moving up here means handling difficult moments with the room watching, and not paying for it for days afterwards. You stay in the conversation rather than freezing or escalating. You move on from setbacks within a useful window rather than carrying them. The people around you notice that you are the calmer presence when things get hard, and they bring more of their thinking to you because of it.",
+      "where_it_helps": "Where this helps you most: the moments after something goes wrong. While the room is still reacting, you are already working the problem, and people take their cue from that.",
+      "where_gain_shows": "Where the gain will show first: the meeting after the setback. Recovering visibly, and in good order, changes what the room expects of you under pressure."
     },
     "A3": {
       "name": "Assertiveness and Accountability",
@@ -109,7 +113,9 @@
         ]
       },
       "subtitle": "Saying the difficult thing, owning the result, and being specific about what you will do.",
-      "next_level_up": "Moving up here means saying the thing that needs saying, in the room where it matters, without becoming aggressive or apologetic. You make specific commitments rather than vague ones. You surface disagreement once, briefly, and live with it. The people around you stop having to guess where you stand. They can act on what you said because you said it clearly."
+      "next_level_up": "Moving up here means saying the thing that needs saying, in the room where it matters, without becoming aggressive or apologetic. You make specific commitments rather than vague ones. You surface disagreement once, briefly, and live with it. The people around you stop having to guess where you stand. They can act on what you said because you said it clearly.",
+      "where_it_helps": "Where this helps you most: the conversation everyone else is avoiding. You can say the difficult thing in the room, with respect, while it can still be acted on.",
+      "where_gain_shows": "Where the gain will show first: the point you nearly made. Saying it in the meeting, once, plainly, is usually enough to change what the meeting decides."
     },
     "A4": {
       "name": "Growth and Adaptability",
@@ -135,7 +141,9 @@
         }
       },
       "subtitle": "Updating your position when shown new evidence, and treating feedback as data.",
-      "next_level_up": "Moving up here means updating well in front of others. You can change your mind about something publicly without it feeling like a defeat. You ask for the feedback that is harder to give. You try things you are not yet good at. The people around you experience someone whose thinking moves forward over time, and they trust you more because of it."
+      "next_level_up": "Moving up here means updating well in front of others. You can change your mind about something publicly without it feeling like a defeat. You ask for the feedback that is harder to give. You try things you are not yet good at. The people around you experience someone whose thinking moves forward over time, and they trust you more because of it.",
+      "where_it_helps": "Where this helps you most: unfamiliar ground. New briefs, new rooms and new evidence read to you as material to learn from, and your thinking visibly moves.",
+      "where_gain_shows": "Where the gain will show first: the feedback you already collect. Acting on one piece inside a week turns willingness into visible movement."
     },
     "A5": {
       "name": "Situational Self-Awareness",
@@ -157,7 +165,9 @@
         ]
       },
       "subtitle": "Reading your own state and the room, in the moment, without performing it or suppressing it.",
-      "next_level_up": "Moving up here means walking into rooms knowing what version of yourself has arrived, and choosing a different one if the room needs it. You catch your own state before it leaks into your behaviour. You notice what the room is carrying that nobody has named. The people around you experience someone who reads the moment well, and they trust the moments you choose to spend with them more because of it."
+      "next_level_up": "Moving up here means walking into rooms knowing what version of yourself has arrived, and choosing a different one if the room needs it. You catch your own state before it leaks into your behaviour. You notice what the room is carrying that nobody has named. The people around you experience someone who reads the moment well, and they trust the moments you choose to spend with them more because of it.",
+      "where_it_helps": "Where this helps you most: the room that has shifted. You read the change while it is happening and adjust before anyone needs to name it.",
+      "where_gain_shows": "Where the gain will show first: the meetings that currently surprise you. You catch your own state before the room does, and adjust while it still matters."
     },
     "B1": {
       "name": "Empathy and Listening",
@@ -179,7 +189,9 @@
         ]
       },
       "subtitle": "Listening for the full stop rather than the gap, and asking about what was actually said.",
-      "next_level_up": "Moving up here means people opening up to you more than they used to. You wait until the speaker has actually finished. You ask about something they said rather than about something you were going to say anyway. The people around you start volunteering more of what they actually think, because they trust the listening will be there for it."
+      "next_level_up": "Moving up here means people opening up to you more than they used to. You wait until the speaker has actually finished. You ask about something they said rather than about something you were going to say anyway. The people around you start volunteering more of what they actually think, because they trust the listening will be there for it.",
+      "where_it_helps": "Where this helps you most: the person who has not said the real thing yet. Your listening gives it room to arrive, and people leave your conversations feeling heard.",
+      "where_gain_shows": "Where the gain will show first: the conversation you would normally steer. Listening past your own next point tends to surface the material the meeting actually needed."
     },
     "B2": {
       "name": "Warmth and Social Courtesy",
@@ -201,7 +213,9 @@
         ]
       },
       "subtitle": "Everyday warmth that does not depend on what the other person can do for you.",
-      "next_level_up": "Moving up here means people feel acknowledged in your presence, regardless of their position relative to yours. You greet, you remember, you follow up. The pattern of small attentions is reliable. The people around you, including the ones who do not benefit you directly, speak well of you when you are not in the room. That is the quiet long-term effect."
+      "next_level_up": "Moving up here means people feel acknowledged in your presence, regardless of their position relative to yours. You greet, you remember, you follow up. The pattern of small attentions is reliable. The people around you, including the ones who do not benefit you directly, speak well of you when you are not in the room. That is the quiet long-term effect.",
+      "where_it_helps": "Where this helps you most: first meetings, cold starts, and the conversations nobody else wants to open. The room you walk into tends to relax.",
+      "where_gain_shows": "Where the gain will show first: the people at the edge of your working day. Small, reliable courtesy with them builds a reputation the centre cannot build on its own."
     },
     "B3": {
       "name": "Conversational Skills",
@@ -223,7 +237,9 @@
         ]
       },
       "subtitle": "Asking questions that move the conversation forward, and ending it cleanly.",
-      "next_level_up": "Moving up here means your conversations land somewhere rather than just running. You ask about the thing they actually said, not the thing you came in with. You yield the floor without losing the thread. You finish conversations cleanly. The people around you describe time with you as worth their while, rather than something they got through."
+      "next_level_up": "Moving up here means your conversations land somewhere rather than just running. You ask about the thing they actually said, not the thing you came in with. You yield the floor without losing the thread. You finish conversations cleanly. The people around you describe time with you as worth their while, rather than something they got through.",
+      "where_it_helps": "Where this helps you most: rooms where the agenda is loose and the stakes are personal. You can take a conversation to the second layer, where the useful material lives.",
+      "where_gain_shows": "Where the gain will show first: the conversations that currently stall. One better question, and the willingness to wait for the answer, moves them somewhere useful."
     },
     "B4": {
       "name": "Emotional Control and Humility",
@@ -245,7 +261,9 @@
         ]
       },
       "subtitle": "Choosing what emotional output goes into the room, and sharing credit without performance.",
-      "next_level_up": "Moving up here means staying steady when contradicted, naming what other people contributed when you are praised, and saying you do not know without self-deprecation. You are not the loudest voice. The people around you trust that they will not be embarrassed by you, that credit will be shared accurately, and that what you do not know will be admitted. That trust takes years to build and minutes to lose."
+      "next_level_up": "Moving up here means staying steady when contradicted, naming what other people contributed when you are praised, and saying you do not know without self-deprecation. You are not the loudest voice. The people around you trust that they will not be embarrassed by you, that credit will be shared accurately, and that what you do not know will be admitted. That trust takes years to build and minutes to lose.",
+      "where_it_helps": "Where this helps you most: provocation. When someone pushes, you stay on the subject and let the slight pass, and the room trusts you more for it.",
+      "where_gain_shows": "Where the gain will show first: the moment you feel the heat rise. A beat of control there protects the relationship and keeps the decision on its merits."
     },
     "B5": {
       "name": "Authentic vs Performed Social Behaviour",
@@ -267,7 +285,9 @@
         ]
       },
       "subtitle": "The same person turning up across audiences. Surface adapts. Principle holds.",
-      "next_level_up": "Moving up here means people on the periphery of your orbit experiencing the same standard of warmth and attention as the people at the centre. The volume changes. The vocabulary changes. The amount you reveal changes. What does not change is who you are underneath the adjustments. The people around you, all of them, speak about you in similar terms."
+      "next_level_up": "Moving up here means people on the periphery of your orbit experiencing the same standard of warmth and attention as the people at the centre. The volume changes. The vocabulary changes. The amount you reveal changes. What does not change is who you are underneath the adjustments. The people around you, all of them, speak about you in similar terms.",
+      "where_it_helps": "Where this helps you most: long relationships and repeat rooms. People test consistency over time, and yours holds, which is what turns liking into trust.",
+      "where_gain_shows": "Where the gain will show first: the audiences that get the functional version of you. Bringing the same warmth there widens your reach at very low cost."
     }
   },
   "methods": {
@@ -491,7 +511,7 @@
   },
   "preface": {
     "page1": {
-      "eyebrow": "What we mean by charisma",
+      "eyebrow": "Open-Source Charisma",
       "title": "What we mean by charisma",
       "paras": [
         "Listening with fascination. Asking the next-level question, the one that shows the other person you want to understand them properly. Listening before speaking. Checking on how someone is feeling, and meaning it. Giving tough feedback in a way that shows respect and concern for another human being.",
@@ -501,7 +521,7 @@
       ]
     },
     "page2": {
-      "eyebrow": "Your two dimensions",
+      "eyebrow": "How charisma is built",
       "title": "The two dimensions",
       "intro": [
         "Confidence and Social Skills are the two elements that combine in the charisma code. Why? Because almost every behaviour that produces a charismatic effect on others comes from one of the two elements, or from the way the two combine."
@@ -562,7 +582,7 @@
       ]
     },
     "page4": {
-      "eyebrow": "The four positions",
+      "eyebrow": "The map",
       "title": "The four positions",
       "intro": [
         "Plotted against each other, Confidence and Social Skills produce a simple map with four characteristic positions. Each position describes a different way the two dimensions can combine in working life, and a different kind of development opportunity. None of the four is a verdict. They are descriptions of where you currently operate, and from where the next step forward begins."
@@ -604,7 +624,7 @@
     }
   },
   "consistency_page": {
-    "eyebrow": "The Charismatic Consistency Index",
+    "eyebrow": "How widely it reaches",
     "title": "Your Charismatic Consistency",
     "concept_intro_head": "A note on the concept before what your score is telling us.",
     "concept": [
