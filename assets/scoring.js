@@ -157,6 +157,43 @@ function scoreOSCIPro(answers, questionnaire) {
     .sort((a, b) => a[1] - b[1] || a[0].localeCompare(b[0]));
   const priority = [ordered[0][0], ordered[1][0]];
 
+  // 9. Item-level detail for the personalisation layer (added v-item1).
+  //    The report generator uses the post-reverse per-item scores to resolve
+  //    which named sub-pattern within a subscale is the respondent's, rather
+  //    than asking the reader to "decide which is you". Without this, the
+  //    generator only sees rolled-up subscale scores and every reader with the
+  //    same priority subscale receives the identical development page.
+  //
+  //    Two views are returned, both keyed on question number:
+  //      itemScores           flat map, post-reverse 1-5 (higher = stronger on
+  //                           the item's subscale construct). Directly usable:
+  //                           a low value always means "less of this behaviour",
+  //                           whether or not the item was reverse-scored.
+  //      subscaleItemScores   the same values grouped by subscale, each entry
+  //                           carrying { n, raw, score, reverse } so the
+  //                           generator can name the specific low item and,
+  //                           where useful, quote it. `raw` is the answer as
+  //                           given (1-5); `score` is post-reverse.
+  //
+  //    Personal Impact items (Q51-60) are included when present. Any item not
+  //    answered (older payloads) is simply absent from both views.
+  const reverseSet = new Set(reverseItems);
+  const itemScores = {};
+  for (const n in inverted) {
+    itemScores[n] = inverted[n];
+  }
+  const subscaleItemScores = {};
+  for (const code in subscales) {
+    subscaleItemScores[code] = subscales[code].items
+      .filter(n => typeof inverted[n] === "number")
+      .map(n => ({
+        n,
+        raw: answers[n],
+        score: inverted[n],
+        reverse: reverseSet.has(n)
+      }));
+  }
+
   return {
     confidence,
     socialSkills,
@@ -170,6 +207,9 @@ function scoreOSCIPro(answers, questionnaire) {
     consistencyDescription: consistencyBand ? consistencyBand.description : null,
     personalImpact: personalImpactResult,
     priorityAreas: priority,
+    // Item-level detail for the personalisation layer.
+    itemScores,
+    subscaleItemScores,
     version: questionnaire.version
   };
 }
