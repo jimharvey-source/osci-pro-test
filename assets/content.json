@@ -1,5 +1,5 @@
 {
-  "version": "content-v3.9",
+  "version": "content-v3.9+techniques1",
   "_meta": {
     "purpose": "Canonical content blocks for the OSCI Pro PDF report. Each subscale has two frames: strength (when the subscale is a relative high point for the respondent) and development (when it's a relative low point). The report generator selects the right frame at render time. Voice follows OSCI_Feedback_Style_guide.",
     "structure_strength_frame": [
@@ -641,6 +641,203 @@
       "broadly_adaptable": "Your warmth and presence are strong across most audiences, with one or two specific contexts where the fuller version of you narrows. Naturally occurring warmth is available to most of the people you meet; in a small number of contexts it is harder to find. Most people in this band can describe the narrowing when they reflect on it: a particular kind of meeting, a particular kind of person, a particular state. The reach is already wide. The opportunity is to identify the one or two contexts where it is not, and extend the same warmth into them deliberately. The work is small and specific, and the return is out of all proportion to the effort.",
       "context_specific": "Your warmth and presence are strongly available in familiar contexts, and noticeably narrower in unfamiliar or higher-stakes ones. This is not a failing. It is a common shape. People in this band are usually entirely warm and attentive with the people they feel most engaged and comfortable with. The development opportunity is to bring the same quality of presence to the audiences at the fringes of your life, even where your naturally occurring warmth is harder to find. The surface behaviours can adapt to fit each context. The underlying presence and warmth can extend further than it currently does with practice and awareness.",
       "highly_context_specific": "Your warmth, attention and presence turn up most strongly in the contexts where you feel most engaged and comfortable, and noticeably less in others. This is genuinely worth working on, and the work is more rewarding than it is hard. Most people in this band are not cold in any general sense. They are highly warm with the audiences that draw their warmth naturally, and more functional with everyone else. The opportunity is to recognise that the audiences at the fringes of your life are still real audiences, and the version of you they meet is the version that builds (or does not build) your reputation in their view of the world. The methods later in this report will help. The work is to extend the naturally occurring warmth you already have, with practice and awareness, into the contexts where it does not yet appear."
+    }
+  },
+  "techniques": {
+    "ask-fuller-picture": {
+      "name": "Ask for the fuller picture",
+      "relevant_to": [
+        "A2"
+      ],
+      "summary": "When a hard piece of feedback is sitting with you, go back to the person and ask for more, so you are acting on the whole picture rather than a half-message. Most people soften feedback or stop halfway because they do not want to cause pain, which leaves you carrying uncertainty into the next interaction. The skill is asking better questions: send one or two specific prompts in advance, and after difficult feedback ask \"can you say more about that?\" and listen without defending.",
+      "full": {
+        "issue": "Feedback often arrives incomplete. People soften it or stop halfway because they do not want to cause pain. You act on a partial picture and the real issue stays unresolved. This leaves you carrying uncertainty into the next interaction and costs trust on both sides.",
+        "thinking": "Most of us are not naturally good at giving clear feedback. The receiver who asks better questions helps the giver do their job well. This small habit turns vague comments into usable information and shows you can handle the truth.",
+        "actions": [
+          "Send the person one or two specific prompts in advance: \"What is one thing I could do differently to be more effective?\" or \"What do people better at this than me tend to do?\"",
+          "After any difficult feedback, ask: \"Can you say more about that?\" and listen without defending.",
+          "Follow up a few days later: \"I tried X based on what you said, how does it land now?\""
+        ],
+        "source": "Draws from David Maister's work on trusted relationships and common feedback practice in executive coaching."
+      }
+    },
+    "ask-next-level-by-default": {
+      "name": "Ask the next-level question by default",
+      "relevant_to": [
+        "B1"
+      ],
+      "summary": "Conversations often stay on the surface: you hear the first answer and move on, so the person never reaches what they really needed to say. People rarely say exactly what they mean the first time, and a genuine follow-up gives them space and signals real interest. Make \"what else?\" or \"say more about that\" your default, pause two full seconds before you speak, and pick one detail they mentioned to ask about specifically.",
+      "full": {
+        "issue": "Conversations often stay on the surface. You hear the first answer and move on, so the person never reaches what they really needed to say. The exchange feels polite but not valuable, and connection stays thin.",
+        "thinking": "People rarely say exactly what they mean first time. A genuine follow-up question gives them space and signals that you are interested in the real story, not just the polite version. This is where trust and understanding grow.",
+        "actions": [
+          "Make \"What else?\" or \"Say more about that\" your default follow-up.",
+          "After they answer, pause for two full seconds before you speak. Use the silence.",
+          "Pick one detail they mentioned and ask a specific question about it: \"You said the meeting felt tense, what was the hardest part?\""
+        ],
+        "source": "Consistent with active listening practices in Carl Rogers' person-centred approach and Fritz Perls' emphasis on layers of expression."
+      }
+    },
+    "colleague-test": {
+      "name": "The colleague test",
+      "relevant_to": [
+        "A1"
+      ],
+      "summary": "When something goes wrong, it is easy to turn one setback into a verdict on your whole worth. You would never judge a capable colleague that way after a single difficult meeting, so apply the same fairness to yourself. Pause, name the specific thing that did not land, and ask: \"What would I tell a colleague I respect in the same position?\" Then give yourself that measured view. It stops the story spreading and keeps the learning useful rather than personal.",
+      "full": {
+        "issue": "One setback quickly becomes a verdict on your whole worth. You judge yourself more harshly than you would ever judge a capable colleague. This swings your confidence and makes other people manage your mood instead of working with you.",
+        "thinking": "Self-compassion is not softness. It is applying the same fairness you extend to others. When your baseline stays steady, people experience you as reliable rather than reactive.",
+        "actions": [
+          "After a difficult moment, ask: \"What would I tell a colleague I respect in the same spot?\" and follow your own advice.",
+          "Write one sentence separating the event from your identity: \"The meeting went badly. I am still the same person who handled last week's project well.\"",
+          "At the end of a hard day, note one thing that went right, however small."
+        ]
+      }
+    },
+    "own-verdict-first": {
+      "name": "Your own verdict first",
+      "relevant_to": [
+        "A1"
+      ],
+      "summary": "Before you look for anyone else's opinion on work you have done, form your own clear reading of it. Write one sentence on what went well, what could be better, and what you learned, and only then seek other views. This gives your own judgement something solid to stand on when feedback arrives, and reduces the swing between external praise and criticism. People notice when your sense of yourself is not hostage to the last person who spoke.",
+      "full": {
+        "issue": "You wait for other people to confirm that your work was good before you believe it. This leaves your sense of worth in their hands and makes praise feel temporary and criticism feel crushing.",
+        "thinking": "Real confidence includes trusting your own eyes. Forming your own view first gives you a stable place to stand when external feedback arrives.",
+        "actions": [
+          "After finishing a piece of work, write one sentence: \"What I did well was...\" before you ask anyone else.",
+          "Keep a short private log of your own verdicts on weekly work. Review it monthly.",
+          "When praise comes, note your own view first, then add the external comment."
+        ]
+      }
+    },
+    "ask-permission-to-differ": {
+      "name": "Ask permission to differ",
+      "relevant_to": [
+        "A3"
+      ],
+      "summary": "When you see a problem or hold a different view, especially with someone senior, open with a one-line pre-frame: \"Can I offer a different read on this?\" It signals respect, lowers defences, and makes the difficult thing easier for both sides to hear. Follow it immediately with the point, kept short and specific. The small courtesy keeps the room open and raises the chance your view is taken seriously rather than dismissed as pushback.",
+      "full": {
+        "issue": "You hold a different view but keep it to yourself, especially with senior people. The room loses your input and decisions are poorer. You stay safe but invisible.",
+        "thinking": "A small courtesy at the start lowers defences and raises the chance your point lands. Courage with courtesy is more effective than silence or blunt force.",
+        "actions": [
+          "Open with: \"Can I offer a different read on this?\" then state your point cleanly.",
+          "Practise the phrase in low-stakes meetings first.",
+          "Follow up afterwards: \"Did that land usefully?\" to learn how it was received."
+        ]
+      }
+    },
+    "say-headline-first": {
+      "name": "Say the headline first",
+      "relevant_to": [
+        "A3"
+      ],
+      "summary": "When you have something difficult or important to say, lead with the single clear point, \"the main thing is X\", then explain or soften around it. Most people do the opposite, cushioning first so the real message gets lost. Stating the headline upfront honours the listener with clarity and makes action far more likely. The courage is already there; this simply lets the message land.",
+      "full": {
+        "issue": "You soften difficult messages so much that the main point disappears. People nod politely but nothing changes. The courage was there; the clarity was not.",
+        "thinking": "Clarity is a form of respect. Leading with the single point lets the other person engage with the real issue instead of guessing.",
+        "actions": [
+          "State the headline first: \"The main thing is we need to change X.\" Then explain.",
+          "Rehearse the one-sentence version out loud before the conversation.",
+          "Check understanding: \"What are you hearing as the key point?\""
+        ]
+      }
+    },
+    "detail-carried-forward": {
+      "name": "The detail carried forward",
+      "relevant_to": [
+        "B2",
+        "B3"
+      ],
+      "summary": "In your next conversation, notice one specific human detail about the other person, a project they mentioned, a concern, a small win, and make a quiet note. Next time you meet, weave it in lightly: \"How did that pitch with the new client go?\" People feel genuinely seen when you remember what matters to them. It takes almost no effort and turns ordinary interactions into the kind that build lasting warmth and trust.",
+      "full": {
+        "issue": "You meet people but the small human details do not stick. They feel politely acknowledged but not genuinely known. Warmth stays shallow.",
+        "thinking": "Remembering one specific thing signals that you were paying real attention. It turns routine interactions into the start of a relationship.",
+        "actions": [
+          "In the conversation, note one non-work detail.",
+          "Next time you meet, mention it lightly and naturally.",
+          "Keep a short note on your phone after important chats."
+        ]
+      }
+    },
+    "no-ask-follow-up": {
+      "name": "The no-ask follow-up",
+      "relevant_to": [
+        "B2"
+      ],
+      "summary": "After a conversation that mattered, send a short message with nothing attached: \"I was thinking about what you said about the team restructure, hope it is settling.\" No request, no agenda, just a sign that you were listening. These small, unconditional touches turn transactional contacts into relationships. They cost little and signal the kind of warmth people remember and return.",
+      "full": {
+        "issue": "Relationships fade once the task is done. People sense the contact was transactional and pull back.",
+        "thinking": "A message with nothing attached shows the relationship matters beyond what they can do for you. This builds the kind of trust that lasts.",
+        "actions": [
+          "After a good conversation, send: \"I was thinking about what you said about...\"",
+          "Do it within a week while it is still fresh.",
+          "Make it a habit for one person per week."
+        ]
+      }
+    },
+    "offer-as-view": {
+      "name": "Offer it as a view, not a verdict",
+      "relevant_to": [
+        "B3"
+      ],
+      "summary": "When you share a strong opinion, frame it as one perspective among others, \"my read on this is...\" or \"in my experience...\", rather than settled fact. It keeps the room open for other people to contribute without feeling they must fight or agree. The conversation stays richer, decisions get better information, and you come across as confident but not dominating.",
+      "full": {
+        "issue": "You state opinions as facts. The room closes down or prepares to fight. Good thinking stops.",
+        "thinking": "Framing your view as one perspective invites others in. The conversation stays alive and decisions improve.",
+        "actions": [
+          "Say \"My read on this is...\" or \"In my experience...\"",
+          "Ask \"What do others think?\" straight after.",
+          "Notice when you slip into certainty and soften the next sentence."
+        ]
+      }
+    },
+    "credit-on-the-spot": {
+      "name": "Credit on the spot",
+      "relevant_to": [
+        "B4"
+      ],
+      "summary": "When praise comes your way for something that involved others, name their contribution in the same moment: \"Sarah did the heavy lifting on the numbers, I just pulled it together.\" Do it publicly and immediately. Credit given on the spot lands as genuine humility and confidence; delayed or private credit feels like an afterthought. People notice who shares the light, and it builds trust faster than almost anything else.",
+      "full": {
+        "issue": "You accept praise without naming others who contributed. It feels like taking more than your share and quietly erodes trust.",
+        "thinking": "Public, immediate credit shows humility and confidence. People remember who shared the light.",
+        "actions": [
+          "In the moment of praise, name the contribution: \"Sarah did the heavy lifting on the numbers.\"",
+          "Practise it even when it feels slightly awkward.",
+          "Make it specific and genuine."
+        ]
+      }
+    },
+    "speak-last-top-seat": {
+      "name": "Speak last from the top seat",
+      "relevant_to": [
+        "B4"
+      ],
+      "summary": "When you are the most senior or experienced person in the room, hold your view until everyone else has spoken. Say something like \"I would like to hear from everyone first.\" You get their real thinking instead of managed agreement, the discussion is richer, and people feel genuinely included. The discipline also sharpens your own listening.",
+      "full": {
+        "issue": "As the senior person you speak first. Others manage their input and you miss their real thinking.",
+        "thinking": "Holding your view until last gives the room permission to think freely. You get better information and stronger commitment.",
+        "actions": [
+          "Say: \"I'd like to hear from everyone first.\"",
+          "Take notes while others speak.",
+          "Summarise what you heard before adding your view."
+        ]
+      }
+    },
+    "low-energy-warmth-baseline": {
+      "name": "The low-energy warmth baseline",
+      "relevant_to": [
+        "B5"
+      ],
+      "summary": "On the days when your energy is low, set a minimum standard you still meet: a genuine greeting, full attention in conversations, remembering one detail about the other person. Decide in advance what that baseline looks like, and protect it even when you feel least like it. The version of you that shows up on tired days is often the one people remember most, and a reliable minimum prevents the drop that others notice.",
+      "full": {
+        "issue": "On low-energy days your warmth drops. People remember the tired version of you more than the good days.",
+        "thinking": "Consistency matters more than perfection. A reliable minimum standard protects your reputation on the days that test it.",
+        "actions": [
+          "Decide your baseline in advance (genuine greeting, full attention, one remembered detail).",
+          "Protect it even when you feel least like it.",
+          "Shorten meetings or slow your pace if needed to maintain quality."
+        ]
+      }
     }
   }
 }

@@ -900,6 +900,17 @@ module.exports = async (req, res) => {
     return;
   }
 
+  // Load the personalised-interpretation patterns block (resolver rules,
+  // locked situational readings, technique references). Non-fatal: if the
+  // file is missing, patterns stays null and the development pages fall back
+  // to the previous locked-block behaviour, so a report is always produced.
+  let patterns = null;
+  try {
+    patterns = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'assets', 'patterns.json'), 'utf8'));
+  } catch (e) {
+    console.error('[patterns] not loaded, falling back to locked blocks:', e.message);
+  }
+
   // Two API calls in parallel: headline (cover) and profile narrative (new
   // "Where you are right now" page). Both have fallbacks. Running in parallel
   // saves ~half a second of report generation time.
@@ -978,7 +989,7 @@ module.exports = async (req, res) => {
   );
   doc.pipe(res);
 
-  renderReport(doc, content, scoring, headline, profileParagraphs, respondentName, strengthCodes, developmentCodes, chosenMethods);
+  renderReport(doc, content, scoring, headline, profileParagraphs, respondentName, strengthCodes, developmentCodes, chosenMethods, patterns);
 
   // Second pass: stamp header, footer and "Page X of Y" on every page now
   // that we know how many pages there are. Skip page 1 (the cover) — a
@@ -1218,7 +1229,59 @@ function renderConsistencyPage(doc, content, scoring) {
   cp.extend.forEach(p => bodyText(doc, p));
 }
 
-function renderReport(doc, content, scoring, headline, profileParagraphs, respondentName, strengthCodes, developmentCodes, chosenMethods) {
+// ── Personalised interpretation: pattern resolver + technique lookup ────────
+// Every subscale in patterns.json carries candidate patterns, each defined by
+// a few item numbers. The resolver picks the candidate whose items have the
+// lowest mean post-reverse score (from scoring.subscaleItemScores). An optional
+// `tie` candidate fires only on an exact tie. Returns null if patterns is
+// absent or the subscale has no item detail, so the caller can fall back.
+function resolvePattern(patterns, scoring, code) {
+  if (!patterns || !patterns.subscales || !patterns.subscales[code]) return null;
+  const detail = scoring.subscaleItemScores && scoring.subscaleItemScores[code];
+  if (!detail || !detail.length) return null;
+  const byN = {};
+  detail.forEach(o => { byN[o.n] = o.score; });
+  const block = patterns.subscales[code];
+  const mean = items => items.reduce((a, n) => a + (byN[n] || 0), 0) / items.length;
+  const scored = block.candidates
+    .map(c => ({ c, m: mean(c.items) }))
+    .sort((a, b) => a.m - b.m || String(a.c.id).localeCompare(String(b.c.id)));
+  if (block.tie && scored.length >= 2 && scored[0].m === scored[1].m) return block.tie;
+  return scored[0] ? scored[0].c : null;
+}
+
+// Resolve a technique reference to { name, summary }. M-ids come from
+// content.methods; new slugs come from content.techniques; anything still
+// unresolved falls back to the one-line description in patterns.new_techniques.
+function lookupTechnique(content, patterns, ref) {
+  if (content.methods && content.methods[ref]) {
+    return { name: content.methods[ref].name, summary: content.methods[ref].summary };
+  }
+  if (content.techniques && content.techniques[ref]) {
+    return { name: content.techniques[ref].name, summary: content.techniques[ref].summary };
+  }
+  if (patterns && patterns.new_techniques && patterns.new_techniques[ref]) {
+    const line = patterns.new_techniques[ref];
+    const i = line.indexOf(':');
+    return i > -1
+      ? { name: line.slice(0, i).trim(), summary: line.slice(i + 1).trim() }
+      : { name: ref, summary: line };
+  }
+  return null;
+}
+
+// Split a development block's "what this score tells you" into the shared
+// concept teaching (kept) and the old generic in-case paragraph (dropped, now
+// replaced by the resolved reading). Splits on the "Now[,] what this score is
+// telling us in your case" marker. If the marker is absent, the whole text is
+// treated as concept teaching.
+function conceptTeaching(text) {
+  if (!text) return '';
+  const m = text.split(/\n?\s*Now,?\s+what this score is telling us in your case\.?\s*/i);
+  return m[0].trim();
+}
+
+function renderReport(doc, content, scoring, headline, profileParagraphs, respondentName, strengthCodes, developmentCodes, chosenMethods, patterns) {
   const quadrant = content.quadrants[scoring.quadrant];
   const today = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
@@ -1369,8 +1432,23 @@ function renderReport(doc, content, scoring, headline, profileParagraphs, respon
   doc.addPage();
   eyebrow(doc, 'Your key development areas');
   h1(doc, 'Where to focus next');
-  bodyText(doc, `Two subscales have been identified as the most useful focus for your development now. These are the areas where some deliberate practice over the next four to six weeks will produce visible change. Pick one to start with. Work on it. Then come back to the other.`);
-  bodyText(doc, `The framing the rest of this report uses is important. A low score on a subscale does not mean you are deficient as a person. It means that particular skill is not yet doing its job reliably. The work is incremental, visible, and entirely doable in the real meetings and conversations of your working week.`);
+  // Section intro. When the patterns block is present, lead with the
+  // provenance line (this is built from the reader's own answers) and the
+  // one-line profile framing, both filled from the reader's scores.
+  const sIntro = patterns && patterns.section_intro;
+  if (sIntro) {
+    if (sIntro.provenance) bodyText(doc, sIntro.provenance);
+    if (sIntro.profile) {
+      const topStrengthName = (content.subscales[strengthCodes[0]] || {}).name || 'your strongest area';
+      const firstPriorityName = (content.subscales[developmentCodes[0]] || {}).name || 'your first priority';
+      bodyText(doc, sIntro.profile
+        .replace('{top_strength}', topStrengthName)
+        .replace('{first_priority}', firstPriorityName));
+    }
+  } else {
+    bodyText(doc, `Two subscales have been identified as the most useful focus for your development now. These are the areas where some deliberate practice over the next four to six weeks will produce visible change. Pick one to start with. Work on it. Then come back to the other.`);
+  }
+  bodyText(doc, `The framing the rest of this report uses is important. A lower score on a subscale does not mean you are deficient as a person. It means that particular skill has the most room to build on, and the work is incremental, visible, and entirely doable in the real meetings and conversations of your working week.`);
 
   developmentCodes.forEach((code, idx) => {
     doc.addPage();
@@ -1384,7 +1462,6 @@ function renderReport(doc, content, scoring, headline, profileParagraphs, respon
        .text(`Score: ${scoring.subscaleScores[code]} of 100`);
     doc.moveDown(0.6);
 
-    h2(doc, 'What this score tells you');
     // v4.4: high-band variant. A subscale can be selected as a priority
     // while sitting in the higher band (a relative gap, not a low score).
     // The locked low-band opening reads wrongly against a score of 80+.
@@ -1398,13 +1475,42 @@ function renderReport(doc, content, scoring, headline, profileParagraphs, respon
         tellsYou.includes(hv.replace)) {
       tellsYou = tellsYou.replace(hv.replace, hv.with);
     }
-    splitParas(tellsYou).forEach(p => bodyText(doc, p));
+
+    // v-item1: resolve the reader's specific pattern from their item answers.
+    // When resolved, we render the shared concept teaching, then the
+    // personalised reading in place of the old generic in-case paragraph, and
+    // the pattern's matched techniques in place of the generic activities.
+    // When not resolved (patterns absent, or no item detail), fall back to the
+    // previous locked-block behaviour exactly.
+    const resolved = resolvePattern(patterns, scoring, code);
+
+    h2(doc, 'What this score tells you');
+    splitParas(resolved ? conceptTeaching(tellsYou) : tellsYou).forEach(p => bodyText(doc, p));
+
+    if (resolved) {
+      h2(doc, 'Where you are with this');
+      bodyText(doc, resolved.reading);
+    }
+
     h2(doc, 'What it costs to leave this alone');
     splitParas(block.what_it_costs_to_leave_this_alone).forEach(p => bodyText(doc, p));
     h2(doc, 'How to close the gap');
     splitParas(block.how_to_close_the_gap).forEach(p => bodyText(doc, p));
-    h2(doc, 'Where you might start');
-    block.where_you_might_start.forEach(b => bulletPoint(doc, b));
+
+    if (resolved && resolved.techniques && resolved.techniques.length) {
+      h2(doc, 'Where to start');
+      bodyText(doc, `These are the techniques matched to what your answers show. Each is set out in fuller detail in the Practice Content Library and the companion book.`);
+      resolved.techniques
+        .map(ref => lookupTechnique(content, patterns, ref))
+        .filter(Boolean)
+        .forEach(t => {
+          h3(doc, t.name);
+          bodyText(doc, t.summary);
+        });
+    } else {
+      h2(doc, 'Where you might start');
+      block.where_you_might_start.forEach(b => bulletPoint(doc, b));
+    }
   });
 
   // ─── Methods worth knowing ─────────────────────────────────────────────

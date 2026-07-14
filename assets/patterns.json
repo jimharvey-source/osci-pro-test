@@ -1,0 +1,131 @@
+{
+  "version": "patterns-v1",
+  "_meta": "Personalised interpretation layer for the OSCI Pro report. Each subscale has candidate patterns; the resolver picks the candidate whose items have the lowest mean post-reverse score (subscaleItemScores from scoring.js). 'tie' fires only on an exact tie. Each pattern carries the locked reading (JH final) and the matched techniques (M-ids from content.methods; slug ids are new library entries to author). Additive: not read by the report until generate-report.js is wired to it.",
+  "resolver": "lowest-mean-candidate",
+  "section_intro": {
+    "provenance": "Based on your question-by-question responses, we have identified the strengths you can build on and the development areas that will most help you build your impact in every situation you face.",
+    "profile": "Your profile is a strong one. What people experience when they meet you is already working for you: your {top_strength} is among your highest scores. Set against that, two subscales stand out as the areas where a small amount of focused work would add most to the charisma you already have. {first_priority} is the first."
+  },
+  "subscales": {
+    "A1": { "mode": "weakest_facet", "candidates": [
+      { "id": "q1", "items": [1], "techniques": ["M8", "M9", "three-moments"],
+        "reading": "Your opinion of yourself rises and falls with recent events. A good week lifts it, a bad week drops it. A settled baseline of your own worth is what lets other people relax in your company; when it moves with every week, they feel the weather change too. The priority is a more consistent view of yourself, one that does not swing so much with the last thing that happened." },
+      { "id": "q2", "items": [2], "techniques": ["M4", "M8", "own-verdict-first"],
+        "reading": "When you do something well, you tend to wait for someone else to say so before you quite believe it. Real confidence starts with being in good faith about your own work; while you cannot rely on it until someone confirms it, your sense of yourself sits in other people's hands. The priority is to help you trust your judgment of your own work, so a good job feels like a good job in spite of what anyone else might say." },
+      { "id": "q3", "items": [3], "techniques": ["M4", "M8", "own-verdict-first"],
+        "reading": "How well you think you are doing depends more on what other people reflect back to you than on your own steady view of yourself. Sometimes that leaves your sense of yourself shifting whenever opinions do, when the steadiness other people read as real confidence comes from holding your own judgment first. The priority here is to help you get a more balanced view of your capabilities that relies less on the reaction that you get from the people around you." },
+      { "id": "q4", "items": [4], "techniques": ["M9", "colleague-test"],
+        "reading": "One thing going wrong can quickly turn into a verdict on your worth. Something goes badly, and the story in your head turns from the issue to how you feel about yourself. You would never condemn a colleague on the basis of one setback, the way you condemn yourself. So this is about applying the same perspective to yourself. Your priority is to manage any setback by dealing with the specific thing that went wrong, in a balanced way, and nothing more." },
+      { "id": "q5", "items": [5], "techniques": ["M4", "24-hour-hold"],
+        "reading": "A piece of criticism can travel a long way, if you let it. Someone criticises something, and you might end up doubting your skills and your track record, well past the point the original feedback was intended to make. Feedback, however negative, always carries useful information, and when it is allowed to spread into wider areas, you can lose the part worth keeping. The priority for you is to take the useful core from any kind of feedback and let the rest go with the wind." }
+    ]},
+    "A2": { "mode": "either_or",
+      "candidates": [
+        { "id": "composure", "items": [9], "techniques": ["M5", "M10", "M11", "one-beat-pause"],
+          "reading": "As pressure rises, your attention can narrow to focus on the immediate situation, and the people in front of you can receive a little less of your warmth and energy. You get back on track in good time, but the opportunity for you is to maximise the moments when your warmth and attention matter most to how those people around you feel. The priority here is about helping you retain the same levels of composure and empathy in times of stress as you show at all other times." },
+        { "id": "resilience", "items": [10], "techniques": ["M9", "M11", "ask-fuller-picture", "finite-window"],
+          "reading": "You tend to handle the difficult moment well. What stays with you is the aftermath. A setback can sit with you longer than it needs to, and some of it affects you into the next meeting or moment. A challenging event is usually a snapshot of a single occasion, and allowing it to follow you gives it more weight than it deserves; the people you meet next sometimes get the version of you that's still processing the last thing. So, the work here is about helping you recover in good time, so you're free to be you in the next moment when people need your energy and optimism." }
+      ],
+      "tie": { "id": "both", "items": [9, 10], "techniques": ["M5", "M9", "one-beat-pause", "finite-window"],
+        "reading": "Both halves are in play for you. Your attention can narrow a little when the pressure is on, and a setback can sit with you a little longer than it needs to. Both things mean that you can seem a little distracted to the people around you, so they get less of you than they expect or need. So, the work here is about helping you stay composed in the moment and recover in good time afterwards, starting with whichever costs you more day to day." } },
+    "A3": { "mode": "either_or", "candidates": [
+      { "id": "view_stays_in", "items": [13], "techniques": ["M1", "M2", "ask-permission-to-differ", "three-beats"],
+        "reading": "When you disagree with someone whose opinion matters to you, you tend to keep it to yourself. Your opinion is valid; it just does not make it into the room, and the decision goes ahead without it being heard. A senior colleague can only act on what they can see, and saying the difficult thing with courtesy is how you let them operate in full view of it. The focus here is to help you say the difficult thing at the moment it counts, in a way that honours them and that the room can act on." },
+      { "id": "muffled", "items": [15], "techniques": ["M1", "M3", "say-headline-first"],
+        "reading": "When you have a difficult thing to say, you sometimes soften it so much that the main point gets lost. The courage to raise difficult issues is there, the message just arrives muffled, and the room moves on without acting on it. Said clearly and kindly, the hard thing is a gift to the other person, because it lets them fix what they could not see for themselves. The priority is to help you say the hard thing clearly and kindly, so it lands and can be acted on." }
+    ]},
+    "A4": { "mode": "weakest_facet", "candidates": [
+      { "id": "q16", "items": [16], "techniques": ["M12"],
+        "reading": "You update your view in private when the evidence shifts. Saying so out loud, in front of others, is the next stage. When people see you change your mind on good evidence, it reads to them as strength and gives everyone else permission to do the same. The focus here is to help you change your mind in the open, where it adds to your credibility and reputation." },
+      { "id": "q17", "items": [17], "techniques": ["M4"],
+        "reading": "You are open to feedback in principle, and you rarely go looking for the kind that might be uncomfortable to hear. Asking for more challenging feedback honours the person you ask, and it gives you information that can be really helpful. The focus here is to help you seek out constructive, sometimes challenging feedback, because it is the kind of feedback that can move you forward fastest." },
+      { "id": "q18", "items": [18], "techniques": ["M9", "harder-or-different"],
+        "reading": "When something is not working, you tend to push harder at the same thing rather than try a different approach. Pushing harder is often counterproductive, and the people relying on you can feel the frustration and wasted effort. The focus here is to help you notice sooner and to choose to change your approach rather than push on regardless." },
+      { "id": "q19", "items": [19], "techniques": ["be-a-beginner"],
+        "reading": "You stay sharp at what you already do well, and take on the unfamiliar less often, outside your comfort zone. Being challenged outside the normal span of your life and work builds resilience, shows courage and helps you stay up to date. Failing to do that can leave you unchallenged and unready for change when it happens. The focus here is to help you spend a little more time in challenging environments, because that is where your growth and development lies." },
+      { "id": "q20", "items": [20], "techniques": ["M12"],
+        "reading": "You can see a weakness as fixed rather than as something you can work on, so it hardens into \"that is just how I am\". That belief closes the door before any work can start, and the people around you hear it close too, it makes you seem less confident and open to change. The focus here is to help you log your weaknesses as 'work in progress', because that is the belief that lets them change." }
+    ]},
+    "A5": { "mode": "either_or", "candidates": [
+      { "id": "own_state", "items": [22, 24], "techniques": ["M5", "M6"],
+        "reading": "You read other people well, and read your own state less easily. You can fail to spot the mood or energy you are carrying into a meeting until it has already coloured how you come across. The emotional state (whether anger, fear, frustration or optimism) you have not noticed is the one that leaks out, and the room often feels it before you do. The focus here is to help you identify your own state before it enters the room, so you can manage what you bring for the good of others." },
+      { "id": "reads_room", "items": [21, 23, 25], "techniques": ["M6", "the-play-back"],
+        "reading": "You identify your own emotional state well, and sometimes you miss what the room is telling you, which can come as a surprise to you and those around you. The focus here is to help you read the room better, and manage your own approach so that you have the impact that you want for the people you are meeting." }
+    ]},
+    "B1": { "mode": "either_or", "candidates": [
+      { "id": "depth", "items": [27, 30], "techniques": ["M13", "M15", "M16"],
+        "reading": "You are attentive in the moment, and you tend to hear the first answer as the final answer. The surface issue is heard, but sometimes the thing underneath it is not. The deeper answer, the one hiding under the first, is often the one the person most needed to say, and reaching for it with an interested question is what makes them feel understood. The priority is to help you reach it, because it is usually the one that matters." },
+      { "id": "space", "items": [26, 28], "techniques": ["M13", "ask-next-level-by-default"],
+        "reading": "You catch what people mean quickly, and you move on it before they have finished exploring it for themselves. The next question arrives a beat too early, and they follow you off the thought, feeling rushed. The next-level question honours the other person and often allows them to raise something they had not even said to themselves; it lifts them and hands you better information. The focus here is to help you listen in silence a little longer, and ask for the next level of detail, so the person gets there in their own time." }
+    ]},
+    "B2": { "mode": "weakest_facet", "candidates": [
+      { "id": "reaches_known", "items": [31], "techniques": ["M7", "M14"],
+        "reading": "Your human warmth reaches the people you already know more fully than everyone else. The people you have a history with get it, others you know less well get a more functional version. The people at the edges of your experience are the ones who describe you when you are not there, and warmth applied more evenly builds a consistent reputation. The focus here is to help you extend the same easy warmth to everyone you meet." },
+      { "id": "details", "items": [32], "techniques": ["detail-carried-forward"],
+        "reading": "You do not always hold on to a specific detail about a person from one conversation to the next. People notice that you remember them, and when you don't. The priority is to help you remember the smallest details about the people you meet, because they are what make people feel valued." },
+      { "id": "conditional", "items": [33, 35], "techniques": ["M14"],
+        "reading": "Your energy and warmth can be applied unevenly, depending on how useful or important the other person is. It is rarely a conscious shift, but people can see through warmth that is weighted to their usefulness, and it quietly teaches them not to trust the warm version of you. The focus here is to help you give the same energy and warmth regardless of what the person can do for you, because that is the warmth people trust." },
+      { "id": "follow_up", "items": [34], "techniques": ["M14", "no-ask-follow-up"],
+        "reading": "You do not always follow up with someone when there is nothing you need from them. Social contact with no strings attached shows a person that the relationship is more than a transaction. The focus here is to help you stay in touch with no agenda attached, because that is what turns transactional contacts into deeper relationships." }
+    ]},
+    "B3": { "mode": "weakest_facet", "candidates": [
+      { "id": "q36", "items": [36], "techniques": ["M15", "M13"],
+        "reading": "Your conversation style can return to the topic you had in mind rather than build on what the other person just said. A conversation built on the other person's thinking is a considerate approach. It shows them you were listening, and it is what turns even a casual conversation into a meaningful moment. The focus here is to help you build empathy and courtesy as the root of your conversational style." },
+      { "id": "q37", "items": [37], "techniques": ["M15", "detail-carried-forward"],
+        "reading": "You do not always learn something about the whole person beyond what they do for a living. Your interest in non-work details is where a working relationship becomes a human one. The focus here is to help you understand the person behind the role, because that is where real rapport starts." },
+      { "id": "q38", "items": [38], "techniques": ["M13"],
+        "reading": "You can bring in your own experience before the other person has finished theirs. However well you mean it, the person who has not finished their thought feels cut off the moment yours arrives. The focus here is to help you hold back so the other person feels heard before you share your own story." },
+      { "id": "q39", "items": [39], "techniques": ["offer-as-view"],
+        "reading": "You can offer an opinion as a settled fact. A view offered as one opinion among many leaves room for other people to add theirs, and that room to share is where good thinking happens. An opinion offered as a fact does the opposite. The focus here is to help you put across your own views in a way that keeps the conversation open for other people to engage." },
+      { "id": "q40", "items": [40], "techniques": ["M7"],
+        "reading": "The version of you in casual conversation can differ from the one in formal settings. As a general rule, people trust consistency, and a big shift in a person's tone, energy and approach in different situations can come across as insincere or forced. People often notice the switch, even when they cannot name it out loud. The focus here is to help you keep the same underlying manner across all occasions, so you convey consistency and certainty to every audience you meet." }
+    ]},
+    "B4": { "mode": "weakest_facet", "candidates": [
+      { "id": "q41", "items": [41], "techniques": ["M10", "M17"],
+        "reading": "You can be less steady than you would like when someone disagrees with you in front of others. People around you notice how you handle being contradicted and use it as a measure of whether it is safe to disagree with you at all. As a general rule someone who is calm, respectful and stable when challenged comes across more confidently than a person who reacts or crumbles. The focus here is to help you keep your calm state in those moments." },
+      { "id": "q42", "items": [42], "techniques": ["M17", "credit-on-the-spot"],
+        "reading": "You do not always name other people's contribution in the moment you are praised. Credit given to others, even if they are not present, is seen as humility, confidence and grace; credit not given, or given later, reads as an afterthought, if it lands at all. The focus here is to help you give more, and more public, praise to others, because that is what people remember most positively." },
+      { "id": "q43", "items": [43], "techniques": ["M17"],
+        "reading": "Saying \"I do not know\" when you do not is not always easy. A plain \"I do not know\" earns more trust and respect in a difficult moment than a confident guess ever will, and people can usually tell the difference. The priority is to help you say it plainly and confidently, because it is one of the easiest ways to build credibility with peers and superiors." },
+      { "id": "q44", "items": [44], "techniques": ["M17", "speak-last-top-seat"],
+        "reading": "You do not always let others speak before you when you are the most senior or experienced person in the room. When the most senior person encourages others to speak before them, people feel included and bring their real thinking, which is the thinking you most need. The priority is to help you hold your view until others have had a chance to share theirs." },
+      { "id": "q45", "items": [45], "techniques": ["M7", "M14"],
+        "reading": "You can behave more courteously and considerately toward 'important' people than everyone else. When you do, the other people in your life see it, remember it, and adjust their expectations of you accordingly. The focus here is to help you bring the same sincere energy to everyone you meet, because that steadiness is what earns trust from all of your audiences." }
+    ]},
+    "B5": { "mode": "weakest_facet", "candidates": [
+      { "id": "q46", "items": [46], "techniques": ["M7", "M14"],
+        "reading": "The least important person in your life does not always get the same quality of attention as the most important. The difference in treatment is rarely conscious or intended, and it is always noticed by more people than you could imagine. The focus here is to help you give everyone you meet, the receptionist or the CEO, the same quality of attention regardless of their rank." },
+      { "id": "q47", "items": [47], "techniques": ["M7"],
+        "reading": "You can behave differently when you know you are being watched. People tend to trust the person who is consistent whether or not anyone is watching, and they can always tell the difference. The focus is to help you bring a genuine consistency to your approach to people, whatever the environment." },
+      { "id": "q48", "items": [48], "techniques": ["M7"],
+        "reading": "The person people meet at work and the person they meet outside it are not always described in the same terms. One consistent person is easier to trust than several polished versions, and the people who see both notice. The focus here is to help you let the same person show up in both environments, because we are almost always more impactful when we are being true to who we are." },
+      { "id": "q49", "items": [49], "techniques": ["M14", "low-energy-warmth-baseline"],
+        "reading": "Your warmth does not always hold up when you are tired or distracted. If your state of mind affects your energy, people will remember. The focus here is to help you keep a baseline of warmth on the days when you feel it least." },
+      { "id": "q50", "items": [50], "techniques": ["M14"],
+        "reading": "Your warmth can be conditional, changing when the other person has nothing that benefits you. Unconditional warmth, courtesy and energy are the things people come to rely on about you. The focus here is to help you give it consistently, however you feel in the moment, because that is the warmth that builds real reputation." }
+    ]}
+  },
+  "new_techniques": {
+    "_meta": "New library entries surfaced by the patterns. Draft one-liners in JH register; full half-page write-ups to be authored into content.methods alongside M1-M17.",
+    "three-moments": "The weekly three-moments list: at the end of each week, name three moments you would still respect if nobody had been watching.",
+    "own-verdict-first": "Your own verdict first: form your own read of a piece of work before you go looking for anyone else's.",
+    "colleague-test": "The colleague test: before judging yourself after a setback, ask how you would judge a colleague you respect in the same spot.",
+    "24-hour-hold": "The 24-hour hold: hold your response to criticism for a day, then take the one useful thing and leave the rest.",
+    "one-beat-pause": "The one-beat pause: when pressure rises, slow down by a single beat before you respond.",
+    "ask-fuller-picture": "Ask for the fuller picture: when a hard piece of feedback is sitting with you, go back to the person for more, so you act on the whole thing rather than a snapshot.",
+    "finite-window": "The finite window: give yourself a set time to feel a setback, then move to the diagnostic question of what to do next.",
+    "ask-permission-to-differ": "Ask permission to differ: a one-line pre-frame ('can I offer a different read?') that opens the door to the difficult view.",
+    "say-headline-first": "Say the headline first: lead with the single point, then soften the delivery, so the softening cannot bury the message.",
+    "three-beats": "The Three Beats: give a conversation a beginning that sets context, a middle that does the work, and a clear close.",
+    "harder-or-different": "Harder or different?: before the next attempt, ask whether the answer is to work harder or to work differently.",
+    "be-a-beginner": "Be a beginner again: deliberately take on something unfamiliar enough that you are not sure you will be good at it.",
+    "the-play-back": "The play-back: review your own performance like match footage, with the same attitude to wins and losses.",
+    "ask-next-level-by-default": "Ask the next-level question by default: make 'what else?' or 'say more' the standing habit.",
+    "detail-carried-forward": "The detail carried forward: note one specific thing about a person and use it lightly next time.",
+    "no-ask-follow-up": "The no-ask follow-up: reach out to someone with nothing attached.",
+    "offer-as-view": "Offer it as a view, not a verdict: put a strong opinion as one view among several.",
+    "credit-on-the-spot": "Credit on the spot: name other people's contribution in the moment you are praised, not later.",
+    "speak-last-top-seat": "Speak last from the top seat: when you are the most senior in the room, hold your view until others have theirs out.",
+    "low-energy-warmth-baseline": "The low-energy warmth baseline: a minimum standard of warmth you hold even on the days you feel it least."
+  }
+}
