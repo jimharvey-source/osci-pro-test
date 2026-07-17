@@ -467,9 +467,9 @@ function fallbackProfileNarrative(content, scoring, respondentName) {
 
   const para1 = `${name}, here is what your scores are actually saying. Your ${strongerLabel} is the stronger of the two dimensions at ${strongerScore}. That is the version of you most people in the room are picking up on, and it is doing useful work. The risk at this band is taking it for granted. Strong dimensions stay strong when they are used deliberately. They quietly thin when they are not.`;
 
-  const para2 = `Your ${otherLabel} at ${otherScore} is the other half of the picture. It is functional, but not yet doing everything it could. The gap between the two dimensions is where the development conversation usually sits. The priority subscales below name the specific behaviours where attention will most repay the effort.`;
+  const para2 = `Your ${otherLabel} at ${otherScore} is the other half of the picture. It is functional, and not yet doing everything it could. Bringing it up to meet your ${strongerLabel} is where the next development usually sits. The priority subscales below name the specific behaviours where attention will most repay the effort.`;
 
-  const para3 = `The two priority subscales identified for you are ${subName(dev1)} and ${subName(dev2)}. These are not character flaws. They are skills that are not yet doing their job reliably. The cost of leaving them unattended is small in any single moment and significant over time. The people around you read these gaps long before they name them.`;
+  const para3 = `The two priority subscales identified for you are ${subName(dev1)} and ${subName(dev2)}. They are skills that are not yet doing their job reliably, and each has clear room to build. The cost of leaving them unattended is small in any single moment and significant over time. The people around you notice these long before they name them.`;
 
   const para4 = `Your Charismatic Consistency Index sits at ${scoring.consistencyIndex}. This measures how reliably your warmth and attention are available across the audiences and situations in your life. The work the rest of this report sets out is the work of widening the reach of what you already have. Not becoming a different person. Making more of the version that already exists available to more of the people around you.`;
 
@@ -1097,11 +1097,11 @@ function stampHeadersAndFooters(doc, respondentName) {
 // two strengths and two development areas, each with a locked situational
 // line from content.json (where_it_helps / where_gain_shows). No AI text
 // on this page; the header uses the static quadrant tagline.
-function renderOnePageSummary(doc, content, scoring, strengthCodes, developmentCodes) {
+function renderOnePageSummary(doc, content, scoring, strengthCodes, developmentCodes, profileParagraphs) {
   const quadrant = content.quadrants[scoring.quadrant];
   doc.addPage();
-  eyebrow(doc, 'The short version');
-  h1(doc, 'Your profile on one page');
+  eyebrow(doc, 'Your results');
+  h1(doc, 'Where you are right now');
 
   if (quadrant && quadrant.tagline) {
     doc.font(FONT_BODY_ITALIC).fontSize(12).fillColor(COLOURS.muted)
@@ -1131,6 +1131,17 @@ function renderOnePageSummary(doc, content, scoring, strengthCodes, developmentC
   doc.moveDown(0.4);
   const firstPriority = content.subscales[developmentCodes[0]];
   bodyText(doc, `Start with ${firstPriority ? firstPriority.name : 'your first priority subscale'}. The rest of this report explains each of these in detail, and the four-week plan near the back turns the first priority into specific practice.`);
+
+  // Folded in from the old "Your profile in plain words" page: the read of the
+  // two dimensions in prose. The Consistency Index paragraph is filtered out,
+  // so consistency keeps its single home on its own page later.
+  if (Array.isArray(profileParagraphs) && profileParagraphs.length) {
+    const dimensionRead = profileParagraphs.filter(p => !/consistency\s+index/i.test(p));
+    if (dimensionRead.length) {
+      h2(doc, 'In plain words');
+      dimensionRead.forEach(p => bodyText(doc, p));
+    }
+  }
 }
 
 function renderPrefaceCharisma(doc, content) {
@@ -1217,16 +1228,16 @@ function renderConsistencyPage(doc, content, scoring) {
   }
   doc.moveDown(0.8);
 
-  h2(doc, cp.concept_intro_head);
-  cp.concept.forEach(p => bodyText(doc, p));
-
+  // One idea, one home: this page now carries only the reader's own consistency
+  // read. The concept (what the Index measures) and the generic "how to extend
+  // your reach" move to the appendix, so the reader meets the number once, here,
+  // as a read of their result.
   if (bandPara) {
-    h2(doc, cp.case_head);
     bodyText(doc, bandPara);
+  } else {
+    // No band resolved: fall back to the concept so the page is never empty.
+    cp.concept.forEach(p => bodyText(doc, p));
   }
-
-  h2(doc, cp.extend_head);
-  cp.extend.forEach(p => bodyText(doc, p));
 }
 
 // ── Personalised interpretation: pattern resolver + technique lookup ────────
@@ -1263,9 +1274,16 @@ function lookupTechnique(content, patterns, ref) {
   if (patterns && patterns.new_techniques && patterns.new_techniques[ref]) {
     const line = patterns.new_techniques[ref];
     const i = line.indexOf(':');
-    return i > -1
-      ? { name: line.slice(0, i).trim(), summary: line.slice(i + 1).trim() }
-      : { name: ref, summary: line };
+    if (i > -1) {
+      const name = line.slice(0, i).trim();
+      let summary = line.slice(i + 1).trim();
+      // The one-liners are stored as "Name: predicate", so the predicate starts
+      // lower-case and reads as a fragment under the heading. Capitalise it so
+      // it stands as a proper sentence beside the fully-authored methods.
+      summary = summary.charAt(0).toUpperCase() + summary.slice(1);
+      return { name, summary };
+    }
+    return { name: ref, summary: line };
   }
   return null;
 }
@@ -1279,6 +1297,87 @@ function conceptTeaching(text) {
   if (!text) return '';
   const m = text.split(/\n?\s*Now,?\s+what this score is telling us in your case\.?\s*/i);
   return m[0].trim();
+}
+
+// Strip the now-obsolete "read your own profile and decide which is you"
+// self-diagnosis lines from a concept note. The report resolves the pattern
+// from the reader's answers now, so the instruction to self-diagnose no
+// longer applies.
+function stripSelfDiagnose(text) {
+  if (!text) return text;
+  return text
+    .replace(/\s*Both possibilities exist in your subscale score\.\s*/gi, ' ')
+    .replace(/\s*Read your own profile against the (?:two|four)[^.]*\.\s*/gi, ' ')
+    .replace(/[ \t]{2,}/g, ' ')
+    .trim();
+}
+
+// Concept teaching for the appendix: apply the high-band variant swap, take
+// the concept half (before the "in your case" marker), and strip the
+// self-diagnosis line.
+function appendixConcept(block, scoring, code) {
+  let t = block.what_this_score_tells_you || '';
+  const hv = block.high_band_variant;
+  if (hv && hv.replace && hv.with && isHighBandSubscale(scoring, code) && t.includes(hv.replace)) {
+    t = t.replace(hv.replace, hv.with);
+  }
+  return stripSelfDiagnose(conceptTeaching(t));
+}
+
+// The Charismatic Consistency Index concept, moved here from the front page.
+// The reader's own consistency read stays on its page in the report; the
+// explanation of what the Index measures, and the generic development move,
+// live here as reference.
+function renderAppendixConsistency(doc, content) {
+  const cp = content.consistency_page;
+  if (!cp) return;
+  doc.addPage();
+  eyebrow(doc, cp.eyebrow || 'How widely it reaches');
+  h1(doc, cp.title || 'The Charismatic Consistency Index');
+  if (cp.concept) cp.concept.forEach(p => bodyText(doc, p));
+  if (cp.extend_head && cp.extend) {
+    h2(doc, cp.extend_head);
+    cp.extend.forEach(p => bodyText(doc, p));
+  }
+}
+
+// ── The appendix: the model, at the back ───────────────────────────────────
+// Everything the reader does not need in order to act now: what charisma is,
+// the two dimensions and the Sistine passage, the four positions, and the
+// concept notes plus skill-building teaching for the priority subscales. All
+// of it moved here so the front of the report is the reader's own results.
+function renderAppendix(doc, content, scoring, developmentCodes, patterns) {
+  doc.addPage();
+  eyebrow(doc, 'Appendix');
+  h1(doc, 'The model, in full');
+  bodyText(doc, `Everything up to here is your report. What follows is the model it rests on: what we mean by charisma, the two dimensions it is built from, the four positions, and the thinking behind your priority subscales. Read it if you want the reasoning under your results. You do not need it to act on the report.`);
+
+  // The concept pages. Each already begins with its own doc.addPage().
+  renderPrefaceCharisma(doc, content);
+  renderPrefaceDimensions(doc, content);
+  renderPrefacePositions(doc, content);
+  renderAppendixConsistency(doc, content);
+
+  // The subscales explained, for the reader's priority subscales: what the
+  // subscale measures, and how the skill is built. Rendered only when the
+  // patterns block is present, because without it the development pages carry
+  // this teaching inline already.
+  if (patterns) {
+    developmentCodes.forEach(code => {
+      const sub = content.subscales[code];
+      if (!sub || !sub.development) return;
+      const block = sub.development;
+      doc.addPage();
+      eyebrow(doc, 'The subscales explained');
+      h1(doc, `${code}  ${sub.name}`);
+      h2(doc, 'What this measures');
+      splitParas(appendixConcept(block, scoring, code)).forEach(p => bodyText(doc, p));
+      if (block.how_to_close_the_gap) {
+        h2(doc, 'How the skill is built');
+        splitParas(block.how_to_close_the_gap).forEach(p => bodyText(doc, p));
+      }
+    });
+  }
 }
 
 function renderReport(doc, content, scoring, headline, profileParagraphs, respondentName, strengthCodes, developmentCodes, chosenMethods, patterns) {
@@ -1314,10 +1413,9 @@ function renderReport(doc, content, scoring, headline, profileParagraphs, respon
      .text(respondentName ? `Prepared for ${respondentName}` : 'Prepared for you');
   doc.text(today);
 
-  // ─── Front matter: one page only ────────────────────────────────────────
-  // What we mean by charisma. The rest of the old preface now renders where
-  // each page earns its place (see the preface functions above).
-  renderPrefaceCharisma(doc, content);
+  // The model theory (what we mean by charisma, the two dimensions, the four
+  // positions) now renders in the appendix at the back. The front of the
+  // report goes straight to the reader's own results.
 
   // ─── Opening summary (the news) ──────────────────────────────────────────
   doc.addPage();
@@ -1328,7 +1426,7 @@ function renderReport(doc, content, scoring, headline, profileParagraphs, respon
     content.manifesto.front.paragraphs.forEach(p => bodyText(doc, p));
   }
 
-  bodyText(doc, `Your results place you in the ${quadrant.label.replace(/^The /, '')} quadrant. ${quadrant.opening_paragraph}`);
+  bodyText(doc, `Your results place you in the ${quadrant.label.replace(/^The /, '')} quadrant, where Confidence and Social Skills are both working for you. Your quadrant is read in full a few pages on.`);
 
   doc.moveDown(0.5);
   drawScoreTiles(doc, scoring, 72, doc.y, 451);
@@ -1345,22 +1443,15 @@ function renderReport(doc, content, scoring, headline, profileParagraphs, respon
   // ─── Your profile on one page (new in v4.5) ──────────────────────────────
   // The complete takeaway by page 4: two strengths and two development
   // areas with situational lines, before any further model exposition.
-  renderOnePageSummary(doc, content, scoring, strengthCodes, developmentCodes);
+  renderOnePageSummary(doc, content, scoring, strengthCodes, developmentCodes, profileParagraphs);
 
-  // ─── The two dimensions (moved in v4.5) ──────────────────────────────────
-  // Confidence, Social Skills, and the Sistine Chapel now render BEFORE the
-  // four positions, the map, and the subscale bars. The reader meets the
-  // axes before anything is plotted on them, and the page's own line "the
-  // five subscales are introduced later in the report" is true again.
-  renderPrefaceDimensions(doc, content);
-
-  // ─── The four positions, then the reader's own placement ────────────────
-  renderPrefacePositions(doc, content);
-
+  // ─── Your position on the map ────────────────────────────────────────────
+  // The two dimensions and the four positions now live in the appendix. The
+  // reader meets their own placement here; the model behind it is at the back.
   doc.addPage();
   eyebrow(doc, 'Where you sit on the map');
   h1(doc, 'Your position');
-  bodyText(doc, `The map below plots your two dimension scores against each other. Your placement is highlighted. The four positions are described earlier in this report; this is where your own scores put you now.`);
+  bodyText(doc, `The map below plots your two dimension scores against each other. Your placement is highlighted. The four positions are described in the appendix at the back of this report; this is where your own scores put you now.`);
   doc.moveDown(1.2);
   drawQuadrantGrid(doc, scoring, 297.5, doc.y, 320);
 
@@ -1371,7 +1462,7 @@ function renderReport(doc, content, scoring, headline, profileParagraphs, respon
   doc.font(FONT_BODY_ITALIC).fontSize(13).fillColor(COLOURS.muted)
      .text(quadrant.tagline);
   doc.moveDown(0.8);
-  h2(doc, 'What this quadrant means');
+  h2(doc, 'The work in this quadrant');
   bodyText(doc, quadrant.what_the_quadrant_means);
   h2(doc, 'Common patterns at this position');
   bodyText(doc, quadrant.common_blind_spots);
@@ -1383,11 +1474,11 @@ function renderReport(doc, content, scoring, headline, profileParagraphs, respon
   doc.moveDown(0.6);
   drawSubscaleBars(doc, scoring, content, developmentCodes, 72, doc.y, 451);
 
-  // ─── Page 7: Where you are right now (new in v6) ───────────────────────
-  doc.addPage();
-  eyebrow(doc, 'Your profile in plain words');
-  h1(doc, 'Where you are right now');
-  profileParagraphs.forEach(p => bodyText(doc, p));
+  // ─── (folded) "Your profile in plain words" ────────────────────────────
+  // The standalone plain-words page is gone. Its dimension read now closes the
+  // results page (renderOnePageSummary), so the reader meets their whole result
+  // in one place. The Consistency Index paragraph is filtered out there, so the
+  // consistency read has its single home on the page below.
 
   // ─── The Charismatic Consistency Index (locked page) ──────────────────
   renderConsistencyPage(doc, content, scoring);
@@ -1448,7 +1539,6 @@ function renderReport(doc, content, scoring, headline, profileParagraphs, respon
   } else {
     bodyText(doc, `Two subscales have been identified as the most useful focus for your development now. These are the areas where some deliberate practice over the next four to six weeks will produce visible change. Pick one to start with. Work on it. Then come back to the other.`);
   }
-  bodyText(doc, `The framing the rest of this report uses is important. A lower score on a subscale does not mean you are deficient as a person. It means that particular skill has the most room to build on, and the work is incremental, visible, and entirely doable in the real meetings and conversations of your working week.`);
 
   developmentCodes.forEach((code, idx) => {
     doc.addPage();
@@ -1484,45 +1574,42 @@ function renderReport(doc, content, scoring, headline, profileParagraphs, respon
     // previous locked-block behaviour exactly.
     const resolved = resolvePattern(patterns, scoring, code);
 
-    h2(doc, 'What this score tells you');
-    splitParas(resolved ? conceptTeaching(tellsYou) : tellsYou).forEach(p => bodyText(doc, p));
-
     if (resolved) {
+      // Personal, up front: your pattern and your matched techniques only.
+      // The concept teaching and the how-to-close method move to the appendix,
+      // so this page stays about you and what to do next.
       h2(doc, 'Where you are with this');
       bodyText(doc, resolved.reading);
-    }
 
-    h2(doc, 'What it costs to leave this alone');
-    splitParas(block.what_it_costs_to_leave_this_alone).forEach(p => bodyText(doc, p));
-    h2(doc, 'How to close the gap');
-    splitParas(block.how_to_close_the_gap).forEach(p => bodyText(doc, p));
-
-    if (resolved && resolved.techniques && resolved.techniques.length) {
-      h2(doc, 'Where to start');
-      bodyText(doc, `These are the techniques matched to what your answers show. Each is set out in fuller detail in the Practice Content Library and the companion book.`);
-      resolved.techniques
-        .map(ref => lookupTechnique(content, patterns, ref))
-        .filter(Boolean)
-        .forEach(t => {
-          h3(doc, t.name);
-          bodyText(doc, t.summary);
-        });
+      if (resolved.techniques && resolved.techniques.length) {
+        h2(doc, 'Where to start');
+        bodyText(doc, `These are the techniques matched to what your answers show. Each is set out in fuller detail in the Practice Content Library and the companion book, and the subscale is explained in full in the appendix.`);
+        resolved.techniques
+          .map(ref => lookupTechnique(content, patterns, ref))
+          .filter(Boolean)
+          .forEach(t => {
+            h3(doc, t.name);
+            bodyText(doc, t.summary);
+          });
+      }
     } else {
+      // Fallback (patterns block absent): the previous locked-block behaviour,
+      // so a report is always produced.
+      h2(doc, 'What this score tells you');
+      splitParas(tellsYou).forEach(p => bodyText(doc, p));
+      h2(doc, 'What it costs to leave this alone');
+      splitParas(block.what_it_costs_to_leave_this_alone).forEach(p => bodyText(doc, p));
+      h2(doc, 'How to close the gap');
+      splitParas(block.how_to_close_the_gap).forEach(p => bodyText(doc, p));
       h2(doc, 'Where you might start');
       block.where_you_might_start.forEach(b => bulletPoint(doc, b));
     }
   });
 
-  // ─── Methods worth knowing ─────────────────────────────────────────────
-  doc.addPage();
-  eyebrow(doc, 'Methods worth knowing');
-  h1(doc, 'Four methods for your profile');
-  bodyText(doc, `The Pro Practice Content Library contains seventeen named methods. Three of the four below have been chosen for their direct relevance to your development areas. The fourth is included to broaden the toolkit. Each is set out in fuller detail in the companion book, Open-Source Charisma.`);
-  doc.moveDown(0.4);
-
-  chosenMethods.forEach((m, idx) => {
-    renderMethodCard(doc, m, idx === chosenMethods.length - 1);
-  });
+  // ─── (removed) "Four methods for your profile" ─────────────────────────
+  // The generic four-method section duplicated the pattern-matched techniques
+  // now shown under "Where to start" on each development page. Removed so each
+  // technique appears once, in the place most relevant to the reader.
 
   // ─── A four-week plan ──────────────────────────────────────────────────
   doc.addPage();
@@ -1551,7 +1638,7 @@ function renderReport(doc, content, scoring, headline, profileParagraphs, respon
     renderGoalSettingClosing(doc, content.goal_setting);
   }
 
-  // ─── Final page: Closing ──────────────────────────────────────────────
+  // ─── Closing: One last thing (the warm close of the report) ────────────
   doc.addPage();
   eyebrow(doc, 'A final note');
   const backManifesto = (content.manifesto && content.manifesto.back) || null;
@@ -1562,6 +1649,10 @@ function renderReport(doc, content, scoring, headline, profileParagraphs, respon
     bodyText(doc, `The point is not to become a different person. It is to make the best of who you already are more consistent, more visible, and more useful to the people around you.`);
   }
 
+  // ─── Appendix: the model, as pure reference behind the report ──────────
+  renderAppendix(doc, content, scoring, developmentCodes, patterns);
+
+  // ─── Final sign-off, at the very end ───────────────────────────────────
   doc.moveDown(3);
   doc.lineWidth(0.5).strokeColor(COLOURS.gold)
      .moveTo(72, doc.y).lineTo(523, doc.y).stroke();
