@@ -98,14 +98,7 @@ export default async function handler(req, res) {
       metadata: { run_token: token },
       // The refund handler sees a charge, never a session. Put the token
       // where the payment intent carries it too.
-      payment_intent_data: {
-        metadata: { run_token: token },
-        // Prefix + "* " + suffix, 22 characters in total. With the account
-        // shortened descriptor set to OSCHARISMA this reads
-        // "OSCHARISMA* PRO REPORT" on the buyer's statement, which matches
-        // the site they bought from. Shorten this if the prefix changes.
-        statement_descriptor_suffix: 'PRO REPORT',
-      },
+      payment_intent_data: { metadata: { run_token: token } },
       success_url: `${SITE_URL}/pro-report.html?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${SITE_URL}/assessment.html?checkout=cancelled`,
       // UK consumers keep a fourteen day cancellation right on digital
