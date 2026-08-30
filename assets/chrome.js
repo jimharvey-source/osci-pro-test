@@ -38,7 +38,7 @@
       <div class="site-footer-inner">
         <div>
           <strong>Open-Source Charisma &middot; Pro</strong><br>
-          <span class="copyright">&copy; 2026 James G Harvey / Allcow Trading Co Ltd</span>
+          <span class="copyright">&copy; 2026 James G Harvey / Allcow Trading Company LTD</span>
         </div>
         <div>
           The Message Business<br>
@@ -48,12 +48,22 @@
           <a href="https://opensourcecharisma.com">opensourcecharisma.com</a><br>
           <a href="https://opensourcecharisma.com/assessment">Take the free assessment</a>
         </div>
+        <div>
+          <a href="/terms.html">Terms of sale</a><br>
+          <a href="/privacy.html">Privacy policy</a><br>
+          <a href="/cookies.html">Cookies</a>
+        </div>
       </div>
     </footer>`;
 
   // Insert at the very top of body, footer at the very bottom
   document.addEventListener('DOMContentLoaded', () => {
-    document.body.insertAdjacentHTML('afterbegin', testBanner + header);
+    // The banner belongs on the test host and nowhere else. Tied to the
+    // hostname so that going live cannot forget to remove it.
+    const isTestHost = /(^|\.)protest\./i.test(window.location.hostname)
+      || window.location.hostname === 'localhost'
+      || window.location.hostname.endsWith('.vercel.app');
+    document.body.insertAdjacentHTML('afterbegin', (isTestHost ? testBanner : '') + header);
     document.body.insertAdjacentHTML('beforeend', footer);
   });
 })();

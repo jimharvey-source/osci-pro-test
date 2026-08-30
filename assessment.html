@@ -5,14 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex,nofollow">
 <title>Take the Assessment — Open-Source Charisma Pro</title>
-<!-- Google Analytics 4 -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-3S96VP3093"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-3S96VP3093', { 'content_group': 'OSCI Pro' });
-</script>
+<script src="/assets/consent.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -167,7 +160,7 @@
     <div class="eyebrow">Step 1 of 2</div>
     <h1>Your details</h1>
     <div class="gold-rule"></div>
-    <p>Your name will appear on your personalised report. Your email is where the report will be sent. We do not sell or share your details. The test build does not actually email you yet, but we use both fields to test the flow.</p>
+    <p>Your name will appear on your personalised report. Your email is where the report will be sent. We do not sell or share your details.</p>
     <div class="card">
       <label for="name-input" style="display:block; font-family:'Calibri',system-ui,sans-serif; font-size:13px; font-weight:600; color:var(--muted); margin-bottom:6px; letter-spacing:0.08em; text-transform:uppercase;">Your name</label>
       <input type="text" id="name-input" placeholder="First and last name" autocomplete="name" style="width:100%; padding:12px; font-size:16px; font-family:Georgia,serif; border:1px solid var(--line); border-radius:3px; margin-bottom:16px;">
@@ -220,16 +213,21 @@
     </div>
 
     <h2>Subscale breakdown</h2>
-    <p style="color: var(--muted); font-size: 15px;">Your two lowest subscales are flagged as priority areas. The full Pro report (not yet active in this test build) will give you band-calibrated practice content for each.</p>
+    <p style="color: var(--muted); font-size: 15px;">Your two lowest subscales are flagged as priority areas. The full Pro report gives you band-calibrated practice content for each.</p>
     <table class="subscale-table" id="subscale-table"><thead>
       <tr><th>Subscale</th><th>Score</th><th>Band</th></tr>
     </thead><tbody></tbody></table>
 
-    <h2>Generate report</h2>
-    <p style="color: var(--muted); font-size: 15px;">In production, this triggers Stripe Checkout. In this test build, it generates a placeholder PDF directly so we can verify the full server-side flow end-to-end.</p>
-    <div class="nav-row">
-      <button class="primary" onclick="generateReport()">Generate test PDF</button>
-      <button class="secondary" onclick="showDebug()">Show scoring debug</button>
+    <h2>Your full report</h2>
+    <div class="card" id="unlock-card">
+      <p style="margin-top:0;">Thirty pages, written to your own scores. Where your two development priorities show up in real situations, what to practise this week, and a four-week plan. A PDF you keep.</p>
+      <p id="price-line" style="font-family:'Outfit',system-ui,sans-serif; font-size:22px; font-weight:600; margin:20px 0 4px;">&pound;19.99</p>
+      <p id="launch-line" style="color: var(--muted); font-size: 14px; margin:0 0 18px;">&nbsp;</p>
+      <p id="checkout-error" style="color:#c00; font-size:14px; display:none; margin:0 0 12px;"></p>
+      <div class="nav-row" style="margin-top:0;">
+        <button class="primary" id="buy-btn" onclick="buyReport()">Get my full report</button>
+      </div>
+      <p style="color: var(--muted); font-size: 13px; margin:18px 0 0;">Payment is handled by Stripe. Your report is written as soon as the payment clears, and the link stays live so you can download it again.</p>
     </div>
     <div id="debug-area" class="hidden" style="margin-top: 24px;">
       <h3>Scoring payload</h3>
@@ -298,6 +296,9 @@ function submitEmail() {
   error.style.display = 'none';
   userEmail = value;
   userName = nameValue;
+  subscribeToMailchimp(nameValue, value);
+  track('pro_email_capture');
+  track('pro_assessment_start');
   renderQuestions();
   goToScreen('questions');
 }
@@ -431,6 +432,9 @@ function submitAnswers() {
     lastScoring = window.scoreOSCIPro(answers, QUESTIONNAIRE);
     renderResults(lastScoring);
     goToScreen('results');
+    track('pro_assessment_complete', { quadrant: lastScoring.quadrant });
+    track('pro_ai_band_assigned', { band: lastScoring.consistencyBand || 'unknown' });
+    loadLaunchStatus();
   } catch (e) {
     alert("Scoring failed: " + e.message);
     console.error(e);
@@ -476,44 +480,163 @@ function showDebug() {
   area.classList.remove('hidden');
 }
 
-async function generateReport() {
-  if (!lastScoring) { alert("No scoring data yet."); return; }
-  try {
-    const res = await fetch('/api/generate-report', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: userEmail, scoring: lastScoring, respondentName: userName })
-    });
-    if (!res.ok) throw new Error('Server returned ' + res.status);
+// ── Mailchimp ─────────────────────────────────────────────────────────────
+// JSONP, not a POST, which sidesteps CORS entirely. The free tool has used
+// this since launch. Fire and forget: the reader never waits on Mailchimp
+// and never sees it fail.
+const MAILCHIMP_JSONP = 'https://jim-harvey.us5.list-manage.com/subscribe/post-json?u=816f112ee06e3f52ea77a1f2a&id=70fa5f8e7e&f_id=00cd40edf0';
 
-    // Read the filename from the server's Content-Disposition header.
-    // Prefer the RFC 5987 filename* form (UTF-8 safe) and fall back to the
-    // plain filename="..." form. Fall back to a sensible default if neither
-    // is present.
-    const disposition = res.headers.get('Content-Disposition') || '';
-    let filename = 'OSCI Report.pdf';
-    const utf8Match = disposition.match(/filename\*=UTF-8''([^;]+)/i);
-    const plainMatch = disposition.match(/filename="([^"]+)"/i);
-    if (utf8Match) {
-      filename = decodeURIComponent(utf8Match[1]);
-    } else if (plainMatch) {
-      filename = plainMatch[1];
+function subscribeToMailchimp(name, email) {
+  try {
+    const parts = String(name).trim().split(/\s+/);
+    const first = parts.shift() || '';
+    const last = parts.join(' ');
+    const cb = 'mcCallback_' + Date.now();
+    const script = document.createElement('script');
+
+    function cleanup() {
+      clearTimeout(timer);
+      if (script.parentNode) script.parentNode.removeChild(script);
+      try { delete window[cb]; } catch (e) { window[cb] = undefined; }
     }
 
-    const blob = await res.blob();
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    const timer = setTimeout(cleanup, 4000);
+    window[cb] = cleanup;
+    script.onerror = cleanup;
+    script.src = MAILCHIMP_JSONP
+      + '&EMAIL=' + encodeURIComponent(email)
+      + '&FNAME=' + encodeURIComponent(first)
+      + '&LNAME=' + encodeURIComponent(last)
+      + '&c=' + cb;
+    document.body.appendChild(script);
   } catch (e) {
-    alert("PDF generation failed: " + e.message);
-    console.error(e);
+    console.error('mailchimp', e);
   }
 }
+
+// ── Analytics ─────────────────────────────────────────────────────────────
+function track(name, params) {
+  try {
+    if (typeof gtag === 'function') gtag('event', name, params || {});
+  } catch (e) {
+    console.error('gtag', e);
+  }
+}
+
+// ── Launch price ──────────────────────────────────────────────────────────
+// The number comes from Stripe's redemption count on the launch coupon, read
+// server side. There is no second counter here to drift out of step with it.
+async function loadLaunchStatus() {
+  const price = document.getElementById('price-line');
+  const line = document.getElementById('launch-line');
+  if (!price || !line) return;
+  try {
+    const res = await fetch('/api/launch-status');
+    if (!res.ok) throw new Error('status ' + res.status);
+    const s = await res.json();
+    price.innerHTML = '&pound;' + (s.pricePence / 100).toFixed(2);
+    if (s.launchOpen && typeof s.remaining === 'number') {
+      line.innerHTML = 'Launch price for the first 1000 readers. ' + s.remaining + ' left, then &pound;19.99.';
+    } else if (s.launchOpen) {
+      line.textContent = 'Launch price for the first 1000 readers.';
+    } else {
+      line.innerHTML = '&nbsp;';
+    }
+  } catch (e) {
+    // The card already shows the list price. A failed lookup leaves it there
+    // rather than inventing a discount.
+    console.error('launch status', e);
+  }
+}
+
+// ── Buy ───────────────────────────────────────────────────────────────────
+function showCheckoutError(message) {
+  const el = document.getElementById('checkout-error');
+  el.textContent = message;
+  el.style.display = 'block';
+}
+
+async function buyReport() {
+  const btn = document.getElementById('buy-btn');
+  document.getElementById('checkout-error').style.display = 'none';
+
+  if (!lastScoring) {
+    showCheckoutError('No scoring data yet. Please run the assessment again.');
+    return;
+  }
+
+  const original = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Taking you to checkout';
+  track('pro_report_purchase_intent', { quadrant: lastScoring.quadrant });
+
+  try {
+    const runRes = await fetch('/api/create-run', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: userName, email: userEmail, scoring: lastScoring })
+    });
+    const runData = await runRes.json().catch(function () { return {}; });
+    if (!runRes.ok || !runData.token) {
+      throw new Error(runData.error || ('Could not save your answers (' + runRes.status + ').'));
+    }
+
+    // Keep the answers on this device so a cancelled checkout returns the
+    // reader to their results rather than to an empty questionnaire.
+    try {
+      sessionStorage.setItem('osciProRun', JSON.stringify({
+        token: runData.token, scoring: lastScoring, name: userName, email: userEmail
+      }));
+    } catch (e) { console.error('sessionStorage', e); }
+
+    const coRes = await fetch('/api/create-checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: runData.token })
+    });
+    const coData = await coRes.json().catch(function () { return {}; });
+    if (!coRes.ok || !coData.url) {
+      throw new Error(coData.error || ('Checkout would not start (' + coRes.status + ').'));
+    }
+
+    window.location.href = coData.url;
+
+  } catch (e) {
+    console.error(e);
+    showCheckoutError(e.message || 'Something went wrong. Please try again.');
+    btn.disabled = false;
+    btn.textContent = original;
+  }
+}
+
+// ── Coming back from a cancelled checkout ─────────────────────────────────
+// The reader who backs out of Stripe lands here with an empty page and no
+// answers, because the state lives in the browser. Put them back on their
+// results instead of making them sit through sixty items again.
+async function restoreCancelledCheckout() {
+  const query = new URLSearchParams(window.location.search);
+  if (query.get('checkout') !== 'cancelled') return;
+
+  let saved = null;
+  try { saved = JSON.parse(sessionStorage.getItem('osciProRun') || 'null'); }
+  catch (e) { console.error('sessionStorage', e); }
+  if (!saved || !saved.scoring) return;
+
+  // renderResults reads the questionnaire for labels, and that is still
+  // being fetched when this runs. Wait for it, up to five seconds.
+  for (let i = 0; i < 50 && !QUESTIONNAIRE; i++) {
+    await new Promise(function (resolve) { setTimeout(resolve, 100); });
+  }
+  if (!QUESTIONNAIRE) return;
+
+  userName = saved.name;
+  userEmail = saved.email;
+  lastScoring = saved.scoring;
+  renderResults(lastScoring);
+  goToScreen('results');
+  loadLaunchStatus();
+}
+restoreCancelledCheckout();
 </script>
 
 </body>

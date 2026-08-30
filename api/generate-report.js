@@ -869,9 +869,35 @@ function varyOpener(originalText, code, frame) {
 }
 
 // ── Main entry ─────────────────────────────────────────────────────────────
+//
+// Paid endpoint. The caller sends a Stripe checkout session id and nothing
+// else. What they answered, and whether they paid for it, are read from
+// places they do not control.
+//
+// There is deliberately no test bypass. A secret door into a paid endpoint is
+// how free reports leak. Test with Stripe test mode and card 4242 4242 4242 4242.
+const MAX_GENERATIONS = 20;
+
 module.exports = async (req, res) => {
-  if (req.method !== 'POST') {
-    res.status(405).json({ error: 'POST only' });
+  if (req.method !== 'POST' && req.method !== 'GET') {
+    res.status(405).json({ error: 'Method not allowed' });
+    return;
+  }
+
+  const stripeKey = process.env.STRIPE_SECRET_KEY;
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  const missingEnv = [
+    !stripeKey && 'STRIPE_SECRET_KEY',
+    !supabaseUrl && 'SUPABASE_URL',
+    !serviceKey && 'SUPABASE_SERVICE_ROLE_KEY'
+  ].filter(Boolean);
+
+  if (missingEnv.length) {
+    // Names only, never values.
+    console.error('[report] Missing environment configuration:', missingEnv.join(', '));
+    res.status(500).json({ error: 'Report generation is not configured.', missing: missingEnv });
     return;
   }
 
@@ -883,11 +909,108 @@ module.exports = async (req, res) => {
     }
   }
 
-  const { email, scoring, respondentName } = body || {};
-  if (!scoring || typeof scoring.confidence !== 'number') {
-    res.status(400).json({ error: 'Missing scoring payload' });
+  const sessionId = (body && body.session_id) || (req.query && req.query.session_id);
+  if (typeof sessionId !== 'string' || sessionId.indexOf('cs_') !== 0) {
+    res.status(400).json({ error: 'Missing checkout session.' });
     return;
   }
+
+  // Initialise inside the handler. Module-level init fails intermittently on
+  // Vercel's serverless runtime and has broken deploys on these projects.
+  const stripe = require('stripe')(stripeKey);
+  const { createClient } = require('@supabase/supabase-js');
+  const admin = createClient(supabaseUrl, serviceKey, {
+    auth: { persistSession: false },
+    db: { schema: 'osci' }
+  });
+
+  // ── The gate ───────────────────────────────────────────────────────────
+  // Stripe is asked directly. A session id in a request is a claim, and the
+  // answer to whether it was paid comes from Stripe, never from the caller.
+  let session;
+  try {
+    session = await stripe.checkout.sessions.retrieve(sessionId);
+  } catch (e) {
+    console.error('[report] Session lookup failed:', e && e.message);
+    res.status(404).json({ error: 'That payment could not be found.' });
+    return;
+  }
+
+  if (session.payment_status !== 'paid') {
+    console.error('[report] Unpaid session refused:', sessionId, session.payment_status);
+    res.status(402).json({ error: 'This report has not been paid for.' });
+    return;
+  }
+
+  const runToken = (session.metadata && session.metadata.run_token) || session.client_reference_id;
+  if (!runToken) {
+    console.error('[report] Paid session carries no run_token:', sessionId);
+    res.status(500).json({ error: 'Your payment went through, but the assessment could not be matched. Please contact us.' });
+    return;
+  }
+
+  const { data: run, error: runError } = await admin
+    .from('runs')
+    .select('name, email, scoring')
+    .eq('token', runToken)
+    .maybeSingle();
+
+  if (runError) {
+    console.error('[report] Run lookup failed:', runError.message);
+    res.status(500).json({ error: 'Could not load your answers. Please try again.' });
+    return;
+  }
+  if (!run) {
+    console.error('[report] Paid session has no run row:', sessionId, runToken);
+    res.status(500).json({ error: 'Your payment went through, but the assessment could not be found. Please contact us.' });
+    return;
+  }
+
+  const { data: order, error: orderError } = await admin
+    .from('orders')
+    .select('generation_count, status, first_generated_at')
+    .eq('stripe_session_id', sessionId)
+    .maybeSingle();
+
+  if (orderError) {
+    // Not fatal. Stripe already said this was paid, and that is the
+    // entitlement. The record is bookkeeping and the log names the gap.
+    console.error('[report] Order lookup failed:', orderError.message);
+  }
+
+  if (order && order.status === 'refunded') {
+    res.status(403).json({ error: 'This order was refunded.' });
+    return;
+  }
+  if (order && order.generation_count >= MAX_GENERATIONS) {
+    console.error('[report] Generation cap reached:', sessionId, order.generation_count);
+    res.status(429).json({ error: 'This report has been downloaded too many times. Please contact us.' });
+    return;
+  }
+
+  const email = run.email;
+  const respondentName = run.name;
+  const scoring = run.scoring;
+
+  if (!scoring || typeof scoring.confidence !== 'number') {
+    console.error('[report] Stored scoring payload is malformed:', runToken);
+    res.status(500).json({ error: 'Stored answers are unreadable. Please contact us.' });
+    return;
+  }
+
+  // Recorded before it is streamed. A count one too high after a broken
+  // download is a nuisance. A count that never rises is a hole.
+  const generatedAt = new Date().toISOString();
+  const { error: countError } = await admin
+    .from('orders')
+    .update({
+      generation_count: ((order && order.generation_count) || 0) + 1,
+      first_generated_at: (order && order.first_generated_at) || generatedAt,
+      last_generated_at: generatedAt,
+      updated_at: generatedAt
+    })
+    .eq('stripe_session_id', sessionId);
+  if (countError) console.error('[report] Could not record generation:', countError.message);
 
   // Load content library
   const contentPath = path.join(__dirname, '..', 'assets', 'content.json');

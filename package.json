@@ -1,9 +1,11 @@
 {
   "name": "osci-pro-test",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
-  "description": "OSCI Pro — technical test build. Clones the free OSCI architecture for the longer Pro questionnaire.",
+  "description": "OSCI Pro — the paid report build. Stripe checkout, stored runs, server-side PDF.",
   "dependencies": {
-    "pdfkit": "^0.15.2"
+    "@supabase/supabase-js": "^2.45.0",
+    "pdfkit": "^0.15.2",
+    "stripe": "^22.5.0"
   }
 }

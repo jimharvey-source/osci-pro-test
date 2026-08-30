@@ -1,5 +1,12 @@
 {
   "version": 2,
+  "functions": {
+    "api/generate-report.js": { "maxDuration": 60 },
+    "api/create-run.mjs": { "maxDuration": 10 },
+    "api/create-checkout.mjs": { "maxDuration": 10 },
+    "api/stripe-webhook.mjs": { "maxDuration": 15 },
+    "api/launch-status.mjs": { "maxDuration": 10 }
+  },
   "headers": [
     {
       "source": "/(.*)",

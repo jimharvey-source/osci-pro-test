@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your report — Open-Source Charisma Pro</title>
+<meta name="robots" content="noindex, nofollow">
+<script src="/assets/consent.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+
+<main class="container">
+
+  <div class="eyebrow">Thank you</div>
+  <h1 id="headline">Your report is being written</h1>
+  <div class="gold-rule"></div>
+  <p class="subtitle" id="standfirst">This takes about twenty seconds. The download starts on its own. Please keep this page open.</p>
+
+  <div class="card">
+    <p id="status" style="margin-top:0;">Working on it.</p>
+    <p id="error-line" style="color:#c00; display:none; margin:0 0 12px;"></p>
+    <div class="nav-row" style="margin-top:0;">
+      <button class="primary" id="again-btn" onclick="fetchReport()" style="display:none;">Download it again</button>
+    </div>
+  </div>
+
+  <h2>Keep this link</h2>
+  <p>This page is your receipt. Bookmark it, or keep the confirmation email from Stripe, and you can come back and download the report again whenever you need it. Nothing expires.</p>
+  <p>If the download will not start, or anything looks wrong in the report, reply to your Stripe receipt and we will sort it out.</p>
+
+  <div style="text-align: center; margin: 48px 0 16px;">
+    <a class="btn secondary" href="/">Back to the Pro</a>
+  </div>
+
+</main>
+
+<script src="/assets/chrome.js"></script>
+<script>
+const params = new URLSearchParams(window.location.search);
+const sessionId = params.get('session_id');
+
+function setStatus(text) {
+  document.getElementById('status').textContent = text;
+}
+function showError(text) {
+  const el = document.getElementById('error-line');
+  el.textContent = text;
+  el.style.display = 'block';
+}
+
+async function fetchReport() {
+  const btn = document.getElementById('again-btn');
+  const errEl = document.getElementById('error-line');
+  errEl.style.display = 'none';
+
+  if (!sessionId) {
+    document.getElementById('headline').textContent = 'We cannot find that order';
+    document.getElementById('standfirst').textContent = 'This page needs the link from your payment confirmation.';
+    setStatus('No order reference in the address.');
+    return;
+  }
+
+  btn.disabled = true;
+  setStatus('Writing your report. This takes about twenty seconds.');
+
+  try {
+    const res = await fetch('/api/generate-report', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ session_id: sessionId })
+    });
+
+    if (!res.ok) {
+      // The server says what went wrong. Say it back, rather than guessing.
+      let message = 'The server returned ' + res.status + '.';
+      try {
+        const problem = await res.json();
+        if (problem && problem.error) message = problem.error;
+      } catch (e) { /* not JSON, keep the status line */ }
+      throw new Error(message);
+    }
+
+    const disposition = res.headers.get('Content-Disposition') || '';
+    let filename = 'OSCI Pro Report.pdf';
+    const utf8Match = disposition.match(/filename\*=UTF-8''([^;]+)/i);
+    const plainMatch = disposition.match(/filename="([^"]+)"/i);
+    if (utf8Match) {
+      filename = decodeURIComponent(utf8Match[1]);
+    } else if (plainMatch) {
+      filename = plainMatch[1];
+    }
+
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    document.getElementById('headline').textContent = 'Your report is ready';
+    document.getElementById('standfirst').textContent = 'It has downloaded to wherever your browser puts files.';
+    setStatus('Downloaded as ' + filename + '.');
+    try { gtag('event', 'pro_report_downloaded', {}); } catch (e) { console.error(e); }
+
+  } catch (e) {
+    console.error(e);
+    document.getElementById('headline').textContent = 'That did not download';
+    setStatus('Your payment is safe. The report can be generated again.');
+    showError(e.message || 'Something went wrong.');
+  } finally {
+    btn.disabled = false;
+    btn.style.display = 'inline-block';
+    btn.textContent = 'Download it again';
+  }
+}
+
+fetchReport();
+</script>
+
+</body>
+</html>

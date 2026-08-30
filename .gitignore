@@ -4,3 +4,14 @@ node_modules
 .vercel
 *.log
 .DS_Store
+
+# Backups written by the launch patches. Kept locally as a safety net
+# until the first live purchase passes, never committed.
+*.prepatch
+*.prename
+*.preconsent
+*.prelegal
+*.bak-*
+
+# Transfer archives used to move files onto this machine.
+_*.tgz
