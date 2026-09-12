@@ -228,6 +228,19 @@
         <button class="primary" id="buy-btn" onclick="buyReport()">Get my full report</button>
       </div>
       <p style="color: var(--muted); font-size: 13px; margin:18px 0 0;">Payment is handled by Stripe. Your report is written as soon as the payment clears, and the link stays live so you can download it again.</p>
+
+      <p style="font-size: 14px; margin:22px 0 0;">
+        <a href="#" class="inline-link" id="cohort-toggle" onclick="toggleCohort(event)">On a programme? Enter your programme code.</a>
+      </p>
+      <div id="cohort-box" style="display:none; margin-top:14px;">
+        <label for="cohort-input" style="display:block; font-size:14px; color: var(--muted); margin-bottom:6px;">Programme code</label>
+        <input type="text" id="cohort-input" placeholder="e.g. ACME26" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="32" onkeydown="if(event.key==='Enter'){event.preventDefault();redeemCohort();}" style="width:100%; max-width:280px; padding:12px; font-size:16px; font-family:'Outfit',system-ui,sans-serif; letter-spacing:0.08em; text-transform:uppercase; border:1px solid var(--line); border-radius:3px; margin-bottom:12px;">
+        <p id="cohort-error" style="color:#c00; font-size:14px; display:none; margin:0 0 12px;"></p>
+        <div class="nav-row" style="margin-top:0;">
+          <button class="secondary" id="cohort-btn" onclick="redeemCohort()">Unlock with my code</button>
+        </div>
+        <p style="color: var(--muted); font-size: 13px; margin:14px 0 0;">Your organisation has already covered the report. No card, no charge.</p>
+      </div>
     </div>
     <div id="debug-area" class="hidden" style="margin-top: 24px;">
       <h3>Scoring payload</h3>
@@ -604,6 +617,87 @@ async function buyReport() {
   } catch (e) {
     console.error(e);
     showCheckoutError(e.message || 'Something went wrong. Please try again.');
+    btn.disabled = false;
+    btn.textContent = original;
+  }
+}
+
+// ── Programme code ────────────────────────────────────────────────────────
+// A participant on a programme unlocks the report with a code instead of a
+// card. The run is stored exactly as for a sale; only the gate differs. The
+// server decides whether the code is good, and says the same thing for an
+// unknown code as for a used-up one.
+function toggleCohort(event) {
+  if (event) event.preventDefault();
+  const box = document.getElementById('cohort-box');
+  const open = box.style.display !== 'none';
+  box.style.display = open ? 'none' : 'block';
+  if (!open) {
+    const input = document.getElementById('cohort-input');
+    if (input) input.focus();
+  }
+}
+
+function showCohortError(message) {
+  const el = document.getElementById('cohort-error');
+  el.textContent = message;
+  el.style.display = 'block';
+}
+
+async function redeemCohort() {
+  const btn = document.getElementById('cohort-btn');
+  const input = document.getElementById('cohort-input');
+  document.getElementById('cohort-error').style.display = 'none';
+
+  const code = (input.value || '').trim().toUpperCase().replace(/\s+/g, '');
+  if (code.length < 4) {
+    showCohortError('Please enter your programme code.');
+    input.focus();
+    return;
+  }
+  if (!lastScoring) {
+    showCohortError('No scoring data yet. Please run the assessment again.');
+    return;
+  }
+
+  const original = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Checking your code';
+  track('pro_cohort_redeem', { quadrant: lastScoring.quadrant });
+
+  try {
+    const runRes = await fetch('/api/create-run', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: userName, email: userEmail, scoring: lastScoring })
+    });
+    const runData = await runRes.json().catch(function () { return {}; });
+    if (!runRes.ok || !runData.token) {
+      throw new Error(runData.error || ('Could not save your answers (' + runRes.status + ').'));
+    }
+
+    try {
+      sessionStorage.setItem('osciProRun', JSON.stringify({
+        token: runData.token, scoring: lastScoring, name: userName, email: userEmail
+      }));
+    } catch (e) { console.error('sessionStorage', e); }
+
+    const rdRes = await fetch('/api/redeem-cohort', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: runData.token, code: code })
+    });
+    const rdData = await rdRes.json().catch(function () { return {}; });
+    if (!rdRes.ok || !rdData.url) {
+      throw new Error(rdData.error || ('The code could not be checked (' + rdRes.status + ').'));
+    }
+
+    track('pro_cohort_unlocked', { quadrant: lastScoring.quadrant });
+    window.location.href = rdData.url;
+
+  } catch (e) {
+    console.error(e);
+    showCohortError(e.message || 'Something went wrong. Please try again.');
     btn.disabled = false;
     btn.textContent = original;
   }

@@ -870,12 +870,15 @@ function varyOpener(originalText, code, frame) {
 
 // ── Main entry ─────────────────────────────────────────────────────────────
 //
-// Paid endpoint. The caller sends a Stripe checkout session id and nothing
-// else. What they answered, and whether they paid for it, are read from
-// places they do not control.
+// Paid endpoint. The caller sends an order id and nothing else: a Stripe
+// checkout session id ("cs_") for a card sale, or a cohort order id ("coh_")
+// written by api/redeem-cohort.mjs when a programme code was accepted. What
+// they answered, and whether they are entitled to it, are read from places
+// they do not control.
 //
 // There is deliberately no test bypass. A secret door into a paid endpoint is
-// how free reports leak. Test with Stripe test mode and card 4242 4242 4242 4242.
+// how free reports leak. Test with Stripe test mode and card 4242 4242 4242 4242,
+// or with a programme code that has uses left.
 const MAX_GENERATIONS = 20;
 
 module.exports = async (req, res) => {
@@ -910,7 +913,9 @@ module.exports = async (req, res) => {
   }
 
   const sessionId = (body && body.session_id) || (req.query && req.query.session_id);
-  if (typeof sessionId !== 'string' || sessionId.indexOf('cs_') !== 0) {
+  const isStripe = typeof sessionId === 'string' && sessionId.indexOf('cs_') === 0;
+  const isCohort = typeof sessionId === 'string' && sessionId.indexOf('coh_') === 0;
+  if (!isStripe && !isCohort) {
     res.status(400).json({ error: 'Missing checkout session.' });
     return;
   }
@@ -925,28 +930,54 @@ module.exports = async (req, res) => {
   });
 
   // ── The gate ───────────────────────────────────────────────────────────
-  // Stripe is asked directly. A session id in a request is a claim, and the
-  // answer to whether it was paid comes from Stripe, never from the caller.
-  let session;
-  try {
-    session = await stripe.checkout.sessions.retrieve(sessionId);
-  } catch (e) {
-    console.error('[report] Session lookup failed:', e && e.message);
-    res.status(404).json({ error: 'That payment could not be found.' });
-    return;
-  }
+  // An id in a request is a claim. For a card sale the answer to whether it
+  // was paid comes from Stripe, never from the caller. For a programme
+  // redemption it comes from the order row that redeem-cohort wrote with the
+  // service role, which the caller cannot reach.
+  let runToken = null;
 
-  if (session.payment_status !== 'paid') {
-    console.error('[report] Unpaid session refused:', sessionId, session.payment_status);
-    res.status(402).json({ error: 'This report has not been paid for.' });
-    return;
-  }
+  if (isStripe) {
+    let session;
+    try {
+      session = await stripe.checkout.sessions.retrieve(sessionId);
+    } catch (e) {
+      console.error('[report] Session lookup failed:', e && e.message);
+      res.status(404).json({ error: 'That payment could not be found.' });
+      return;
+    }
 
-  const runToken = (session.metadata && session.metadata.run_token) || session.client_reference_id;
-  if (!runToken) {
-    console.error('[report] Paid session carries no run_token:', sessionId);
-    res.status(500).json({ error: 'Your payment went through, but the assessment could not be matched. Please contact us.' });
-    return;
+    if (session.payment_status !== 'paid') {
+      console.error('[report] Unpaid session refused:', sessionId, session.payment_status);
+      res.status(402).json({ error: 'This report has not been paid for.' });
+      return;
+    }
+
+    runToken = (session.metadata && session.metadata.run_token) || session.client_reference_id;
+    if (!runToken) {
+      console.error('[report] Paid session carries no run_token:', sessionId);
+      res.status(500).json({ error: 'Your payment went through, but the assessment could not be matched. Please contact us.' });
+      return;
+    }
+  } else {
+    const { data: cohortOrder, error: cohortError } = await admin
+      .from('orders')
+      .select('token, status, cohort_code')
+      .eq('stripe_session_id', sessionId)
+      .maybeSingle();
+
+    if (cohortError) {
+      console.error('[report] Cohort order lookup failed:', cohortError.message);
+      res.status(500).json({ error: 'Could not check your programme code. Please try again.' });
+      return;
+    }
+    // A cohort id must name a cohort order. A row with no cohort_code is a
+    // card sale and never answers to a "coh_" id, whatever the status says.
+    if (!cohortOrder || !cohortOrder.cohort_code || cohortOrder.status !== 'paid') {
+      console.error('[report] Cohort order refused:', sessionId, cohortOrder && cohortOrder.status);
+      res.status(404).json({ error: 'That programme unlock could not be found.' });
+      return;
+    }
+    runToken = cohortOrder.token;
   }
 
   const { data: run, error: runError } = await admin

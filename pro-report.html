@@ -29,8 +29,8 @@
   </div>
 
   <h2>Keep this link</h2>
-  <p>This page is your receipt. Bookmark it, or keep the confirmation email from Stripe, and you can come back and download the report again whenever you need it. Nothing expires.</p>
-  <p>If the download will not start, or anything looks wrong in the report, reply to your Stripe receipt and we will sort it out.</p>
+  <p id="keep-line">This page is your receipt. Bookmark it, or keep the confirmation email from Stripe, and you can come back and download the report again whenever you need it. Nothing expires.</p>
+  <p id="help-line">If the download will not start, or anything looks wrong in the report, reply to your Stripe receipt and we will sort it out.</p>
 
   <div style="text-align: center; margin: 48px 0 16px;">
     <a class="btn secondary" href="/">Back to the Pro</a>
@@ -42,6 +42,15 @@
 <script>
 const params = new URLSearchParams(window.location.search);
 const sessionId = params.get('session_id');
+
+// A programme unlock has no Stripe receipt to point at. Same page, two
+// sentences changed.
+if (sessionId && sessionId.indexOf('coh_') === 0) {
+  document.getElementById('keep-line').textContent =
+    'This page is your download link. Bookmark it and you can come back and download the report again whenever you need it. Nothing expires.';
+  document.getElementById('help-line').textContent =
+    'If the download will not start, or anything looks wrong in the report, email jim.harvey@themessagebusiness.com and we will sort it out.';
+}
 
 function setStatus(text) {
   document.getElementById('status').textContent = text;
