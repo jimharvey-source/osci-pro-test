@@ -138,6 +138,15 @@
     letter-spacing: 0.1em; text-transform: uppercase;
   }
   .hidden { display: none; }
+  .unlock-row { flex-wrap: wrap; justify-content: flex-start; gap: 12px; }
+  .unlock-row .primary { flex: 0 0 auto; }
+  .unlock-row .cohort { margin-left: auto; }
+  button.cohort {
+    background: var(--gold); color: white;
+    padding: 14px 28px; font-size: 16px;
+  }
+  button.cohort:hover { background: #967746; }
+  button.cohort[aria-expanded="true"] { background: var(--navy); }
   .debug-output {
     font-family: 'Courier New', monospace; font-size: 12px; background: #f0f0f0;
     padding: 12px; border-radius: 3px; overflow-x: auto; white-space: pre-wrap;
@@ -148,6 +157,7 @@
     .score-row { grid-template-columns: 1fr; }
     .dimension-banner { padding: 20px 20px; }
     .dimension-banner h2 { font-size: 22px; }
+    .unlock-row .primary, .unlock-row .cohort { width: 100%; margin-left: 0; }
   }
 </style>
 </head>
@@ -224,15 +234,13 @@
       <p id="price-line" style="font-family:'Outfit',system-ui,sans-serif; font-size:22px; font-weight:600; margin:20px 0 4px;">&pound;19.99</p>
       <p id="launch-line" style="color: var(--muted); font-size: 14px; margin:0 0 18px;">&nbsp;</p>
       <p id="checkout-error" style="color:#c00; font-size:14px; display:none; margin:0 0 12px;"></p>
-      <div class="nav-row" style="margin-top:0;">
+      <div class="nav-row unlock-row" style="margin-top:0;">
         <button class="primary" id="buy-btn" onclick="buyReport()">Get my full report</button>
+        <button class="cohort" id="cohort-toggle" onclick="toggleCohort(event)">On a programme? Enter your code</button>
       </div>
       <p style="color: var(--muted); font-size: 13px; margin:18px 0 0;">Payment is handled by Stripe. Your report is written as soon as the payment clears, and the link stays live so you can download it again.</p>
 
-      <p style="font-size: 14px; margin:22px 0 0;">
-        <a href="#" class="inline-link" id="cohort-toggle" onclick="toggleCohort(event)">On a programme? Enter your programme code.</a>
-      </p>
-      <div id="cohort-box" style="display:none; margin-top:14px;">
+      <div id="cohort-box" style="display:none; margin-top:22px; padding-top:18px; border-top:1px solid var(--line);">
         <label for="cohort-input" style="display:block; font-size:14px; color: var(--muted); margin-bottom:6px;">Programme code</label>
         <input type="text" id="cohort-input" placeholder="e.g. ACME26" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="32" onkeydown="if(event.key==='Enter'){event.preventDefault();redeemCohort();}" style="width:100%; max-width:280px; padding:12px; font-size:16px; font-family:'Outfit',system-ui,sans-serif; letter-spacing:0.08em; text-transform:uppercase; border:1px solid var(--line); border-radius:3px; margin-bottom:12px;">
         <p id="cohort-error" style="color:#c00; font-size:14px; display:none; margin:0 0 12px;"></p>
@@ -632,6 +640,8 @@ function toggleCohort(event) {
   const box = document.getElementById('cohort-box');
   const open = box.style.display !== 'none';
   box.style.display = open ? 'none' : 'block';
+  const toggle = document.getElementById('cohort-toggle');
+  if (toggle) toggle.setAttribute('aria-expanded', open ? 'false' : 'true');
   if (!open) {
     const input = document.getElementById('cohort-input');
     if (input) input.focus();
