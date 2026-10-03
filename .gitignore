@@ -15,3 +15,7 @@ node_modules
 
 # Transfer archives used to move files onto this machine.
 _*.tgz
+*.predescriptor
+
+# Working notes and briefings from Claude sessions. Kept locally, never deployed.
+Claude outputs/
