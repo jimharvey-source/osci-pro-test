@@ -82,6 +82,14 @@ export default async function handler(req, res) {
       case 'checkout.session.completed':
       case 'checkout.session.async_payment_succeeded': {
         const session = event.data.object;
+
+        // One Stripe account serves several apps, and every endpoint hears
+        // every checkout. FFF Pro tags its sessions; skip anything tagged
+        // for another product.
+        // Management Ignition subscriptions are mode 'subscription'.
+        if (session.mode !== 'payment') break;
+        if (session.metadata?.product && session.metadata.product !== 'osci-pro') break;
+
         const token = session.metadata?.run_token || session.client_reference_id || null;
 
         if (!token) {
