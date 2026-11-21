@@ -1,5 +1,5 @@
 {
-  "version": "content-v3.9+techniques1",
+  "version": "content-v3.9+techniques2",
   "_meta": {
     "purpose": "Canonical content blocks for the OSCI Pro PDF report. Each subscale has two frames: strength (when the subscale is a relative high point for the respondent) and development (when it's a relative low point). The report generator selects the right frame at render time. Voice follows OSCI_Feedback_Style_guide.",
     "structure_strength_frame": [
@@ -836,6 +836,139 @@
           "Decide your baseline in advance (genuine greeting, full attention, one remembered detail).",
           "Protect it even when you feel least like it.",
           "Shorten meetings or slow your pace if needed to maintain quality."
+        ]
+      }
+    },
+    "thank-for-waiting": {
+      "name": "Thank them for waiting",
+      "relevant_to": [
+        "A1"
+      ],
+      "summary": "Swap the reflex apology for thanks. \"Thank you for waiting\" credits the other person's patience and keeps you level with them, where \"sorry for the delay\" puts you a step below. Each unnecessary sorry tells the listener you think you owe them something, and said often enough, people start to agree. When you have got something wrong, apologise plainly and once. The habit to drop is the sorry that fills space.",
+      "full": {
+        "issue": "You apologise by reflex: for being late, for asking a question, for taking up time. Each apology is small, and together they tell people you see yourself a step below them.",
+        "thinking": "Gratitude carries the same courtesy without the debt. Thanks keeps you level with the other person and still honours their time. A real apology, kept for real mistakes, carries more weight for being rare.",
+        "actions": [
+          "For one week, catch every sorry before you say it and ask whether you did anything wrong.",
+          "Where you did not, swap it for thanks: \"Thanks for making time.\" \"Thanks for bearing with me.\"",
+          "Where you did get something wrong, apologise once, plainly, and move to what happens next."
+        ]
+      }
+    },
+    "weigh-praise-lightly": {
+      "name": "Weigh praise lightly",
+      "relevant_to": [
+        "A1",
+        "B5"
+      ],
+      "summary": "Accept a compliment with a simple thank you, then set it aside from any decision in front of you. Praise feels good and it should, but it can lower your guard and make it awkward to refuse the person who offered it. Your view of your own work, and of other people, is steadier when it rests on what you see over weeks. Before you agree to a request from someone who has just praised you, ask whether you would say yes to a stranger.",
+      "full": {
+        "issue": "Praise lands, and your judgement moves with it. A compliment can make your work feel good only once someone has said so, and it can make it hard to refuse the person who said it.",
+        "thinking": "Character shows in what people do over time, especially when there is nothing in it for them. Your judgement of your own work, and of other people, needs the same steady footing.",
+        "actions": [
+          "Accept a compliment with a plain thank you and nothing more.",
+          "Before you agree to a request from someone who has just praised you, ask whether you would say yes to the same request from a stranger.",
+          "Judge people by what they do over weeks: how they treat the receptionist, and whether they keep small promises."
+        ]
+      }
+    },
+    "one-beat-pause": {
+      "name": "The one-beat pause",
+      "relevant_to": [
+        "A2",
+        "B4"
+      ],
+      "summary": "When something upsets you, slow down by a single beat before you respond. The first reply you make in that state is for you: it vents and it defends, and it usually makes the next week harder. A beat gives the thinking part of you time to arrive, and it is enough to change the first sentence you say. You can still feel angry. The pause lets you choose what goes into the room, and that choice is what other people read as composure.",
+      "full": {
+        "issue": "Under pressure your first response comes fast and comes from the feeling. Whoever set off the reaction ends up deciding how the next hour goes.",
+        "thinking": "Pausing leaves the feeling intact and gives you the choice of what to do with it. With email, the beat can stretch to an hour, which is often enough to change whether you send anything at all.",
+        "actions": [
+          "When something upsets you in a meeting, take one beat before you answer, and use it to ask a question back: \"Tell me more about that.\"",
+          "With an email that annoys you, write the reply, then leave it unsent until you have read it again later in the day.",
+          "Notice afterwards which replies you were glad you paused on."
+        ]
+      }
+    },
+    "choose-what-goes-in": {
+      "name": "Choose what goes in",
+      "relevant_to": [
+        "A5"
+      ],
+      "summary": "What you take in shapes the state you carry into the next room. A steady diet of outrage and gossip leaves a residue of mild irritation and low-grade worry, and those quiet states are the ones that leak, because they are too quiet to notice. The people you meet feel them before you do. Notice which feeds, chats and sources leave you worse off and cut back on them. For the ten minutes before an important conversation, take in nothing at all.",
+      "full": {
+        "issue": "You walk into an important meeting tense and cannot say why. Often it is something you read or watched in the twenty minutes before, with nothing to do with you.",
+        "thinking": "You cannot control every input, but you control more of them than it feels. Knowing which ones leave you worse off is the first step. Cutting back on them is the second.",
+        "actions": [
+          "For three days, notice how you feel after each thing you read, watch or listen to.",
+          "Mute the sources that reliably leave you anxious or angry, and follow some that teach you something.",
+          "For the ten minutes before an important conversation, take in nothing at all."
+        ]
+      }
+    },
+    "notice-who-leaves-you-flatter": {
+      "name": "Notice who leaves you flatter",
+      "relevant_to": [
+        "A5",
+        "B5"
+      ],
+      "summary": "Moods spread. Spend enough time with someone who reads every change as a threat and you start to read it that way too. Notice how you feel after time with each of the people you see most. Where someone reliably leaves you flatter, shorten the time or change the setting, and steer the talk towards what can be done. Hold one line: someone going through a hard time needs your attention, and your warmth still reaches everyone. The pattern to watch is habitual negativity that pulls you in.",
+      "full": {
+        "issue": "After time with certain people you leave flatter than you arrived, and the mood follows you into the next conversation.",
+        "thinking": "Your state is part of what you bring to every room. The aim is to protect it while keeping the same warmth for everyone, including people who can do nothing for you.",
+        "actions": [
+          "Notice how you feel after time with each of the people you see most.",
+          "Where someone reliably leaves you flatter, shorten the time, change the setting, or steer the talk towards what can be done.",
+          "Make deliberate time for the people who leave you sharper."
+        ]
+      }
+    },
+    "say-no-once": {
+      "name": "Say no once",
+      "relevant_to": [
+        "A3"
+      ],
+      "summary": "When you need to decline, say it once and stop: \"I can't commit to that right now.\" Long explanations invite negotiation, because every reason you give is a problem the other person can solve for you, and the more you justify, the weaker the no sounds. A clear no is a courtesy. It respects the other person's time and lets them find someone else quickly. You can still be warm, and you can still offer one specific alternative if you mean it.",
+      "full": {
+        "issue": "You decline with a long explanation, the other person solves each reason in turn, and you end up saying yes.",
+        "thinking": "The defence weakens the answer. One clear sentence keeps the no intact and still treats the other person with respect.",
+        "actions": [
+          "Decline in one sentence: \"I can't commit to that right now.\"",
+          "If you want to help, add one specific offer: \"I could review it on Thursday.\"",
+          "Then stop talking."
+        ]
+      }
+    },
+    "what-exactly-do-you-need": {
+      "name": "What exactly do you need?",
+      "relevant_to": [
+        "A3",
+        "A1"
+      ],
+      "summary": "When a request arrives wrapped in guilt, ask one question before you answer: \"What exactly do you need me to do, and by when?\" Guilt pushes you straight to how you could possibly refuse. A concrete request can be judged on its merits, and your answer becomes a decision.",
+      "full": {
+        "issue": "Someone asks with a sigh, and you feel the yes forming before you know what the job is. The commitment is made before your view is in it.",
+        "thinking": "Detail is the antidote to guilt. A concrete request can be weighed, and your answer becomes a decision.",
+        "actions": [
+          "Before you agree, ask \"What exactly do you need me to do, and by when?\"",
+          "Listen to the answer in full.",
+          "Then make the decision you would make if nobody had sighed."
+        ]
+      }
+    },
+    "story-does-not-add-up": {
+      "name": "When the story does not add up",
+      "relevant_to": [
+        "B3",
+        "A3"
+      ],
+      "summary": "When you hear an account you believe is wrong, hold the rebuttal and ask the person to take you through it step by step. Calling something untrue forces the other person to defend it and turns the conversation into a contest. Calm, specific questions (\"Talk me through the timeline\") let the facts come out without anyone being cornered. If the account is wrong, the gaps show. If you have misread it, you find out before you have accused anyone.",
+      "full": {
+        "issue": "When an account clashes with what you know, you say so, and the other person digs in.",
+        "thinking": "Questions keep the conversation open and keep your view a view until the facts settle it. They have to be genuine. Asked with an edge, they become cross-examination.",
+        "actions": [
+          "Hold the rebuttal and ask: \"Talk me through the timeline.\"",
+          "Ask for the specific detail: dates, names, who did what.",
+          "Listen to the whole answer, then decide what to say."
         ]
       }
     }

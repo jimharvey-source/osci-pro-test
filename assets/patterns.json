@@ -1,5 +1,5 @@
 {
-  "version": "patterns-v1",
+  "version": "patterns-v1.1",
   "_meta": "Personalised interpretation layer for the OSCI Pro report. Each subscale has candidate patterns; the resolver picks the candidate whose items have the lowest mean post-reverse score (subscaleItemScores from scoring.js). 'tie' fires only on an exact tie. Each pattern carries the locked reading (JH final) and the matched techniques (M-ids from content.methods; slug ids are new library entries to author). Additive: not read by the report until generate-report.js is wired to it.",
   "resolver": "lowest-mean-candidate",
   "section_intro": {
@@ -10,9 +10,9 @@
     "A1": { "mode": "weakest_facet", "candidates": [
       { "id": "q1", "items": [1], "techniques": ["M8", "M9", "three-moments"],
         "reading": "Your opinion of yourself rises and falls with recent events. A good week lifts it, a bad week drops it. A settled baseline of your own worth is what lets other people relax in your company; when it moves with every week, they feel the weather change too. The priority is a more consistent view of yourself, one that does not swing so much with the last thing that happened." },
-      { "id": "q2", "items": [2], "techniques": ["M4", "M8", "own-verdict-first"],
+      { "id": "q2", "items": [2], "techniques": ["M4", "M8", "own-verdict-first", "weigh-praise-lightly"],
         "reading": "When you do something well, you tend to wait for someone else to say so before you quite believe it. Real confidence starts with being in good faith about your own work; while you cannot rely on it until someone confirms it, your sense of yourself sits in other people's hands. The priority is to help you trust your judgment of your own work, so a good job feels like a good job in spite of what anyone else might say." },
-      { "id": "q3", "items": [3], "techniques": ["M4", "M8", "own-verdict-first"],
+      { "id": "q3", "items": [3], "techniques": ["M4", "M8", "own-verdict-first", "thank-for-waiting"],
         "reading": "How well you think you are doing depends more on what other people reflect back to you than on your own steady view of yourself. Sometimes that leaves your sense of yourself shifting whenever opinions do, when the steadiness other people read as real confidence comes from holding your own judgment first. The priority here is to help you get a more balanced view of your capabilities that relies less on the reaction that you get from the people around you." },
       { "id": "q4", "items": [4], "techniques": ["M9", "colleague-test"],
         "reading": "One thing going wrong can quickly turn into a verdict on your worth. Something goes badly, and the story in your head turns from the issue to how you feel about yourself. You would never condemn a colleague on the basis of one setback, the way you condemn yourself. So this is about applying the same perspective to yourself. Your priority is to manage any setback by dealing with the specific thing that went wrong, in a balanced way, and nothing more." },
@@ -29,9 +29,9 @@
       "tie": { "id": "both", "items": [9, 10], "techniques": ["M5", "M9", "one-beat-pause", "finite-window"],
         "reading": "Both halves are in play for you. Your attention can narrow a little when the pressure is on, and a setback can sit with you a little longer than it needs to. Both things mean that you can seem a little distracted to the people around you, so they get less of you than they expect or need. So, the work here is about helping you stay composed in the moment and recover in good time afterwards, starting with whichever costs you more day to day." } },
     "A3": { "mode": "either_or", "candidates": [
-      { "id": "view_stays_in", "items": [13], "techniques": ["M1", "M2", "ask-permission-to-differ", "three-beats"],
+      { "id": "view_stays_in", "items": [13], "techniques": ["M1", "M2", "ask-permission-to-differ", "three-beats", "what-exactly-do-you-need"],
         "reading": "When you disagree with someone whose opinion matters to you, you tend to keep it to yourself. Your opinion is valid; it just does not make it into the room, and the decision goes ahead without it being heard. A senior colleague can only act on what they can see, and saying the difficult thing with courtesy is how you let them operate in full view of it. The focus here is to help you say the difficult thing at the moment it counts, in a way that honours them and that the room can act on." },
-      { "id": "muffled", "items": [15], "techniques": ["M1", "M3", "say-headline-first"],
+      { "id": "muffled", "items": [15], "techniques": ["M1", "M3", "say-headline-first", "say-no-once"],
         "reading": "When you have a difficult thing to say, you sometimes soften it so much that the main point gets lost. The courage to raise difficult issues is there, the message just arrives muffled, and the room moves on without acting on it. Said clearly and kindly, the hard thing is a gift to the other person, because it lets them fix what they could not see for themselves. The priority is to help you say the hard thing clearly and kindly, so it lands and can be acted on." }
     ]},
     "A4": { "mode": "weakest_facet", "candidates": [
@@ -47,7 +47,7 @@
         "reading": "You can see a weakness as fixed rather than as something you can work on, so it hardens into \"that is just how I am\". That belief closes the door before any work can start, and the people around you hear it close too, it makes you seem less confident and open to change. The focus here is to help you log your weaknesses as 'work in progress', because that is the belief that lets them change." }
     ]},
     "A5": { "mode": "either_or", "candidates": [
-      { "id": "own_state", "items": [22, 24], "techniques": ["M5", "M6"],
+      { "id": "own_state", "items": [22, 24], "techniques": ["M5", "M6", "choose-what-goes-in", "notice-who-leaves-you-flatter"],
         "reading": "You read other people well, and read your own state less easily. You can fail to spot the mood or energy you are carrying into a meeting until it has already coloured how you come across. The emotional state (whether anger, fear, frustration or optimism) you have not noticed is the one that leaks out, and the room often feels it before you do. The focus here is to help you identify your own state before it enters the room, so you can manage what you bring for the good of others." },
       { "id": "reads_room", "items": [21, 23, 25], "techniques": ["M6", "the-play-back"],
         "reading": "You identify your own emotional state well, and sometimes you miss what the room is telling you, which can come as a surprise to you and those around you. The focus here is to help you read the room better, and manage your own approach so that you have the impact that you want for the people you are meeting." }
@@ -75,13 +75,13 @@
         "reading": "You do not always learn something about the whole person beyond what they do for a living. Your interest in non-work details is where a working relationship becomes a human one. The focus here is to help you understand the person behind the role, because that is where real rapport starts." },
       { "id": "q38", "items": [38], "techniques": ["M13"],
         "reading": "You can bring in your own experience before the other person has finished theirs. However well you mean it, the person who has not finished their thought feels cut off the moment yours arrives. The focus here is to help you hold back so the other person feels heard before you share your own story." },
-      { "id": "q39", "items": [39], "techniques": ["offer-as-view"],
+      { "id": "q39", "items": [39], "techniques": ["offer-as-view", "story-does-not-add-up"],
         "reading": "You can offer an opinion as a settled fact. A view offered as one opinion among many leaves room for other people to add theirs, and that room to share is where good thinking happens. An opinion offered as a fact does the opposite. The focus here is to help you put across your own views in a way that keeps the conversation open for other people to engage." },
       { "id": "q40", "items": [40], "techniques": ["M7"],
         "reading": "The version of you in casual conversation can differ from the one in formal settings. As a general rule, people trust consistency, and a big shift in a person's tone, energy and approach in different situations can come across as insincere or forced. People often notice the switch, even when they cannot name it out loud. The focus here is to help you keep the same underlying manner across all occasions, so you convey consistency and certainty to every audience you meet." }
     ]},
     "B4": { "mode": "weakest_facet", "candidates": [
-      { "id": "q41", "items": [41], "techniques": ["M10", "M17"],
+      { "id": "q41", "items": [41], "techniques": ["M10", "M17", "one-beat-pause"],
         "reading": "You can be less steady than you would like when someone disagrees with you in front of others. People around you notice how you handle being contradicted and use it as a measure of whether it is safe to disagree with you at all. As a general rule someone who is calm, respectful and stable when challenged comes across more confidently than a person who reacts or crumbles. The focus here is to help you keep your calm state in those moments." },
       { "id": "q42", "items": [42], "techniques": ["M17", "credit-on-the-spot"],
         "reading": "You do not always name other people's contribution in the moment you are praised. Credit given to others, even if they are not present, is seen as humility, confidence and grace; credit not given, or given later, reads as an afterthought, if it lands at all. The focus here is to help you give more, and more public, praise to others, because that is what people remember most positively." },
