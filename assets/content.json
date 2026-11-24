@@ -1,5 +1,5 @@
 {
-  "version": "content-v3.9+techniques2",
+  "version": "content-v3.9+techniques3",
   "_meta": {
     "purpose": "Canonical content blocks for the OSCI Pro PDF report. Each subscale has two frames: strength (when the subscale is a relative high point for the respondent) and development (when it's a relative low point). The report generator selects the right frame at render time. Voice follows OSCI_Feedback_Style_guide.",
     "structure_strength_frame": [
@@ -969,6 +969,191 @@
           "Hold the rebuttal and ask: \"Talk me through the timeline.\"",
           "Ask for the specific detail: dates, names, who did what.",
           "Listen to the whole answer, then decide what to say."
+        ]
+      }
+    },
+    "stop-keeping-score": {
+      "name": "Stop keeping score",
+      "relevant_to": [
+        "A1",
+        "A2"
+      ],
+      "summary": "Checking who has replied, who liked the post and who seems further ahead hands your mood to people who are not thinking about you. Every refresh asks someone else to confirm you are fine, and every comparison sets your whole week against the best day of someone else's year. Mute the accounts that leave you feeling smaller. After you send something that matters, close the app and pick one time to check.",
+      "full": {
+        "issue": "Your sense of how you are doing rises and falls with replies, likes and other people's news. A quiet inbox can sour a whole morning.",
+        "thinking": "Most of the people you measure yourself against are running a different course. Your footing is steadier when it rests on what you are doing this week.",
+        "actions": [
+          "Mute or unfollow the accounts that reliably leave you feeling smaller.",
+          "After you send something that matters, close the app and choose one time to check for a reply.",
+          "When you catch yourself feeling behind, name one thing you can do this week, and do it."
+        ]
+      }
+    },
+    "talk-to-yourself-like-a-friend": {
+      "name": "Talk to yourself as you would to a friend",
+      "relevant_to": [
+        "A1"
+      ],
+      "summary": "When something goes badly, notice the verdict you pass on yourself and ask what you would say to a friend who had the same day. Say that instead. The voice in your head is the one you hear most, and what it repeats starts to feel like fact. One plain, true line about the person you are working to be, read every day, gives that voice a better script.",
+      "full": {
+        "issue": "After a setback you tell yourself you always freeze, or that you are not good enough for this level. You would never say that to a colleague.",
+        "thinking": "You cannot argue the harsh voice into silence, but you can give it a different script. Keep the line small and true, because a grand claim you do not believe does nothing.",
+        "actions": [
+          "When you catch a harsh verdict, ask what you would say to a friend who had the same day, then say that to yourself.",
+          "Write one plain line about who you are becoming, such as \"I say what I think, kindly.\"",
+          "Put it where you will see it daily, such as your lockscreen."
+        ]
+      }
+    },
+    "ten-quiet-minutes": {
+      "name": "Ten quiet minutes",
+      "relevant_to": [
+        "A5",
+        "A2"
+      ],
+      "summary": "Once a day, sit upright, close your eyes and breathe slowly for ten minutes. For the first few days your mind will wander within seconds. Each time you notice and bring it back, you practise the move you need in a tense meeting: spot the reaction starting, then choose what to do. Give it three weeks. Most people find they start to catch themselves before they react.",
+      "full": {
+        "issue": "Pressure reaches your reactions before your thinking catches up, and you notice afterwards.",
+        "thinking": "Noticing is the exercise. Every time you bring a wandering mind back, you rehearse catching a reaction early.",
+        "actions": [
+          "Sit upright, close your eyes and breathe slowly for ten minutes, once a day.",
+          "Each time your mind wanders, bring it back without telling yourself off.",
+          "Give it three weeks before you judge it."
+        ]
+      }
+    },
+    "settle-up-with-the-day": {
+      "name": "Settle up with the day",
+      "relevant_to": [
+        "A4",
+        "A5"
+      ],
+      "summary": "Before bed, write three lines: where your hours went, where your energy drained away, and one thing you will change tomorrow. Two minutes is enough. Most days pass without review, so the same leaks happen again. Over a month the notes show you patterns you cannot see from inside a single day, and they point to what to try differently.",
+      "full": {
+        "issue": "When something is not working, you push harder at it. The same leaks repeat because nobody stops to look at them.",
+        "thinking": "A short daily review turns a blur of days into evidence. Patterns show up over weeks that no single day reveals.",
+        "actions": [
+          "Each night, write where your time went, where your energy leaked, and one fix for tomorrow.",
+          "Keep it to two minutes and three lines.",
+          "At the end of thirty nights, read them all and look for what repeats."
+        ]
+      }
+    },
+    "be-a-beginner": {
+      "name": "Be a beginner again",
+      "relevant_to": [
+        "A4"
+      ],
+      "summary": "Pick something you are bad at and do it for fun, with other people watching if you can. The more senior you get, the fewer places you are allowed to look foolish, and the less practice you get at not knowing. Being a beginner is a skill: asking basic questions and being seen trying. Confidence built at a dance class or a language lesson travels into the board meeting.",
+      "full": {
+        "issue": "You stick to what you already do well. When something new arrives, the fear of looking slow keeps you quiet just when you need to ask.",
+        "thinking": "Being seen trying, and surviving it, makes the next basic question cost less.",
+        "actions": [
+          "Choose something unfamiliar enough that you are not sure you will be good at it.",
+          "Do it where other people can see you learning.",
+          "Notice the urge to give up or explain yourself, and stay anyway."
+        ]
+      }
+    },
+    "leave-work-in-the-car": {
+      "name": "Leave work in the car",
+      "relevant_to": [
+        "B1",
+        "A5"
+      ],
+      "summary": "Before you walk in after work, sit for two minutes with your phone down and let the day finish. Listening needs room. If the last meeting is still running in your head, there is no space for the person in front of you, and they can tell. The same short stop helps between back-to-back meetings and before a one-to-one.",
+      "full": {
+        "issue": "You arrive at the next conversation still finishing the last one. You nod in the right places and keep none of it.",
+        "thinking": "A short stop lets one setting end before the next begins, so you can arrive and listen properly.",
+        "actions": [
+          "Before you walk in after work, sit for two minutes with your phone down.",
+          "Before an important conversation, take thirty seconds to do the same.",
+          "Then ask one question about the other person's day and listen to the whole answer."
+        ]
+      }
+    },
+    "curious-before-judging": {
+      "name": "Get curious before you judge",
+      "relevant_to": [
+        "B1",
+        "B4"
+      ],
+      "summary": "When you notice yourself judging someone, ask one open question first: \"What is going on?\" Judgement arrives fast and feels like insight, but it is often a guess filled in with the worst explanation to hand. Your standard stays where it is. What changes is your first question, and the first question decides what you learn. If the judgement still holds after the answer, act on it.",
+      "full": {
+        "issue": "You decide what is going on with someone before you have asked. People feel judged and tell you less.",
+        "thinking": "Assume the person is doing their best with what they have. Curiosity tests whether your judgement was fair before you act on it.",
+        "actions": [
+          "When you notice a judgement forming, ask one open question: \"Talk me through it.\"",
+          "Listen to the whole answer before you decide.",
+          "Then act on what you now know."
+        ]
+      }
+    },
+    "say-hello-to-everyone": {
+      "name": "Say hello to everyone",
+      "relevant_to": [
+        "B2",
+        "B5"
+      ],
+      "summary": "For a week, greet everyone you pass at work and thank anyone who does you a small favour, including the driver who lets you out of a junction. Use names where you know them. Warmth that only switches on for people who matter to you reads as a tactic. A greeting takes seconds and shows who you are when nobody important is watching.",
+      "full": {
+        "issue": "You greet the people you know or need, and pass the rest. Without meaning to, you ration your warmth.",
+        "thinking": "The real test of warmth is how you treat people who can do nothing for you. They notice, and so does everyone watching.",
+        "actions": [
+          "For one week, say hello to everyone you pass at work.",
+          "Thank anyone who does you a small favour.",
+          "Learn and use the names of the people others overlook."
+        ]
+      }
+    },
+    "one-thing-nobody-asked-for": {
+      "name": "One thing nobody asked for",
+      "relevant_to": [
+        "B2",
+        "B5"
+      ],
+      "summary": "Each day, do one small thing for someone that nobody asked you to do: refill the printer, clear the meeting room, send the thank-you note. Do not mention it. Doing what you are asked is the job. Doing something nobody asked for tells people you notice them and the place you share, and because it has nothing to do with rank, people trust it.",
+      "full": {
+        "issue": "Your warmth shows up where it is expected or useful, and less where nobody is keeping count.",
+        "thinking": "Small, unprompted acts say more than anything you could say. They show warmth that does not depend on who is watching.",
+        "actions": [
+          "Each day, do one small thing for someone that nobody asked for.",
+          "Pick the jobs everyone steps round.",
+          "Do not mention it."
+        ]
+      }
+    },
+    "steady-yourself-first": {
+      "name": "Steady yourself first",
+      "relevant_to": [
+        "B4",
+        "A2"
+      ],
+      "summary": "When a room heats up, take three slow breaths with a long out-breath, then speak a little slower and quieter than you feel like speaking. Moods spread fastest from whoever holds the most attention. If you are tense, the room catches it, and if you are steady, it catches that too. Settling yourself is the first thing you can do for everyone else in a hard conversation.",
+      "full": {
+        "issue": "When someone disagrees with you in front of others, your voice rises and your pace quickens, and the room follows.",
+        "thinking": "You set the temperature more than you think. A steady voice gives everyone else permission to settle.",
+        "actions": [
+          "Before a difficult conversation, take three slow breaths with a long out-breath.",
+          "When a room heats up, lower your voice and slow your pace.",
+          "Then take the first issue: \"Let's take the first point.\""
+        ]
+      }
+    },
+    "three-hours-as-nobody": {
+      "name": "Three hours as nobody",
+      "relevant_to": [
+        "B5",
+        "A5"
+      ],
+      "summary": "Once a week, spend three hours somewhere you have no title, with no phone and no company. A walk, a gallery, a class where you are the beginner. When every conversation runs through a role, you lose track of who you are without one, and people sense the performance. Time with no role to play shows you the person underneath, and that is the person to take into every room.",
+      "full": {
+        "issue": "At work you are a role: boss, fixer, the one who knows. The person people meet changes with the setting.",
+        "thinking": "Roles are useful and can swallow you. Time where nobody needs anything from you shows you who holds steady underneath them.",
+        "actions": [
+          "Block three hours this week with no phone and no company.",
+          "Go somewhere you have no title.",
+          "Afterwards, notice what you thought about once nobody wanted anything from you."
         ]
       }
     }
