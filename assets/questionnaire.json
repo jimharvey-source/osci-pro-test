@@ -1,5 +1,5 @@
 {
-  "version": "pro-test-1.4",
+  "version": "pro-test-1.5",
   "title": "OSCI Pro — Charisma Quadrant Assessment",
   "subtitle": "Sixty questions. About ten minutes. Answer honestly, the way you actually are at work, rather than the way you would like to be. The honest answer gives you the most useful report.",
   "likert": [
@@ -145,8 +145,6 @@
     15,
     18,
     20,
-    23,
-    25,
     28,
     30,
     33,
@@ -294,8 +292,7 @@
     {
       "n": 23,
       "subscale": "A5",
-      "text": "Feedback from other people usually matches the way I would describe myself.",
-      "reverse": true
+      "text": "Feedback from other people usually matches the way I would describe myself."
     },
     {
       "n": 24,
@@ -305,8 +302,7 @@
     {
       "n": 25,
       "subscale": "A5",
-      "text": "The way I think I come across to other people is usually the same as how they actually see me.",
-      "reverse": true
+      "text": "The way I think I come across to other people is usually the same as how they actually see me."
     },
     {
       "n": 26,
