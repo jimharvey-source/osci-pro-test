@@ -1263,6 +1263,35 @@ function renderOnePageSummary(doc, content, scoring, strengthCodes, developmentC
     doc.moveDown(0.8);
   }
 
+  // Pass 1 (24 Nov): "In plain words" now opens the page, before the score
+  // lines, so the reader meets the friendly read first. The score block that
+  // follows is measured; if it will not fit under the AI-written prose, it
+  // moves to the next page whole, so no two-line spill page is left behind.
+  if (Array.isArray(profileParagraphs) && profileParagraphs.length) {
+    const dimensionRead = profileParagraphs.filter(p => !/consistency\s+index/i.test(p));
+    if (dimensionRead.length) {
+      h2(doc, 'In plain words');
+      dimensionRead.forEach(p => bodyText(doc, p));
+    }
+  }
+
+  const entryLines = [];
+  strengthCodes.forEach(code => entryLines.push([code, content.subscales[code] && content.subscales[code].where_it_helps]));
+  developmentCodes.forEach(code => entryLines.push([code, content.subscales[code] && content.subscales[code].where_gain_shows]));
+  const firstPriority = content.subscales[developmentCodes[0]];
+  const startLine = `Start with ${firstPriority ? firstPriority.name : 'your first priority subscale'}. The rest of this report explains each of these in detail, and the four-week action plan turns your priorities into specific practice.`;
+  doc.font(FONT_BODY).fontSize(11);
+  let needed = 2 * 45 + 30; // two h2 headings plus spacing
+  entryLines.forEach(([, line]) => {
+    needed += 24 + (line ? doc.heightOfString(line, { width: 451, lineGap: 3 }) + 8 : 0);
+  });
+  needed += doc.heightOfString(startLine, { width: 451, lineGap: 3 }) + 12;
+  if (doc.y + needed > 760) {
+    doc.addPage();
+    eyebrow(doc, 'Your results, continued');
+    doc.moveDown(0.4);
+  }
+
   const entry = (code, line) => {
     const sub = content.subscales[code];
     if (!sub) return;
@@ -1283,19 +1312,7 @@ function renderOnePageSummary(doc, content, scoring, strengthCodes, developmentC
     entry(code, content.subscales[code] && content.subscales[code].where_gain_shows));
 
   doc.moveDown(0.4);
-  const firstPriority = content.subscales[developmentCodes[0]];
-  bodyText(doc, `Start with ${firstPriority ? firstPriority.name : 'your first priority subscale'}. The rest of this report explains each of these in detail, and the four-week plan near the back turns the first priority into specific practice.`);
-
-  // Folded in from the old "Your profile in plain words" page: the read of the
-  // two dimensions in prose. The Consistency Index paragraph is filtered out,
-  // so consistency keeps its single home on its own page later.
-  if (Array.isArray(profileParagraphs) && profileParagraphs.length) {
-    const dimensionRead = profileParagraphs.filter(p => !/consistency\s+index/i.test(p));
-    if (dimensionRead.length) {
-      h2(doc, 'In plain words');
-      dimensionRead.forEach(p => bodyText(doc, p));
-    }
-  }
+  bodyText(doc, startLine);
 }
 
 function renderPrefaceCharisma(doc, content) {
@@ -1386,6 +1403,7 @@ function renderConsistencyPage(doc, content, scoring) {
   // read. The concept (what the Index measures) and the generic "how to extend
   // your reach" move to the appendix, so the reader meets the number once, here,
   // as a read of their result.
+  if (cp.why_it_matters) bodyText(doc, cp.why_it_matters);
   if (bandPara) {
     bodyText(doc, bandPara);
   } else {
@@ -1737,7 +1755,7 @@ function renderReport(doc, content, scoring, headline, profileParagraphs, respon
 
       if (resolved.techniques && resolved.techniques.length) {
         h2(doc, 'Where to start');
-        bodyText(doc, `These are the techniques matched to what your answers show. Each is set out in fuller detail in the Practice Content Library and the companion book, and the subscale is explained in full in the appendix.`);
+        bodyText(doc, `These are the techniques matched to what your answers show. The appendix at the back explains this subscale in full.`);
         resolved.techniques
           .map(ref => lookupTechnique(content, patterns, ref))
           .filter(Boolean)
@@ -1768,8 +1786,8 @@ function renderReport(doc, content, scoring, headline, profileParagraphs, respon
   // ─── A four-week plan ──────────────────────────────────────────────────
   doc.addPage();
   eyebrow(doc, 'Putting it to work');
-  h1(doc, 'Your four weeks');
-  bodyText(doc, `Most development plans fail because they are too long or too vague. Yours has four weeks, with one or two specific things to do in each. Small enough to actually run alongside your normal work.`);
+  h1(doc, 'Your four-week action plan');
+  bodyText(doc, `This plan is built to make a real difference to your charisma in every part of your life. Most development plans fail because they are too long or too vague. Yours has four weeks, with one or two specific things to do in each. Small enough to actually run alongside your normal work.`);
   bodyText(doc, `Focus on your first priority subscale: ${content.subscales[developmentCodes[0]] ? content.subscales[developmentCodes[0]].name : 'your first priority'}. The plan below uses the activities from that subscale. After four weeks, come back to this report and decide whether to keep going or to move on to your second priority.`);
 
   const weeklyPlan = buildWeeklyPlan(content, developmentCodes, chosenMethods);
